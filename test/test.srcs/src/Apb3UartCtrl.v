@@ -8,6 +8,7 @@ module Apb3UartCtrl (
     input  wire        io_apb_PWRITE,
     input  wire [31:0] io_apb_PWDATA,
     output reg  [31:0] io_apb_PRDATA,
+
     output wire        io_uart_txd,
     input  wire        io_uart_rxd,
     output wire        io_interrupt,

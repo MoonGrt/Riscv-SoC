@@ -1,7 +1,32 @@
 # compile verilog/system verilog design source files
 verilog xil_defaultlib  \
-"../../../../Murax.srcs/Murax.v" \
-"../../../../Murax.srcs/tb_Murax.v" \
+"../../../../test.srcs/src/Apb3Decoder.v" \
+"../../../../test.srcs/src/Apb3Gpio.v" \
+"../../../../test.srcs/src/Apb3Router.v" \
+"../../../../test.srcs/src/Apb3UartCtrl.v" \
+"../../../../test.srcs/src/BufferCC.v" \
+"../../../../test.srcs/src/BufferCC_1.v" \
+"../../../../test.srcs/src/BufferCC_2.v" \
+"../../../../test.srcs/src/BufferCC_3.v" \
+"../../../../test.srcs/src/FlowCCUnsafeByToggle.v" \
+"../../../../test.srcs/src/InterruptCtrl.v" \
+"../../../../test.srcs/src/JtagBridge.v" \
+"../../../../test.srcs/src/Murax.v" \
+"../../../../test.srcs/src/MuraxApb3Timer.v" \
+"../../../../test.srcs/src/MuraxMasterArbiter.v" \
+"../../../../test.srcs/src/MuraxPipelinedMemoryBusRam.v" \
+"../../../../test.srcs/src/PipelinedMemoryBusToApbBridge.v" \
+"../../../../test.srcs/src/Prescaler.v" \
+"../../../../test.srcs/src/StreamFifo.v" \
+"../../../../test.srcs/src/StreamFifoLowLatency.v" \
+"../../../../test.srcs/src/StreamFifo_2.v" \
+"../../../../test.srcs/src/SystemDebugger.v" \
+"../../../../test.srcs/src/Timer.v" \
+"../../../../test.srcs/src/UartCtrl.v" \
+"../../../../test.srcs/src/UartCtrlRx.v" \
+"../../../../test.srcs/src/UartCtrlTx.v" \
+"../../../../test.srcs/src/VexRiscv.v" \
+"../../../../test.srcs/sim/tb_Murax.v" \
 
 # compile glbl module
 verilog xil_defaultlib "glbl.v"

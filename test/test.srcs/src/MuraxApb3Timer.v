@@ -8,6 +8,7 @@ module MuraxApb3Timer (
     input  wire        io_apb_PWRITE,
     input  wire [31:0] io_apb_PWDATA,
     output reg  [31:0] io_apb_PRDATA,
+
     output wire        io_apb_PSLVERROR,
     output wire        io_interrupt,
     input  wire        io_mainClk,

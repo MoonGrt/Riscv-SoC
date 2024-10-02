@@ -20,10 +20,10 @@ module MuraxPipelinedMemoryBusRam (
     reg         _zz_io_bus_rsp_valid;
     wire [29:0] _zz_io_bus_rsp_payload_data;
     wire [31:0] _zz_io_bus_rsp_payload_data_1;
-    reg  [ 7:0] ram_symbol0                   [0:1023];
-    reg  [ 7:0] ram_symbol1                   [0:1023];
-    reg  [ 7:0] ram_symbol2                   [0:1023];
-    reg  [ 7:0] ram_symbol3                   [0:1023];
+    reg  [ 7:0] ram_symbol0 [0:1023];
+    reg  [ 7:0] ram_symbol1 [0:1023];
+    reg  [ 7:0] ram_symbol2 [0:1023];
+    reg  [ 7:0] ram_symbol3 [0:1023];
     reg  [ 7:0] _zz_ramsymbol_read;
     reg  [ 7:0] _zz_ramsymbol_read_1;
     reg  [ 7:0] _zz_ramsymbol_read_2;
@@ -31,10 +31,10 @@ module MuraxPipelinedMemoryBusRam (
 
     assign _zz_io_bus_rsp_payload_data_2 = _zz_io_bus_rsp_payload_data[9:0];
     initial begin
-        $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Project/Murax/Murax.srcs/Murax.v_toplevel_system_ram_ram_symbol0.bin",ram_symbol0);
-        $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Project/Murax/Murax.srcs/Murax.v_toplevel_system_ram_ram_symbol1.bin",ram_symbol1);
-        $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Project/Murax/Murax.srcs/Murax.v_toplevel_system_ram_ram_symbol2.bin",ram_symbol2);
-        $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Project/Murax/Murax.srcs/Murax.v_toplevel_system_ram_ram_symbol3.bin",ram_symbol3);
+        $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/ram/Murax.v_toplevel_system_ram_ram_symbol0.bin",ram_symbol0);
+        $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/ram/Murax.v_toplevel_system_ram_ram_symbol1.bin",ram_symbol1);
+        $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/ram/Murax.v_toplevel_system_ram_ram_symbol2.bin",ram_symbol2);
+        $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/ram/Murax.v_toplevel_system_ram_ram_symbol3.bin",ram_symbol3);
     end
     always @(*) begin
         ram_spinal_port0 = {
