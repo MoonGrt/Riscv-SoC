@@ -1,19 +1,20 @@
 `timescale 1ns / 1ps
 
 module Apb3UART (
+    input wire io_mainClk,
+    input wire resetCtrl_systemReset,
+
     input  wire [ 4:0] io_apb_PADDR,
     input  wire [ 0:0] io_apb_PSEL,
     input  wire        io_apb_PENABLE,
-    output wire        io_apb_PREADY,
     input  wire        io_apb_PWRITE,
     input  wire [31:0] io_apb_PWDATA,
+    output wire        io_apb_PREADY,
     output reg  [31:0] io_apb_PRDATA,
 
-    output wire        io_uart_txd,
-    input  wire        io_uart_rxd,
-    output wire        io_interrupt,
-    input  wire        io_mainClk,
-    input  wire        resetCtrl_systemReset
+    input  wire io_uart_rxd,
+    output wire io_uart_txd,
+    output wire io_interrupt
 );
     localparam UartStopType_ONE = 1'd0;
     localparam UartStopType_TWO = 1'd1;

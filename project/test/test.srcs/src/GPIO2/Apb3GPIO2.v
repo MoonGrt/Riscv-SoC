@@ -1,21 +1,21 @@
 `timescale 1ns / 1ps
 
-module Apb3GPIO (
-    input wire io_mainClk,
-    input wire resetCtrl_systemReset,
-
+module Apb3GPIO2 (
     input  wire [ 3:0] io_apb_PADDR,
     input  wire [ 0:0] io_apb_PSEL,
     input  wire        io_apb_PENABLE,
+    output wire        io_apb_PREADY,
     input  wire        io_apb_PWRITE,
     input  wire [31:0] io_apb_PWDATA,
-    output wire        io_apb_PREADY,
     output reg  [31:0] io_apb_PRDATA,
 
+    output wire        io_apb_PSLVERROR,
     input  wire [31:0] io_gpio_read,
     output wire [31:0] io_gpio_write,
     output wire [31:0] io_gpio_writeEnable,
-    output wire        io_apb_PSLVERROR
+    output wire [31:0] io_value,
+    input  wire        io_mainClk,
+    input  wire        resetCtrl_systemReset
 );
 
     wire [31:0] io_gpio_read_buffercc_io_dataOut;
@@ -34,6 +34,7 @@ module Apb3GPIO (
         .io_mainClk           (io_mainClk),                              //i
         .resetCtrl_systemReset(resetCtrl_systemReset)                    //i
     );
+    assign io_value = io_gpio_read_buffercc_io_dataOut;
     assign ctrl_readErrorFlag = 1'b0;
     assign ctrl_writeErrorFlag = 1'b0;
     assign io_apb_PREADY = 1'b1;
@@ -41,7 +42,7 @@ module Apb3GPIO (
         io_apb_PRDATA = 32'h0;
         case (io_apb_PADDR)
             4'b0000: begin
-                io_apb_PRDATA[31 : 0] = io_gpio_read_buffercc_io_dataOut;
+                io_apb_PRDATA[31 : 0] = io_value;
             end
             4'b0100: begin
                 io_apb_PRDATA[31 : 0] = io_gpio_write_driver;

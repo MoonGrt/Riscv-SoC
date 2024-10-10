@@ -76,7 +76,6 @@ module Murax (
     wire        system_gpioACtrl_io_apb_PSLVERROR;
     wire [31:0] system_gpioACtrl_io_gpio_write;
     wire [31:0] system_gpioACtrl_io_gpio_writeEnable;
-    wire [31:0] system_gpioACtrl_io_value;
     wire        system_uartCtrl_io_apb_PREADY;
     wire [31:0] system_uartCtrl_io_apb_PRDATA;
     wire        system_uartCtrl_io_uart_txd;
@@ -302,7 +301,6 @@ module Murax (
         .io_gpio_read         (io_gpioA_read[31:0]),                         //i
         .io_gpio_write        (system_gpioACtrl_io_gpio_write[31:0]),        //o
         .io_gpio_writeEnable  (system_gpioACtrl_io_gpio_writeEnable[31:0]),  //o
-        .io_value             (system_gpioACtrl_io_value[31:0]),             //o
         .io_mainClk           (io_mainClk),                                  //i
         .resetCtrl_systemReset(resetCtrl_systemReset)                        //i
     );

@@ -1,18 +1,19 @@
 `timescale 1ns / 1ps
 
 module Apb3Timer (
+    input wire io_mainClk,
+    input wire resetCtrl_systemReset,
+
     input  wire [ 7:0] io_apb_PADDR,
     input  wire [ 0:0] io_apb_PSEL,
     input  wire        io_apb_PENABLE,
-    output wire        io_apb_PREADY,
     input  wire        io_apb_PWRITE,
     input  wire [31:0] io_apb_PWDATA,
+    output wire        io_apb_PREADY,
     output reg  [31:0] io_apb_PRDATA,
 
-    output wire        io_apb_PSLVERROR,
-    output wire        io_interrupt,
-    input  wire        io_mainClk,
-    input  wire        resetCtrl_systemReset
+    output wire io_apb_PSLVERROR,
+    output wire io_interrupt
 );
 
     wire        timerA_io_tick;
