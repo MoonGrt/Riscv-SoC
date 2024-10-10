@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module BufferCC (
+module BufferCC_RST (
     input  wire io_dataIn,
     output wire io_dataOut,
     input  wire io_mainClk

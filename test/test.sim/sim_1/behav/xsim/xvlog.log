@@ -8,12 +8,12 @@ INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Ri
 INFO: [VRFC 10-311] analyzing module Apb3Timer
 INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/UART/Apb3UART.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module Apb3UART
-INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/BufferCC.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module BufferCC
 INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/GPIO/BufferCC_GPIO.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module BufferCC_GPIO
 INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/JTAG/BufferCC_JTAG.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module BufferCC_JTAG
+INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/BufferCC_RST.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module BufferCC_RST
 INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/UART/BufferCC_UART.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module BufferCC_UART
 INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/JTAG/Debugger.v" into library xil_defaultlib
@@ -34,11 +34,11 @@ INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Ri
 INFO: [VRFC 10-311] analyzing module RAMPPL
 INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/RAM/RAMPPLToApb.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module RAMPPLToApb
-INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/StreamFifoLowLatency.v" into library xil_defaultlib
+INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/VexRiscv/StreamFifoLowLatency.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module StreamFifoLowLatency
 INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/UART/StreamFifo_UART.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module StreamFifo_UART
-INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/StreamFifo_VexRisv.v" into library xil_defaultlib
+INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/VexRiscv/StreamFifo_VexRisv.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module StreamFifo_VexRisv
 INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/TIMER/Timer.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module Timer
@@ -48,7 +48,7 @@ INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Ri
 INFO: [VRFC 10-311] analyzing module UartCtrlRx
 INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/UART/UartCtrlTx.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module UartCtrlTx
-INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/VexRiscv.v" into library xil_defaultlib
+INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/VexRiscv/VexRiscv.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module VexRiscv
 INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/sim/tb_Murax.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module tb_Murax

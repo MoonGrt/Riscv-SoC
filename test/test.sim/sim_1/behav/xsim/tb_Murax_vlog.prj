@@ -5,9 +5,9 @@ verilog xil_defaultlib  \
 "../../../../test.srcs/src/APB3/Apb3Router.v" \
 "../../../../test.srcs/src/TIMER/Apb3Timer.v" \
 "../../../../test.srcs/src/UART/Apb3UART.v" \
-"../../../../test.srcs/src/BufferCC.v" \
 "../../../../test.srcs/src/GPIO/BufferCC_GPIO.v" \
 "../../../../test.srcs/src/JTAG/BufferCC_JTAG.v" \
+"../../../../test.srcs/src/BufferCC_RST.v" \
 "../../../../test.srcs/src/UART/BufferCC_UART.v" \
 "../../../../test.srcs/src/JTAG/Debugger.v" \
 "../../../../test.srcs/src/JTAG/FlowCCUnsafeByToggle.v" \
@@ -18,14 +18,14 @@ verilog xil_defaultlib  \
 "../../../../test.srcs/src/TIMER/Prescaler.v" \
 "../../../../test.srcs/src/RAM/RAMPPL.v" \
 "../../../../test.srcs/src/RAM/RAMPPLToApb.v" \
-"../../../../test.srcs/src/StreamFifoLowLatency.v" \
+"../../../../test.srcs/src/VexRiscv/StreamFifoLowLatency.v" \
 "../../../../test.srcs/src/UART/StreamFifo_UART.v" \
-"../../../../test.srcs/src/StreamFifo_VexRisv.v" \
+"../../../../test.srcs/src/VexRiscv/StreamFifo_VexRisv.v" \
 "../../../../test.srcs/src/TIMER/Timer.v" \
 "../../../../test.srcs/src/UART/UartCtrl.v" \
 "../../../../test.srcs/src/UART/UartCtrlRx.v" \
 "../../../../test.srcs/src/UART/UartCtrlTx.v" \
-"../../../../test.srcs/src/VexRiscv.v" \
+"../../../../test.srcs/src/VexRiscv/VexRiscv.v" \
 "../../../../test.srcs/sim/tb_Murax.v" \
 
 # compile glbl module

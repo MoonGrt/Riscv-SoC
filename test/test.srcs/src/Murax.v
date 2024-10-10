@@ -158,7 +158,7 @@ module Murax (
     reg  [ 0:0] system_mainBusDecoder_logic_rspSourceId;
     wire        when_MuraxUtiles_l133;
 
-    (* keep_hierarchy = "TRUE" *) BufferCC asyncReset (
+    (* keep_hierarchy = "TRUE" *) BufferCC_RST asyncReset (
         .io_dataIn (io_asyncReset),                      //i
         .io_dataOut(io_asyncReset_buffercc_io_dataOut),  //o
         .io_mainClk(io_mainClk)                          //i
