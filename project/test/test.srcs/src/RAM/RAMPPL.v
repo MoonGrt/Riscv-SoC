@@ -31,14 +31,14 @@ module RAMPPL (
 
     assign _zz_io_bus_rsp_payload_data_2 = _zz_io_bus_rsp_payload_data[9:0];
     initial begin
-        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram0", ram_symbol0);
-        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram1", ram_symbol1);
-        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram2", ram_symbol2);
-        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram3", ram_symbol3);
-        // $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/ram/ram0.bin", ram_symbol0);
-        // $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/ram/ram1.bin", ram_symbol1);
-        // $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/ram/ram2.bin", ram_symbol2);
-        // $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/test/test.srcs/src/ram/ram3.bin", ram_symbol3);
+        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram0.bin", ram_symbol0);
+        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram1.bin", ram_symbol1);
+        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram2.bin", ram_symbol2);
+        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram3.bin", ram_symbol3);
+        // $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/test/test.srcs/src/ram/ram0.bin", ram_symbol0);
+        // $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/test/test.srcs/src/ram/ram1.bin", ram_symbol1);
+        // $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/test/test.srcs/src/ram/ram2.bin", ram_symbol2);
+        // $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/test/test.srcs/src/ram/ram3.bin", ram_symbol3);
     end
     always @(*) begin
         ram_spinal_port0 = {

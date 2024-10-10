@@ -42,7 +42,7 @@ def save_bytes_to_files(instructions, output_dir):
     """
     将每条指令的每个字节保存到四个不同的文件中，确保每个文件写入1024字节数据。
     """
-    file_names = [output_dir, f'{output_dir}0', f'{output_dir}1', f'{output_dir}2', f'{output_dir}3']
+    file_names = [f'{output_dir}.bin', f'{output_dir}0.bin', f'{output_dir}1.bin', f'{output_dir}2.bin', f'{output_dir}3.bin']
 
     # 每个文件的最大字节数
     max_bytes = 1024
