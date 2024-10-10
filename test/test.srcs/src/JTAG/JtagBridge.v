@@ -128,7 +128,7 @@ module JtagBridge (
 
     assign _zz_jtag_tap_isBypass = jtag_tap_instruction;
     assign _zz_jtag_tap_instructionShift = 2'b01;
-    FlowCCUnsafeByToggle flowCCUnsafeByToggle_1 (
+    FlowCCUnsafeByToggle FlowCCUnsafeByToggle (
         .io_input_valid            (jtag_writeArea_source_valid),                        //i
         .io_input_payload_last     (jtag_writeArea_source_payload_last),                 //i
         .io_input_payload_fragment (jtag_writeArea_source_payload_fragment),             //i

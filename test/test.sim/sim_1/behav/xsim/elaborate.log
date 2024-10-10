@@ -4,4 +4,35 @@ Running: G:/Xilinx1/Vivado/2018.3/bin/unwrapped/win64.o/xelab.exe -wto dc40023a7
 Using 2 slave threads.
 Starting static elaboration
 Completed static elaboration
-INFO: [XSIM 43-4323] No Change in HDL. Linking previously generated obj files to create kernel
+Starting simulation data flow analysis
+Completed simulation data flow analysis
+Time Resolution for simulation is 1ps
+Compiling module xil_defaultlib.BufferCC
+Compiling module xil_defaultlib.MasterArbiter
+Compiling module xil_defaultlib.StreamFifo_VexRisv
+Compiling module xil_defaultlib.StreamFifoLowLatency
+Compiling module xil_defaultlib.VexRiscv
+Compiling module xil_defaultlib.BufferCC_JTAG
+Compiling module xil_defaultlib.FlowCCUnsafeByToggle
+Compiling module xil_defaultlib.JtagBridge
+Compiling module xil_defaultlib.Debugger
+Compiling module xil_defaultlib.RAMPPL
+Compiling module xil_defaultlib.RAMPPLToApb
+Compiling module xil_defaultlib.BufferCC_GPIO
+Compiling module xil_defaultlib.Apb3GPIO
+Compiling module xil_defaultlib.UartCtrlTx
+Compiling module xil_defaultlib.BufferCC_UART
+Compiling module xil_defaultlib.UartCtrlRx
+Compiling module xil_defaultlib.UartCtrl
+Compiling module xil_defaultlib.StreamFifo_UART
+Compiling module xil_defaultlib.Apb3UART
+Compiling module xil_defaultlib.Prescaler
+Compiling module xil_defaultlib.Timer
+Compiling module xil_defaultlib.InterruptCtrl
+Compiling module xil_defaultlib.Apb3Timer
+Compiling module xil_defaultlib.Apb3Decoder
+Compiling module xil_defaultlib.Apb3Router
+Compiling module xil_defaultlib.Murax
+Compiling module xil_defaultlib.tb_Murax
+Compiling module xil_defaultlib.glbl
+Built simulation snapshot tb_Murax_behav

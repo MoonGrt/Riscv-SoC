@@ -63,7 +63,7 @@ module UartCtrlRx (
 
     assign _zz_when_UartCtrlRx_l139_1 = ((io_configFrame_stop == UartStopType_ONE) ? 1'b0 : 1'b1);
     assign _zz_when_UartCtrlRx_l139   = {2'd0, _zz_when_UartCtrlRx_l139_1};
-    (* keep_hierarchy = "TRUE" *) BufferCC_3 io_rxd_buffercc (
+    (* keep_hierarchy = "TRUE" *) BufferCC_UART BufferCC_UART (
         .io_dataIn            (io_rxd),                      //i
         .io_dataOut           (io_rxd_buffercc_io_dataOut),  //o
         .io_mainClk           (io_mainClk),                  //i

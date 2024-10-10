@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module StreamFifo_2 (
+module StreamFifo_VexRisv (
     input  wire        io_push_valid,
     output reg         io_push_ready,
     input  wire        io_push_payload_error,

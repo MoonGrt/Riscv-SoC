@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module MuraxPipelinedMemoryBusRam (
+module RAMPPL (
     input  wire        io_bus_cmd_valid,
     output wire        io_bus_cmd_ready,
     input  wire        io_bus_cmd_payload_write,

@@ -23,7 +23,7 @@ module StreamFifoLowLatency (
     wire [ 0:0] fifo_io_occupancy;
     wire [ 0:0] fifo_io_availability;
 
-    StreamFifo_2 fifo (
+    StreamFifo_VexRisv StreamFifo (
         .io_push_valid        (io_push_valid),                   //i
         .io_push_ready        (fifo_io_push_ready),              //o
         .io_push_payload_error(io_push_payload_error),           //i

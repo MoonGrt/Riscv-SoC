@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module MuraxMasterArbiter (
+module MasterArbiter (
     input  wire        io_iBus_cmd_valid,
     output reg         io_iBus_cmd_ready,
     input  wire [31:0] io_iBus_cmd_payload_pc,

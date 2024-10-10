@@ -25,7 +25,7 @@ module FlowCCUnsafeByToggle (
     (* async_reg = "true" *)reg        outputArea_flow_m2sPipe_payload_last;
     (* async_reg = "true" *)reg  [0:0] outputArea_flow_m2sPipe_payload_fragment;
 
-    (* keep_hierarchy = "TRUE" *) BufferCC_2 inputArea_target_buffercc (
+    (* keep_hierarchy = "TRUE" *) BufferCC_JTAG BufferCC_JTAG (
         .io_dataIn             (inputArea_target),                      //i
         .io_dataOut            (inputArea_target_buffercc_io_dataOut),  //o
         .io_mainClk            (io_mainClk),                            //i

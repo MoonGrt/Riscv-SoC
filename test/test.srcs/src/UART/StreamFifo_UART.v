@@ -1,7 +1,7 @@
 // StreamFifo_1 replaced by StreamFifo
 `timescale 1ns / 1ps
 
-module StreamFifo (
+module StreamFifo_UART (
     input  wire       io_push_valid,
     output wire       io_push_ready,
     input  wire [7:0] io_push_payload,

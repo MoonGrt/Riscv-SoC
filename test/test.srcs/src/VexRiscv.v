@@ -1105,7 +1105,7 @@ module VexRiscv (
         end
     end
 
-    StreamFifoLowLatency IBusSimplePlugin_rspJoin_rspBuffer_c (
+    StreamFifoLowLatency StreamFifoLowLatency (
         .io_push_valid        (iBus_rsp_toStream_valid),                                         //i
         .io_push_ready        (IBusSimplePlugin_rspJoin_rspBuffer_c_io_push_ready),              //o
         .io_push_payload_error(iBus_rsp_toStream_payload_error),                                 //i

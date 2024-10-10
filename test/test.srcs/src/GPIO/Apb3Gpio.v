@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module Apb3Gpio (
+module Apb3GPIO (
     input  wire [ 3:0] io_apb_PADDR,
     input  wire [ 0:0] io_apb_PSEL,
     input  wire        io_apb_PENABLE,
@@ -28,7 +28,7 @@ module Apb3Gpio (
     reg  [31:0] io_gpio_write_driver;
     reg  [31:0] io_gpio_writeEnable_driver;
 
-    (* keep_hierarchy = "TRUE" *) BufferCC_1 io_gpio_read_buffercc (
+    (* keep_hierarchy = "TRUE" *) BufferCC_GPIO BufferCC_GPIO (
         .io_dataIn            (io_gpio_read[31:0]),                      //i
         .io_dataOut           (io_gpio_read_buffercc_io_dataOut[31:0]),  //o
         .io_mainClk           (io_mainClk),                              //i

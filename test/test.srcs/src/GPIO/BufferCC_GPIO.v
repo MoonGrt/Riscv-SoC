@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module BufferCC_1 (
+module BufferCC_GPIO (
     input  wire [31:0] io_dataIn,
     output wire [31:0] io_dataOut,
     input  wire        io_mainClk,

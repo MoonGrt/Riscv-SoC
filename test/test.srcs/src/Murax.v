@@ -158,12 +158,12 @@ module Murax (
     reg  [ 0:0] system_mainBusDecoder_logic_rspSourceId;
     wire        when_MuraxUtiles_l133;
 
-    (* keep_hierarchy = "TRUE" *) BufferCC io_asyncReset_buffercc (
+    (* keep_hierarchy = "TRUE" *) BufferCC asyncReset (
         .io_dataIn (io_asyncReset),                      //i
         .io_dataOut(io_asyncReset_buffercc_io_dataOut),  //o
         .io_mainClk(io_mainClk)                          //i
     );
-    MuraxMasterArbiter system_mainBusArbiter (
+    MasterArbiter MasterArbiter (
         .io_iBus_cmd_valid(system_cpu_iBus_cmd_valid),  //i
         .io_iBus_cmd_ready(system_mainBusArbiter_io_iBus_cmd_ready),  //o
         .io_iBus_cmd_payload_pc(system_cpu_iBus_cmd_payload_pc[31:0]),  //i
@@ -191,7 +191,7 @@ module Murax (
         .io_mainClk(io_mainClk),  //i
         .resetCtrl_systemReset(resetCtrl_systemReset)  //i
     );
-    VexRiscv system_cpu (
+    VexRiscv VexRiscv (
         .iBus_cmd_valid               (system_cpu_iBus_cmd_valid),                             //o
         .iBus_cmd_ready               (system_mainBusArbiter_io_iBus_cmd_ready),               //i
         .iBus_cmd_payload_pc          (system_cpu_iBus_cmd_payload_pc[31:0]),                  //o
@@ -222,7 +222,7 @@ module Murax (
         .resetCtrl_systemReset        (resetCtrl_systemReset),                                 //i
         .resetCtrl_mainClkReset       (resetCtrl_mainClkReset)                                 //i
     );
-    JtagBridge jtagBridge_1 (
+    JtagBridge JtagBridge (
         .io_jtag_tms                   (io_jtag_tms),                                        //i
         .io_jtag_tdi                   (io_jtag_tdi),                                        //i
         .io_jtag_tdo                   (jtagBridge_1_io_jtag_tdo),                           //o
@@ -238,7 +238,7 @@ module Murax (
         .io_mainClk                    (io_mainClk),                                         //i
         .resetCtrl_mainClkReset        (resetCtrl_mainClkReset)                              //i
     );
-    SystemDebugger systemDebugger_1 (
+    Debugger Debugger (
         .io_remote_cmd_valid           (jtagBridge_1_io_remote_cmd_valid),                   //i
         .io_remote_cmd_ready           (systemDebugger_1_io_remote_cmd_ready),               //o
         .io_remote_cmd_payload_last    (jtagBridge_1_io_remote_cmd_payload_last),            //i
@@ -258,7 +258,7 @@ module Murax (
         .io_mainClk                    (io_mainClk),                                         //i
         .resetCtrl_mainClkReset        (resetCtrl_mainClkReset)                              //i
     );
-    MuraxPipelinedMemoryBusRam system_ram (
+    RAMPPL RAMPPL (
         .io_bus_cmd_valid(system_ram_io_bus_cmd_valid),  //i
         .io_bus_cmd_ready(system_ram_io_bus_cmd_ready),  //o
         .io_bus_cmd_payload_write(_zz_io_bus_cmd_payload_write),  //i
@@ -270,7 +270,7 @@ module Murax (
         .io_mainClk(io_mainClk),  //i
         .resetCtrl_systemReset(resetCtrl_systemReset)  //i
     );
-    PipelinedMemoryBusToApbBridge system_apbBridge (
+    RAMPPLToApb RAMPPLToApb (
         .io_pipelinedMemoryBus_cmd_valid(system_apbBridge_io_pipelinedMemoryBus_cmd_valid),  //i
         .io_pipelinedMemoryBus_cmd_ready(system_apbBridge_io_pipelinedMemoryBus_cmd_ready),  //o
         .io_pipelinedMemoryBus_cmd_payload_write(_zz_io_pipelinedMemoryBus_cmd_payload_write),  //i
@@ -290,7 +290,7 @@ module Murax (
         .io_mainClk(io_mainClk),  //i
         .resetCtrl_systemReset(resetCtrl_systemReset)  //i
     );
-    Apb3Gpio system_gpioACtrl (
+    Apb3GPIO Apb3GPIO (
         .io_apb_PADDR         (system_gpioACtrl_io_apb_PADDR[3:0]),          //i
         .io_apb_PSEL          (apb3Router_1_io_outputs_0_PSEL),              //i
         .io_apb_PENABLE       (apb3Router_1_io_outputs_0_PENABLE),           //i
@@ -306,7 +306,7 @@ module Murax (
         .io_mainClk           (io_mainClk),                                  //i
         .resetCtrl_systemReset(resetCtrl_systemReset)                        //i
     );
-    Apb3UartCtrl system_uartCtrl (
+    Apb3UART Apb3UART (
         .io_apb_PADDR         (system_uartCtrl_io_apb_PADDR[4:0]),       //i
         .io_apb_PSEL          (apb3Router_1_io_outputs_1_PSEL),          //i
         .io_apb_PENABLE       (apb3Router_1_io_outputs_1_PENABLE),       //i
@@ -320,7 +320,7 @@ module Murax (
         .io_mainClk           (io_mainClk),                              //i
         .resetCtrl_systemReset(resetCtrl_systemReset)                    //i
     );
-    MuraxApb3Timer system_timer (
+    Apb3Timer Apb3Timer (
         .io_apb_PADDR         (system_timer_io_apb_PADDR[7:0]),          //i
         .io_apb_PSEL          (apb3Router_1_io_outputs_2_PSEL),          //i
         .io_apb_PENABLE       (apb3Router_1_io_outputs_2_PENABLE),       //i
@@ -333,7 +333,7 @@ module Murax (
         .io_mainClk           (io_mainClk),                              //i
         .resetCtrl_systemReset(resetCtrl_systemReset)                    //i
     );
-    Apb3Decoder io_apb_decoder (
+    Apb3Decoder Apb3Decoder (
         .io_input_PADDR     (system_apbBridge_io_apb_PADDR[19:0]),    //i
         .io_input_PSEL      (system_apbBridge_io_apb_PSEL),           //i
         .io_input_PENABLE   (system_apbBridge_io_apb_PENABLE),        //i
@@ -351,7 +351,7 @@ module Murax (
         .io_output_PRDATA   (apb3Router_1_io_input_PRDATA[31:0]),     //i
         .io_output_PSLVERROR(apb3Router_1_io_input_PSLVERROR)         //i
     );
-    Apb3Router apb3Router_1 (
+    Apb3Router Apb3Router (
         .io_input_PADDR        (io_apb_decoder_io_output_PADDR[19:0]),    //i
         .io_input_PSEL         (io_apb_decoder_io_output_PSEL[2:0]),      //i
         .io_input_PENABLE      (io_apb_decoder_io_output_PENABLE),        //i

@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module Apb3UartCtrl (
+module Apb3UART (
     input  wire [ 4:0] io_apb_PADDR,
     input  wire [ 0:0] io_apb_PSEL,
     input  wire        io_apb_PENABLE,
@@ -104,7 +104,7 @@ module Apb3UartCtrl (
     assign _zz_bridge_misc_doBreak = 1'b1;
     assign _zz_bridge_misc_doBreak_1 = 1'b0;
     assign _zz_io_apb_PRDATA = (5'h10 - bridge_write_streamUnbuffered_queueWithOccupancy_io_occupancy);
-    UartCtrl uartCtrl_1 (
+    UartCtrl UartCtrl (
         .io_config_frame_dataLength(bridge_uartConfigReg_frame_dataLength[2:0]),  //i
         .io_config_frame_stop(bridge_uartConfigReg_frame_stop),  //i
         .io_config_frame_parity(bridge_uartConfigReg_frame_parity[1:0]),  //i
@@ -123,7 +123,7 @@ module Apb3UartCtrl (
         .io_mainClk(io_mainClk),  //i
         .resetCtrl_systemReset(resetCtrl_systemReset)  //i
     );
-    StreamFifo bridge_write_streamUnbuffered_queueWithOccupancy (
+    StreamFifo_UART StreamFifo_UART_TX (
         .io_push_valid(bridge_write_streamUnbuffered_valid),  //i
         .io_push_ready(bridge_write_streamUnbuffered_queueWithOccupancy_io_push_ready),  //o
         .io_push_payload(bridge_write_streamUnbuffered_payload[7:0]),  //i
@@ -136,7 +136,7 @@ module Apb3UartCtrl (
         .io_mainClk(io_mainClk),  //i
         .resetCtrl_systemReset(resetCtrl_systemReset)  //i
     );
-    StreamFifo system_uartCtrl_uartCtrl_1_io_read_queueWithOccupancy (
+    StreamFifo_UART StreamFifo_UART_RX (
         .io_push_valid(uartCtrl_1_io_read_valid),  //i
         .io_push_ready(system_uartCtrl_uartCtrl_1_io_read_queueWithOccupancy_io_push_ready),  //o
         .io_push_payload(uartCtrl_1_io_read_payload[7:0]),  //i

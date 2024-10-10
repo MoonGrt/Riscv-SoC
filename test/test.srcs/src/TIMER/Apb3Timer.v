@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module MuraxApb3Timer (
+module Apb3Timer (
     input  wire [ 7:0] io_apb_PADDR,
     input  wire [ 0:0] io_apb_PSEL,
     input  wire        io_apb_PENABLE,
@@ -49,7 +49,7 @@ module MuraxApb3Timer (
     reg         when_Timer_l44_1;
     reg  [ 1:0] system_timer_interruptCtrl_1_io_masks_driver;
 
-    Prescaler prescaler_1 (
+    Prescaler Prescaler (
         .io_clear             (_zz_io_clear),             //i
         .io_limit             (_zz_io_limit[15:0]),       //i
         .io_overflow          (prescaler_1_io_overflow),  //o
@@ -74,7 +74,7 @@ module MuraxApb3Timer (
         .io_mainClk           (io_mainClk),                                 //i
         .resetCtrl_systemReset(resetCtrl_systemReset)                       //i
     );
-    InterruptCtrl interruptCtrl_1 (
+    InterruptCtrl InterruptCtrl (
         .io_inputs            (interruptCtrl_1_io_inputs[1:0]),                     //i
         .io_clears            (interruptCtrl_1_io_clears[1:0]),                     //i
         .io_masks             (system_timer_interruptCtrl_1_io_masks_driver[1:0]),  //i

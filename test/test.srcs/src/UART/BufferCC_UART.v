@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module BufferCC_3 (
+module BufferCC_UART (
     input  wire io_dataIn,
     output wire io_dataOut,
     input  wire io_mainClk,

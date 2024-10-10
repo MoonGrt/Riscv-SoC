@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module SystemDebugger (
+module Debugger (
     input  wire        io_remote_cmd_valid,
     output wire        io_remote_cmd_ready,
     input  wire        io_remote_cmd_payload_last,
