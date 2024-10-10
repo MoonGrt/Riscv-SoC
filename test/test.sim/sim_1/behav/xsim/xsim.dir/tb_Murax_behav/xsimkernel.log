@@ -1,7 +1,7 @@
-Running: xsim.dir/tb_Murax_behav/xsimk.exe -simmode gui -wdb tb_Murax_behav.wdb -simrunnum 0 -socket 11485
+Running: xsim.dir/tb_Murax_behav/xsimk.exe -simmode gui -wdb tb_Murax_behav.wdb -simrunnum 0 -socket 13638
 Design successfully loaded
-Design Loading Memory Usage: 6576 KB (Peak: 6576 KB)
-Design Loading CPU Usage: 15 ms
+Design Loading Memory Usage: 6584 KB (Peak: 6584 KB)
+Design Loading CPU Usage: 46 ms
 Simulation completed
-Simulation Memory Usage: 8436 KB (Peak: 8436 KB)
-Simulation CPU Usage: 30 ms
+Simulation Memory Usage: 8132 KB (Peak: 8132 KB)
+Simulation CPU Usage: 92 ms
