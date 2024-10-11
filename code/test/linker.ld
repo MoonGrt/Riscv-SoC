@@ -20,7 +20,7 @@ _heap_size = DEFINED(_heap_size) ? _heap_size : 0;
 SECTIONS {
 
   .vector : {
-    *crt.o(.text);
+    *init.o(.text);
   } > onChipRam
 
   .memory : {

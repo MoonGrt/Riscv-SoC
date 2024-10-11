@@ -29,10 +29,10 @@ module Apb3GPIO (
     reg  [31:0] io_gpio_writeEnable_driver;
 
     (* keep_hierarchy = "TRUE" *) BufferCC_GPIO BufferCC_GPIO (
-        .io_dataIn            (io_gpio_read[31:0]),                      //i
-        .io_dataOut           (io_gpio_read_buffercc_io_dataOut[31:0]),  //o
-        .io_mainClk           (io_mainClk),                              //i
-        .resetCtrl_systemReset(resetCtrl_systemReset)                    //i
+        .io_dataIn            (io_gpio_read[31:0]),                      // i
+        .io_dataOut           (io_gpio_read_buffercc_io_dataOut[31:0]),  // o
+        .io_mainClk           (io_mainClk),                              // i
+        .resetCtrl_systemReset(resetCtrl_systemReset)                    // i
     );
     assign ctrl_readErrorFlag = 1'b0;
     assign ctrl_writeErrorFlag = 1'b0;

@@ -176,23 +176,23 @@ module Apb3UART (
         io_apb_PRDATA = 32'h0;
         case (io_apb_PADDR)
             5'h0: begin
-                io_apb_PRDATA[16 : 16] = (bridge_read_streamBreaked_valid ^ 1'b0);
-                io_apb_PRDATA[7 : 0]   = bridge_read_streamBreaked_payload;
+                io_apb_PRDATA[16:16] = (bridge_read_streamBreaked_valid ^ 1'b0);
+                io_apb_PRDATA[7:0]   = bridge_read_streamBreaked_payload;
             end
             5'h04: begin
-                io_apb_PRDATA[20 : 16] = _zz_io_apb_PRDATA;
-                io_apb_PRDATA[15 : 15] = bridge_write_streamUnbuffered_queueWithOccupancy_io_pop_valid;
-                io_apb_PRDATA[28 : 24] = system_uartCtrl_uartCtrl_1_io_read_queueWithOccupancy_io_occupancy;
-                io_apb_PRDATA[0 : 0] = bridge_interruptCtrl_writeIntEnable;
-                io_apb_PRDATA[1 : 1] = bridge_interruptCtrl_readIntEnable;
-                io_apb_PRDATA[8 : 8] = bridge_interruptCtrl_writeInt;
-                io_apb_PRDATA[9 : 9] = bridge_interruptCtrl_readInt;
+                io_apb_PRDATA[20:16] = _zz_io_apb_PRDATA;
+                io_apb_PRDATA[15:15] = bridge_write_streamUnbuffered_queueWithOccupancy_io_pop_valid;
+                io_apb_PRDATA[28:24] = system_uartCtrl_uartCtrl_1_io_read_queueWithOccupancy_io_occupancy;
+                io_apb_PRDATA[0:0] = bridge_interruptCtrl_writeIntEnable;
+                io_apb_PRDATA[1:1] = bridge_interruptCtrl_readIntEnable;
+                io_apb_PRDATA[8:8] = bridge_interruptCtrl_writeInt;
+                io_apb_PRDATA[9:9] = bridge_interruptCtrl_readInt;
             end
             5'h10: begin
-                io_apb_PRDATA[0 : 0] = bridge_misc_readError;
-                io_apb_PRDATA[1 : 1] = bridge_misc_readOverflowError;
-                io_apb_PRDATA[8 : 8] = uartCtrl_1_io_readBreak;
-                io_apb_PRDATA[9 : 9] = bridge_misc_breakDetected;
+                io_apb_PRDATA[0:0] = bridge_misc_readError;
+                io_apb_PRDATA[1:1] = bridge_misc_readOverflowError;
+                io_apb_PRDATA[8:8] = uartCtrl_1_io_readBreak;
+                io_apb_PRDATA[9:9] = bridge_misc_breakDetected;
             end
             default: begin
             end
@@ -224,7 +224,7 @@ module Apb3UART (
     end
 
     assign bridge_write_streamUnbuffered_valid = _zz_bridge_write_streamUnbuffered_valid;
-    assign bridge_write_streamUnbuffered_payload = io_apb_PWDATA[7 : 0];
+    assign bridge_write_streamUnbuffered_payload = io_apb_PWDATA[7:0];
     assign bridge_write_streamUnbuffered_ready = bridge_write_streamUnbuffered_queueWithOccupancy_io_push_ready;
     always @(*) begin
         bridge_read_streamBreaked_valid = system_uartCtrl_uartCtrl_1_io_read_queueWithOccupancy_io_pop_valid;
