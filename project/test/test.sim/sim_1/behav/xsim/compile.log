@@ -52,3 +52,5 @@ INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Ri
 INFO: [VRFC 10-311] analyzing module VexRiscv
 INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/test/test.srcs/sim/tb_Murax.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module tb_Murax
+INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/test/test.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module glbl
