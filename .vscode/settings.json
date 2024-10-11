@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "interrupt.h": "c",
+        "uart.h": "c",
+        "gpio.h": "c",
+        "stm32f10x.h": "c",
+        "stdint.h": "c",
+        "prescaler.h": "c",
+        "murax.h": "c",
+        "delay.h": "c",
+        "timer.h": "c"
+    }
+}
