@@ -1,4 +1,4 @@
-PROJ_NAME = gpio
+PROJ_NAME = test
 DEBUG = yes
 BENCH = no
 MULDIV = no

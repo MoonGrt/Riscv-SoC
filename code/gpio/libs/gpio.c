@@ -1,5 +1,4 @@
 #include "gpio.h"
-#include <stdint.h>
 
 /* ------------ RCC registers bit address in the alias region ----------------*/
 #define AFIO_OFFSET                 (AFIO_BASE - PERIPH_BASE)

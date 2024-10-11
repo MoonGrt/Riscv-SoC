@@ -1,5 +1,5 @@
 
-build/gpio.elf:     file format elf32-littleriscv
+build/test.elf:     file format elf32-littleriscv
 
 
 Disassembly of section .memory:
@@ -818,7 +818,7 @@ trap_entry:
   addi sp,sp,-16*4
 80000700:	fc010113          	addi	sp,sp,-64
   call irqCallback
-80000704:	294000ef          	jal	ra,80000998 <irqCallback>
+80000704:	2b8000ef          	jal	ra,800009bc <irqCallback>
   lw x1 , 15*4(sp)
 80000708:	03c12083          	lw	ra,60(sp)
   lw x5,  14*4(sp)
@@ -864,20 +864,20 @@ crtInit:
   .option norelax
   la gp, __global_pointer$
 80000750:	00001197          	auipc	gp,0x1
-80000754:	a6818193          	addi	gp,gp,-1432 # 800011b8 <__global_pointer$>
+80000754:	a8818193          	addi	gp,gp,-1400 # 800011d8 <__global_pointer$>
   .option pop
   la sp, _stack_start
-80000758:	a0818113          	addi	sp,gp,-1528 # 80000bc0 <_stack_start>
+80000758:	a0818113          	addi	sp,gp,-1528 # 80000be0 <_stack_start>
 
 8000075c <bss_init>:
 
 bss_init:
   la a0, _bss_start
 8000075c:	00000517          	auipc	a0,0x0
-80000760:	25c50513          	addi	a0,a0,604 # 800009b8 <_bss_end>
+80000760:	27c50513          	addi	a0,a0,636 # 800009d8 <end>
   la a1, _bss_end
 80000764:	00000597          	auipc	a1,0x0
-80000768:	25458593          	addi	a1,a1,596 # 800009b8 <_bss_end>
+80000768:	27458593          	addi	a1,a1,628 # 800009d8 <end>
 
 8000076c <bss_loop>:
 bss_loop:
@@ -896,7 +896,7 @@ bss_done:
 ctors_init:
   la a0, _ctors_start
 8000077c:	00000517          	auipc	a0,0x0
-80000780:	23850513          	addi	a0,a0,568 # 800009b4 <end>
+80000780:	25c50513          	addi	a0,a0,604 # 800009d8 <end>
   addi sp,sp,-4
 80000784:	ffc10113          	addi	sp,sp,-4
 
@@ -904,7 +904,7 @@ ctors_init:
 ctors_loop:
   la a1, _ctors_end
 80000788:	00000597          	auipc	a1,0x0
-8000078c:	22c58593          	addi	a1,a1,556 # 800009b4 <end>
+8000078c:	25058593          	addi	a1,a1,592 # 800009d8 <end>
   beq a0,a1,ctors_done
 80000790:	00b50e63          	beq	a0,a1,800007ac <ctors_done>
   lw a3,0(a0)
@@ -1089,33 +1089,49 @@ static void uart_applyConfig(Uart_Reg *reg, Uart_Config *config){
 
 void main()
 {
-80000964:	ff010113          	addi	sp,sp,-16
-80000968:	00812623          	sw	s0,12(sp)
-8000096c:	01010413          	addi	s0,sp,16
-    GPIO_A->OUTPUT_ENABLE = 0x000000FF;
-80000970:	f00007b7          	lui	a5,0xf0000
-80000974:	0ff00713          	li	a4,255
-80000978:	00e7a423          	sw	a4,8(a5) # f0000008 <__global_pointer$+0x6fffee50>
-    GPIO_A->OUTPUT = 0x00000011;
-8000097c:	f00007b7          	lui	a5,0xf0000
-80000980:	01100713          	li	a4,17
-80000984:	00e7a223          	sw	a4,4(a5) # f0000004 <__global_pointer$+0x6fffee4c>
-}
-80000988:	00000013          	nop
-8000098c:	00c12403          	lw	s0,12(sp)
-80000990:	01010113          	addi	sp,sp,16
-80000994:	00008067          	ret
+80000964:	fe010113          	addi	sp,sp,-32
+80000968:	00112e23          	sw	ra,28(sp)
+8000096c:	00812c23          	sw	s0,24(sp)
+80000970:	02010413          	addi	s0,sp,32
+    GPIO_InitTypeDef GPIO_InitStructure;
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
+80000974:	01000793          	li	a5,16
+80000978:	fef42623          	sw	a5,-20(s0)
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_0;
+8000097c:	00100793          	li	a5,1
+80000980:	fef41223          	sh	a5,-28(s0)
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+80000984:	00300793          	li	a5,3
+80000988:	fef42423          	sw	a5,-24(s0)
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+8000098c:	fe440793          	addi	a5,s0,-28
+80000990:	00078593          	mv	a1,a5
+80000994:	f0000537          	lui	a0,0xf0000
+80000998:	839ff0ef          	jal	ra,800001d0 <GPIO_Init>
+    GPIO_SetBits(GPIOA, GPIO_Pin_0);
+8000099c:	00100593          	li	a1,1
+800009a0:	f0000537          	lui	a0,0xf0000
+800009a4:	c11ff0ef          	jal	ra,800005b4 <GPIO_SetBits>
 
-80000998 <irqCallback>:
+    // GPIO_A->OUTPUT_ENABLE = 0x000000FF;
+    // GPIO_A->OUTPUT = 0x00000011;
+}
+800009a8:	00000013          	nop
+800009ac:	01c12083          	lw	ra,28(sp)
+800009b0:	01812403          	lw	s0,24(sp)
+800009b4:	02010113          	addi	sp,sp,32
+800009b8:	00008067          	ret
+
+800009bc <irqCallback>:
 
 void irqCallback()
 {
-80000998:	ff010113          	addi	sp,sp,-16
-8000099c:	00812623          	sw	s0,12(sp)
-800009a0:	01010413          	addi	s0,sp,16
+800009bc:	ff010113          	addi	sp,sp,-16
+800009c0:	00812623          	sw	s0,12(sp)
+800009c4:	01010413          	addi	s0,sp,16
 
 }
-800009a4:	00000013          	nop
-800009a8:	00c12403          	lw	s0,12(sp)
-800009ac:	01010113          	addi	sp,sp,16
-800009b0:	00008067          	ret
+800009c8:	00000013          	nop
+800009cc:	00c12403          	lw	s0,12(sp)
+800009d0:	01010113          	addi	sp,sp,16
+800009d4:	00008067          	ret

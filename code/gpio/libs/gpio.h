@@ -14,6 +14,29 @@
   * @{
   */
 
+
+/** 
+  * @brief GPIO Structure
+  */
+
+typedef struct
+{
+    uint32_t CRL;
+    uint32_t CRH;
+    uint32_t IDR;
+    uint32_t ODR;
+    uint32_t BSRR;
+    uint32_t BRR;
+    uint32_t LCKR;
+} GPIO_TypeDef;
+
+typedef struct
+{
+    volatile uint32_t INPUT;
+    volatile uint32_t OUTPUT;
+    volatile uint32_t OUTPUT_ENABLE;
+} Gpio_Reg;
+
 /** @defgroup GPIO_Exported_Types
   * @{
   */
