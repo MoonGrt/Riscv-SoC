@@ -1,37 +1,4 @@
 
-Discarded input sections
-
- .group         0x0000000000000000        0xc build/libs/gpio.o
- .group         0x0000000000000000        0xc build/libs/gpio.o
- .group         0x0000000000000000        0xc build/libs/gpio.o
- .group         0x0000000000000000        0xc build/libs/gpio.o
- .group         0x0000000000000000        0xc build/libs/gpio.o
- .group         0x0000000000000000        0xc build/libs/gpio.o
- .group         0x0000000000000000        0xc build/libs/gpio.o
- .group         0x0000000000000000        0xc build/libs/gpio.o
- .group         0x0000000000000000        0xc build/libs/gpio.o
- .group         0x0000000000000000        0xc build/libs/gpio.o
- .group         0x0000000000000000        0xc build/src/main.o
- .group         0x0000000000000000        0xc build/src/main.o
- .group         0x0000000000000000        0xc build/src/main.o
- .group         0x0000000000000000        0xc build/src/main.o
- .group         0x0000000000000000        0xc build/src/main.o
- .group         0x0000000000000000        0xc build/src/main.o
- .group         0x0000000000000000        0xc build/src/main.o
- .group         0x0000000000000000        0xc build/src/main.o
- .group         0x0000000000000000        0xc build/src/main.o
- .group         0x0000000000000000        0xc build/src/main.o
- .debug_macro   0x0000000000000000      0x736 build/src/main.o
- .debug_macro   0x0000000000000000       0x22 build/src/main.o
- .debug_macro   0x0000000000000000       0x8e build/src/main.o
- .debug_macro   0x0000000000000000       0x51 build/src/main.o
- .debug_macro   0x0000000000000000      0x103 build/src/main.o
- .debug_macro   0x0000000000000000       0x6a build/src/main.o
- .debug_macro   0x0000000000000000      0x1df build/src/main.o
- .debug_macro   0x0000000000000000      0x28b build/src/main.o
- .debug_macro   0x0000000000000000       0x10 build/src/main.o
- .debug_macro   0x0000000000000000       0x5e build/src/main.o
-
 Memory Configuration
 
 Name             Origin             Length             Attributes
@@ -149,51 +116,6 @@ LOAD /opt/riscv/bin/../lib/gcc/riscv64-unknown-elf/8.3.0/rv32i/ilp32/libgcc.a
                 0x0000000080000be0                PROVIDE (_stack_start = .)
 OUTPUT(build/test.elf elf32-littleriscv)
 
-.debug_info     0x0000000000000000      0xc6e
- .debug_info    0x0000000000000000      0x78f build/libs/gpio.o
- .debug_info    0x000000000000078f       0x26 build/libs/int.o
- .debug_info    0x00000000000007b5      0x4b9 build/src/main.o
-
-.debug_abbrev   0x0000000000000000      0x36a
- .debug_abbrev  0x0000000000000000      0x1ea build/libs/gpio.o
- .debug_abbrev  0x00000000000001ea       0x14 build/libs/int.o
- .debug_abbrev  0x00000000000001fe      0x16c build/src/main.o
-
-.debug_aranges  0x0000000000000000       0x60
- .debug_aranges
-                0x0000000000000000       0x20 build/libs/gpio.o
- .debug_aranges
-                0x0000000000000020       0x20 build/libs/int.o
- .debug_aranges
-                0x0000000000000040       0x20 build/src/main.o
-
-.debug_macro    0x0000000000000000     0x1036
- .debug_macro   0x0000000000000000      0x104 build/libs/gpio.o
- .debug_macro   0x0000000000000104      0x736 build/libs/gpio.o
- .debug_macro   0x000000000000083a       0x22 build/libs/gpio.o
- .debug_macro   0x000000000000085c       0x8e build/libs/gpio.o
- .debug_macro   0x00000000000008ea       0x51 build/libs/gpio.o
- .debug_macro   0x000000000000093b      0x103 build/libs/gpio.o
- .debug_macro   0x0000000000000a3e       0x6a build/libs/gpio.o
- .debug_macro   0x0000000000000aa8      0x1df build/libs/gpio.o
- .debug_macro   0x0000000000000c87       0x10 build/libs/gpio.o
- .debug_macro   0x0000000000000c97       0x5e build/libs/gpio.o
- .debug_macro   0x0000000000000cf5      0x28b build/libs/gpio.o
- .debug_macro   0x0000000000000f80       0xb6 build/src/main.o
-
-.debug_line     0x0000000000000000      0xb9b
- .debug_line    0x0000000000000000      0x69f build/libs/gpio.o
- .debug_line    0x000000000000069f      0x1d1 build/libs/int.o
- .debug_line    0x0000000000000870      0x32b build/src/main.o
-
-.debug_str      0x0000000000000000     0x55db
- .debug_str     0x0000000000000000     0x5595 build/libs/gpio.o
-                                       0x570a (size before relaxing)
- .debug_str     0x0000000000005595       0x17 build/libs/int.o
-                                         0x43 (size before relaxing)
- .debug_str     0x00000000000055ac       0x2f build/src/main.o
-                                       0x53a3 (size before relaxing)
-
 .comment        0x0000000000000000       0x28
  .comment       0x0000000000000000       0x28 build/libs/gpio.o
                                          0x29 (size before relaxing)
@@ -207,7 +129,3 @@ OUTPUT(build/test.elf elf32-littleriscv)
                 0x000000000000001c       0x1a build/libs/int.o
  .riscv.attributes
                 0x0000000000000036       0x1c build/src/main.o
-
-.debug_frame    0x0000000000000000      0x41c
- .debug_frame   0x0000000000000000      0x2c0 build/libs/gpio.o
- .debug_frame   0x00000000000002c0      0x15c build/src/main.o
