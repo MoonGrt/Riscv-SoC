@@ -20,6 +20,7 @@ Compiling module xil_defaultlib.RAMPPL
 Compiling module xil_defaultlib.RAMPPLToApb
 Compiling module xil_defaultlib.BufferCC_GPIO
 Compiling module xil_defaultlib.Apb3GPIO
+Compiling module xil_defaultlib.Apb3GPIO2
 Compiling module xil_defaultlib.UartCtrlTx
 Compiling module xil_defaultlib.BufferCC_UART
 Compiling module xil_defaultlib.UartCtrlRx

@@ -1,5 +1,7 @@
 INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/test/test.srcs/src/APB3/Apb3Decoder.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module Apb3Decoder
+INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/test/test.srcs/src/GPIO2/Apb3GPIO2.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module Apb3GPIO2
 INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/test/test.srcs/src/GPIO/Apb3GPIO.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module Apb3GPIO
 INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/test/test.srcs/src/APB3/Apb3Router.v" into library xil_defaultlib
@@ -52,5 +54,3 @@ INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Ri
 INFO: [VRFC 10-311] analyzing module VexRiscv
 INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/test/test.srcs/sim/tb_Murax.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module tb_Murax
-INFO: [VRFC 10-2263] Analyzing Verilog file "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/test/test.sim/sim_1/behav/xsim/glbl.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module glbl

@@ -1,6 +1,7 @@
 # compile verilog/system verilog design source files
 verilog xil_defaultlib  \
 "../../../../test.srcs/src/APB3/Apb3Decoder.v" \
+"../../../../test.srcs/src/GPIO2/Apb3GPIO2.v" \
 "../../../../test.srcs/src/GPIO/Apb3GPIO.v" \
 "../../../../test.srcs/src/APB3/Apb3Router.v" \
 "../../../../test.srcs/src/TIMER/Apb3Timer.v" \

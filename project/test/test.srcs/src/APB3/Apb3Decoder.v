@@ -10,7 +10,7 @@ module Apb3Decoder (
     output wire [31:0] io_input_PRDATA,
     output reg         io_input_PSLVERROR,
     output wire [19:0] io_output_PADDR,
-    output reg  [ 2:0] io_output_PSEL,
+    output reg  [ 3:0] io_output_PSEL,
     output wire        io_output_PENABLE,
     input  wire        io_output_PREADY,
     output wire        io_output_PWRITE,
@@ -26,9 +26,10 @@ module Apb3Decoder (
     assign io_output_PWRITE  = io_input_PWRITE;
     assign io_output_PWDATA  = io_input_PWDATA;
     always @(*) begin
-        io_output_PSEL[0] = (((io_input_PADDR & (~20'h00fff)) == 20'h0) && io_input_PSEL[0]);
-        io_output_PSEL[1] = (((io_input_PADDR & (~20'h00fff)) == 20'h10000) && io_input_PSEL[0]);
-        io_output_PSEL[2] = (((io_input_PADDR & (~20'h00fff)) == 20'h20000) && io_input_PSEL[0]);
+        io_output_PSEL[0] = (((io_input_PADDR & (20'hFF000)) == 20'h0) && io_input_PSEL[0]);
+        io_output_PSEL[1] = (((io_input_PADDR & (20'hFF000)) == 20'h10000) && io_input_PSEL[0]);
+        io_output_PSEL[2] = (((io_input_PADDR & (20'hFF000)) == 20'h20000) && io_input_PSEL[0]);
+        io_output_PSEL[3] = (((io_input_PADDR & (20'hFF000)) == 20'h30000) && io_input_PSEL[0]);  // new
     end
 
     always @(*) begin

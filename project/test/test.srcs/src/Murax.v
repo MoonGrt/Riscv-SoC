@@ -7,6 +7,9 @@ module Murax (
     input  wire        io_jtag_tdi,
     output wire        io_jtag_tdo,
     input  wire        io_jtag_tck,
+
+    inout  wire [15:0] GPIO,  // new
+
     input  wire [31:0] io_gpioA_read,
     output wire [31:0] io_gpioA_write,
     output wire [31:0] io_gpioA_writeEnable,
@@ -19,6 +22,7 @@ module Murax (
     reg         system_ram_io_bus_cmd_valid;
     reg         system_apbBridge_io_pipelinedMemoryBus_cmd_valid;
     wire [ 3:0] system_gpioACtrl_io_apb_PADDR;
+    wire [ 2:0] system_gpioACtrl_io_apb_PADDR2;  // new PADDR for GPIO2
     wire [ 4:0] system_uartCtrl_io_apb_PADDR;
     wire [ 7:0] system_timer_io_apb_PADDR;
     wire        io_asyncReset_buffercc_io_dataOut;
@@ -76,6 +80,13 @@ module Murax (
     wire        system_gpioACtrl_io_apb_PSLVERROR;
     wire [31:0] system_gpioACtrl_io_gpio_write;
     wire [31:0] system_gpioACtrl_io_gpio_writeEnable;
+
+    wire        system_gpioACtrl_io_apb_PREADY2;  // new
+    wire [31:0] system_gpioACtrl_io_apb_PRDATA2;  // new
+    wire        system_gpioACtrl_io_apb_PSLVERROR2;  // new
+    wire [31:0] system_gpioACtrl_io_gpio_write2;  // new
+    wire [31:0] system_gpioACtrl_io_gpio_writeEnable2;  // new
+
     wire        system_uartCtrl_io_apb_PREADY;
     wire [31:0] system_uartCtrl_io_apb_PRDATA;
     wire        system_uartCtrl_io_uart_txd;
@@ -88,7 +99,7 @@ module Murax (
     wire [31:0] io_apb_decoder_io_input_PRDATA;
     wire        io_apb_decoder_io_input_PSLVERROR;
     wire [19:0] io_apb_decoder_io_output_PADDR;
-    wire [ 2:0] io_apb_decoder_io_output_PSEL;
+    wire [ 3:0] io_apb_decoder_io_output_PSEL;
     wire        io_apb_decoder_io_output_PENABLE;
     wire        io_apb_decoder_io_output_PWRITE;
     wire [31:0] io_apb_decoder_io_output_PWDATA;
@@ -110,6 +121,13 @@ module Murax (
     wire        apb3Router_1_io_outputs_2_PENABLE;
     wire        apb3Router_1_io_outputs_2_PWRITE;
     wire [31:0] apb3Router_1_io_outputs_2_PWDATA;
+
+    wire [19:0] apb3Router_1_io_outputs_3_PADDR;  // new device
+    wire [ 0:0] apb3Router_1_io_outputs_3_PSEL;  // new device
+    wire        apb3Router_1_io_outputs_3_PENABLE;  // new device
+    wire        apb3Router_1_io_outputs_3_PWRITE;  // new device
+    wire [31:0] apb3Router_1_io_outputs_3_PWDATA;  // new device
+
     reg  [31:0] _zz_system_mainBusDecoder_logic_masterPipelined_rsp_payload_data;
     reg         resetCtrl_mainClkResetUnbuffered;
     reg  [ 5:0] resetCtrl_systemClkResetCounter;
@@ -158,232 +176,255 @@ module Murax (
     wire        when_MuraxUtiles_l133;
 
     (* keep_hierarchy = "TRUE" *) BufferCC_RST asyncReset (
-        .io_dataIn (io_asyncReset),                      //i
-        .io_dataOut(io_asyncReset_buffercc_io_dataOut),  //o
-        .io_mainClk(io_mainClk)                          //i
+        .io_dataIn (io_asyncReset),                      // i
+        .io_dataOut(io_asyncReset_buffercc_io_dataOut),  // o
+        .io_mainClk(io_mainClk)                          // i
     );
     MasterArbiter MasterArbiter (
-        .io_iBus_cmd_valid(system_cpu_iBus_cmd_valid),  //i
-        .io_iBus_cmd_ready(system_mainBusArbiter_io_iBus_cmd_ready),  //o
-        .io_iBus_cmd_payload_pc(system_cpu_iBus_cmd_payload_pc[31:0]),  //i
-        .io_iBus_rsp_valid(system_mainBusArbiter_io_iBus_rsp_valid),  //o
-        .io_iBus_rsp_payload_error(system_mainBusArbiter_io_iBus_rsp_payload_error),  //o
-        .io_iBus_rsp_payload_inst(system_mainBusArbiter_io_iBus_rsp_payload_inst[31:0]),  //o
-        .io_dBus_cmd_valid(toplevel_system_cpu_dBus_cmd_halfPipe_valid),  //i
-        .io_dBus_cmd_ready(system_mainBusArbiter_io_dBus_cmd_ready),  //o
-        .io_dBus_cmd_payload_wr(toplevel_system_cpu_dBus_cmd_halfPipe_payload_wr),  //i
-        .io_dBus_cmd_payload_mask(toplevel_system_cpu_dBus_cmd_halfPipe_payload_mask[3:0]),  //i
-        .io_dBus_cmd_payload_address      (toplevel_system_cpu_dBus_cmd_halfPipe_payload_address[31:0]       ), //i
-        .io_dBus_cmd_payload_data(toplevel_system_cpu_dBus_cmd_halfPipe_payload_data[31:0]),  //i
-        .io_dBus_cmd_payload_size(toplevel_system_cpu_dBus_cmd_halfPipe_payload_size[1:0]),  //i
-        .io_dBus_rsp_ready(system_mainBusArbiter_io_dBus_rsp_ready),  //o
-        .io_dBus_rsp_error(system_mainBusArbiter_io_dBus_rsp_error),  //o
-        .io_dBus_rsp_data(system_mainBusArbiter_io_dBus_rsp_data[31:0]),  //o
-        .io_masterBus_cmd_valid(system_mainBusArbiter_io_masterBus_cmd_valid),  //o
-        .io_masterBus_cmd_ready(system_mainBusDecoder_logic_masterPipelined_cmd_ready),  //i
-        .io_masterBus_cmd_payload_write(system_mainBusArbiter_io_masterBus_cmd_payload_write),  //o
-        .io_masterBus_cmd_payload_address (system_mainBusArbiter_io_masterBus_cmd_payload_address[31:0]      ), //o
-        .io_masterBus_cmd_payload_data    (system_mainBusArbiter_io_masterBus_cmd_payload_data[31:0]         ), //o
-        .io_masterBus_cmd_payload_mask    (system_mainBusArbiter_io_masterBus_cmd_payload_mask[3:0]          ), //o
-        .io_masterBus_rsp_valid(system_mainBusDecoder_logic_masterPipelined_rsp_valid),  //i
-        .io_masterBus_rsp_payload_data    (system_mainBusDecoder_logic_masterPipelined_rsp_payload_data[31:0]), //i
-        .io_mainClk(io_mainClk),  //i
-        .resetCtrl_systemReset(resetCtrl_systemReset)  //i
+        .io_iBus_cmd_valid(system_cpu_iBus_cmd_valid),  // i
+        .io_iBus_cmd_ready(system_mainBusArbiter_io_iBus_cmd_ready),  // o
+        .io_iBus_cmd_payload_pc(system_cpu_iBus_cmd_payload_pc[31:0]),  // i
+        .io_iBus_rsp_valid(system_mainBusArbiter_io_iBus_rsp_valid),  // o
+        .io_iBus_rsp_payload_error(system_mainBusArbiter_io_iBus_rsp_payload_error),  // o
+        .io_iBus_rsp_payload_inst(system_mainBusArbiter_io_iBus_rsp_payload_inst[31:0]),  // o
+        .io_dBus_cmd_valid(toplevel_system_cpu_dBus_cmd_halfPipe_valid),  // i
+        .io_dBus_cmd_ready(system_mainBusArbiter_io_dBus_cmd_ready),  // o
+        .io_dBus_cmd_payload_wr(toplevel_system_cpu_dBus_cmd_halfPipe_payload_wr),  // i
+        .io_dBus_cmd_payload_mask(toplevel_system_cpu_dBus_cmd_halfPipe_payload_mask[3:0]),  // i
+        .io_dBus_cmd_payload_address      (toplevel_system_cpu_dBus_cmd_halfPipe_payload_address[31:0]       ), // i
+        .io_dBus_cmd_payload_data(toplevel_system_cpu_dBus_cmd_halfPipe_payload_data[31:0]),  // i
+        .io_dBus_cmd_payload_size(toplevel_system_cpu_dBus_cmd_halfPipe_payload_size[1:0]),  // i
+        .io_dBus_rsp_ready(system_mainBusArbiter_io_dBus_rsp_ready),  // o
+        .io_dBus_rsp_error(system_mainBusArbiter_io_dBus_rsp_error),  // o
+        .io_dBus_rsp_data(system_mainBusArbiter_io_dBus_rsp_data[31:0]),  // o
+        .io_masterBus_cmd_valid(system_mainBusArbiter_io_masterBus_cmd_valid),  // o
+        .io_masterBus_cmd_ready(system_mainBusDecoder_logic_masterPipelined_cmd_ready),  // i
+        .io_masterBus_cmd_payload_write(system_mainBusArbiter_io_masterBus_cmd_payload_write),  // o
+        .io_masterBus_cmd_payload_address (system_mainBusArbiter_io_masterBus_cmd_payload_address[31:0]      ), // o
+        .io_masterBus_cmd_payload_data    (system_mainBusArbiter_io_masterBus_cmd_payload_data[31:0]         ), // o
+        .io_masterBus_cmd_payload_mask    (system_mainBusArbiter_io_masterBus_cmd_payload_mask[3:0]          ), // o
+        .io_masterBus_rsp_valid(system_mainBusDecoder_logic_masterPipelined_rsp_valid),  // i
+        .io_masterBus_rsp_payload_data    (system_mainBusDecoder_logic_masterPipelined_rsp_payload_data[31:0]), // i
+        .io_mainClk(io_mainClk),  // i
+        .resetCtrl_systemReset(resetCtrl_systemReset)  // i
     );
     VexRiscv VexRiscv (
-        .iBus_cmd_valid               (system_cpu_iBus_cmd_valid),                             //o
-        .iBus_cmd_ready               (system_mainBusArbiter_io_iBus_cmd_ready),               //i
-        .iBus_cmd_payload_pc          (system_cpu_iBus_cmd_payload_pc[31:0]),                  //o
-        .iBus_rsp_valid               (system_mainBusArbiter_io_iBus_rsp_valid),               //i
-        .iBus_rsp_payload_error       (system_mainBusArbiter_io_iBus_rsp_payload_error),       //i
-        .iBus_rsp_payload_inst        (system_mainBusArbiter_io_iBus_rsp_payload_inst[31:0]),  //i
-        .timerInterrupt               (system_timerInterrupt),                                 //i
-        .externalInterrupt            (system_externalInterrupt),                              //i
-        .softwareInterrupt            (1'b0),                                                  //i
-        .debug_bus_cmd_valid          (systemDebugger_1_io_mem_cmd_valid),                     //i
-        .debug_bus_cmd_ready          (system_cpu_debug_bus_cmd_ready),                        //o
-        .debug_bus_cmd_payload_wr     (systemDebugger_1_io_mem_cmd_payload_wr),                //i
-        .debug_bus_cmd_payload_address(system_cpu_debug_bus_cmd_payload_address[7:0]),         //i
-        .debug_bus_cmd_payload_data   (systemDebugger_1_io_mem_cmd_payload_data[31:0]),        //i
-        .debug_bus_rsp_data           (system_cpu_debug_bus_rsp_data[31:0]),                   //o
-        .debug_resetOut               (system_cpu_debug_resetOut),                             //o
-        .dBus_cmd_valid               (system_cpu_dBus_cmd_valid),                             //o
-        .dBus_cmd_ready               (system_cpu_dBus_cmd_ready),                             //i
-        .dBus_cmd_payload_wr          (system_cpu_dBus_cmd_payload_wr),                        //o
-        .dBus_cmd_payload_mask        (system_cpu_dBus_cmd_payload_mask[3:0]),                 //o
-        .dBus_cmd_payload_address     (system_cpu_dBus_cmd_payload_address[31:0]),             //o
-        .dBus_cmd_payload_data        (system_cpu_dBus_cmd_payload_data[31:0]),                //o
-        .dBus_cmd_payload_size        (system_cpu_dBus_cmd_payload_size[1:0]),                 //o
-        .dBus_rsp_ready               (system_mainBusArbiter_io_dBus_rsp_ready),               //i
-        .dBus_rsp_error               (system_mainBusArbiter_io_dBus_rsp_error),               //i
-        .dBus_rsp_data                (system_mainBusArbiter_io_dBus_rsp_data[31:0]),          //i
-        .io_mainClk                   (io_mainClk),                                            //i
-        .resetCtrl_systemReset        (resetCtrl_systemReset),                                 //i
-        .resetCtrl_mainClkReset       (resetCtrl_mainClkReset)                                 //i
+        .iBus_cmd_valid               (system_cpu_iBus_cmd_valid),                             // o
+        .iBus_cmd_ready               (system_mainBusArbiter_io_iBus_cmd_ready),               // i
+        .iBus_cmd_payload_pc          (system_cpu_iBus_cmd_payload_pc[31:0]),                  // o
+        .iBus_rsp_valid               (system_mainBusArbiter_io_iBus_rsp_valid),               // i
+        .iBus_rsp_payload_error       (system_mainBusArbiter_io_iBus_rsp_payload_error),       // i
+        .iBus_rsp_payload_inst        (system_mainBusArbiter_io_iBus_rsp_payload_inst[31:0]),  // i
+        .timerInterrupt               (system_timerInterrupt),                                 // i
+        .externalInterrupt            (system_externalInterrupt),                              // i
+        .softwareInterrupt            (1'b0),                                                  // i
+        .debug_bus_cmd_valid          (systemDebugger_1_io_mem_cmd_valid),                     // i
+        .debug_bus_cmd_ready          (system_cpu_debug_bus_cmd_ready),                        // o
+        .debug_bus_cmd_payload_wr     (systemDebugger_1_io_mem_cmd_payload_wr),                // i
+        .debug_bus_cmd_payload_address(system_cpu_debug_bus_cmd_payload_address[7:0]),         // i
+        .debug_bus_cmd_payload_data   (systemDebugger_1_io_mem_cmd_payload_data[31:0]),        // i
+        .debug_bus_rsp_data           (system_cpu_debug_bus_rsp_data[31:0]),                   // o
+        .debug_resetOut               (system_cpu_debug_resetOut),                             // o
+        .dBus_cmd_valid               (system_cpu_dBus_cmd_valid),                             // o
+        .dBus_cmd_ready               (system_cpu_dBus_cmd_ready),                             // i
+        .dBus_cmd_payload_wr          (system_cpu_dBus_cmd_payload_wr),                        // o
+        .dBus_cmd_payload_mask        (system_cpu_dBus_cmd_payload_mask[3:0]),                 // o
+        .dBus_cmd_payload_address     (system_cpu_dBus_cmd_payload_address[31:0]),             // o
+        .dBus_cmd_payload_data        (system_cpu_dBus_cmd_payload_data[31:0]),                // o
+        .dBus_cmd_payload_size        (system_cpu_dBus_cmd_payload_size[1:0]),                 // o
+        .dBus_rsp_ready               (system_mainBusArbiter_io_dBus_rsp_ready),               // i
+        .dBus_rsp_error               (system_mainBusArbiter_io_dBus_rsp_error),               // i
+        .dBus_rsp_data                (system_mainBusArbiter_io_dBus_rsp_data[31:0]),          // i
+        .io_mainClk                   (io_mainClk),                                            // i
+        .resetCtrl_systemReset        (resetCtrl_systemReset),                                 // i
+        .resetCtrl_mainClkReset       (resetCtrl_mainClkReset)                                 // i
     );
     JtagBridge JtagBridge (
-        .io_jtag_tms                   (io_jtag_tms),                                        //i
-        .io_jtag_tdi                   (io_jtag_tdi),                                        //i
-        .io_jtag_tdo                   (jtagBridge_1_io_jtag_tdo),                           //o
-        .io_jtag_tck                   (io_jtag_tck),                                        //i
-        .io_remote_cmd_valid           (jtagBridge_1_io_remote_cmd_valid),                   //o
-        .io_remote_cmd_ready           (systemDebugger_1_io_remote_cmd_ready),               //i
-        .io_remote_cmd_payload_last    (jtagBridge_1_io_remote_cmd_payload_last),            //o
-        .io_remote_cmd_payload_fragment(jtagBridge_1_io_remote_cmd_payload_fragment),        //o
-        .io_remote_rsp_valid           (systemDebugger_1_io_remote_rsp_valid),               //i
-        .io_remote_rsp_ready           (jtagBridge_1_io_remote_rsp_ready),                   //o
-        .io_remote_rsp_payload_error   (systemDebugger_1_io_remote_rsp_payload_error),       //i
-        .io_remote_rsp_payload_data    (systemDebugger_1_io_remote_rsp_payload_data[31:0]),  //i
-        .io_mainClk                    (io_mainClk),                                         //i
-        .resetCtrl_mainClkReset        (resetCtrl_mainClkReset)                              //i
+        .io_jtag_tms                   (io_jtag_tms),                                        // i
+        .io_jtag_tdi                   (io_jtag_tdi),                                        // i
+        .io_jtag_tdo                   (jtagBridge_1_io_jtag_tdo),                           // o
+        .io_jtag_tck                   (io_jtag_tck),                                        // i
+        .io_remote_cmd_valid           (jtagBridge_1_io_remote_cmd_valid),                   // o
+        .io_remote_cmd_ready           (systemDebugger_1_io_remote_cmd_ready),               // i
+        .io_remote_cmd_payload_last    (jtagBridge_1_io_remote_cmd_payload_last),            // o
+        .io_remote_cmd_payload_fragment(jtagBridge_1_io_remote_cmd_payload_fragment),        // o
+        .io_remote_rsp_valid           (systemDebugger_1_io_remote_rsp_valid),               // i
+        .io_remote_rsp_ready           (jtagBridge_1_io_remote_rsp_ready),                   // o
+        .io_remote_rsp_payload_error   (systemDebugger_1_io_remote_rsp_payload_error),       // i
+        .io_remote_rsp_payload_data    (systemDebugger_1_io_remote_rsp_payload_data[31:0]),  // i
+        .io_mainClk                    (io_mainClk),                                         // i
+        .resetCtrl_mainClkReset        (resetCtrl_mainClkReset)                              // i
     );
     Debugger Debugger (
-        .io_remote_cmd_valid           (jtagBridge_1_io_remote_cmd_valid),                   //i
-        .io_remote_cmd_ready           (systemDebugger_1_io_remote_cmd_ready),               //o
-        .io_remote_cmd_payload_last    (jtagBridge_1_io_remote_cmd_payload_last),            //i
-        .io_remote_cmd_payload_fragment(jtagBridge_1_io_remote_cmd_payload_fragment),        //i
-        .io_remote_rsp_valid           (systemDebugger_1_io_remote_rsp_valid),               //o
-        .io_remote_rsp_ready           (jtagBridge_1_io_remote_rsp_ready),                   //i
-        .io_remote_rsp_payload_error   (systemDebugger_1_io_remote_rsp_payload_error),       //o
-        .io_remote_rsp_payload_data    (systemDebugger_1_io_remote_rsp_payload_data[31:0]),  //o
-        .io_mem_cmd_valid              (systemDebugger_1_io_mem_cmd_valid),                  //o
-        .io_mem_cmd_ready              (system_cpu_debug_bus_cmd_ready),                     //i
-        .io_mem_cmd_payload_address    (systemDebugger_1_io_mem_cmd_payload_address[31:0]),  //o
-        .io_mem_cmd_payload_data       (systemDebugger_1_io_mem_cmd_payload_data[31:0]),     //o
-        .io_mem_cmd_payload_wr         (systemDebugger_1_io_mem_cmd_payload_wr),             //o
-        .io_mem_cmd_payload_size       (systemDebugger_1_io_mem_cmd_payload_size[1:0]),      //o
-        .io_mem_rsp_valid              (toplevel_system_cpu_debug_bus_cmd_fire_regNext),     //i
-        .io_mem_rsp_payload            (system_cpu_debug_bus_rsp_data[31:0]),                //i
-        .io_mainClk                    (io_mainClk),                                         //i
-        .resetCtrl_mainClkReset        (resetCtrl_mainClkReset)                              //i
+        .io_remote_cmd_valid           (jtagBridge_1_io_remote_cmd_valid),                   // i
+        .io_remote_cmd_ready           (systemDebugger_1_io_remote_cmd_ready),               // o
+        .io_remote_cmd_payload_last    (jtagBridge_1_io_remote_cmd_payload_last),            // i
+        .io_remote_cmd_payload_fragment(jtagBridge_1_io_remote_cmd_payload_fragment),        // i
+        .io_remote_rsp_valid           (systemDebugger_1_io_remote_rsp_valid),               // o
+        .io_remote_rsp_ready           (jtagBridge_1_io_remote_rsp_ready),                   // i
+        .io_remote_rsp_payload_error   (systemDebugger_1_io_remote_rsp_payload_error),       // o
+        .io_remote_rsp_payload_data    (systemDebugger_1_io_remote_rsp_payload_data[31:0]),  // o
+        .io_mem_cmd_valid              (systemDebugger_1_io_mem_cmd_valid),                  // o
+        .io_mem_cmd_ready              (system_cpu_debug_bus_cmd_ready),                     // i
+        .io_mem_cmd_payload_address    (systemDebugger_1_io_mem_cmd_payload_address[31:0]),  // o
+        .io_mem_cmd_payload_data       (systemDebugger_1_io_mem_cmd_payload_data[31:0]),     // o
+        .io_mem_cmd_payload_wr         (systemDebugger_1_io_mem_cmd_payload_wr),             // o
+        .io_mem_cmd_payload_size       (systemDebugger_1_io_mem_cmd_payload_size[1:0]),      // o
+        .io_mem_rsp_valid              (toplevel_system_cpu_debug_bus_cmd_fire_regNext),     // i
+        .io_mem_rsp_payload            (system_cpu_debug_bus_rsp_data[31:0]),                // i
+        .io_mainClk                    (io_mainClk),                                         // i
+        .resetCtrl_mainClkReset        (resetCtrl_mainClkReset)                              // i
     );
     RAMPPL RAMPPL (
-        .io_bus_cmd_valid(system_ram_io_bus_cmd_valid),  //i
-        .io_bus_cmd_ready(system_ram_io_bus_cmd_ready),  //o
-        .io_bus_cmd_payload_write(_zz_io_bus_cmd_payload_write),  //i
-        .io_bus_cmd_payload_address (system_mainBusDecoder_logic_masterPipelined_cmd_payload_address[31:0]), //i
-        .io_bus_cmd_payload_data    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_data[31:0]   ), //i
-        .io_bus_cmd_payload_mask    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_mask[3:0]    ), //i
-        .io_bus_rsp_valid(system_ram_io_bus_rsp_valid),  //o
-        .io_bus_rsp_payload_data(system_ram_io_bus_rsp_payload_data[31:0]),  //o
-        .io_mainClk(io_mainClk),  //i
-        .resetCtrl_systemReset(resetCtrl_systemReset)  //i
+        .io_bus_cmd_valid(system_ram_io_bus_cmd_valid),  // i
+        .io_bus_cmd_ready(system_ram_io_bus_cmd_ready),  // o
+        .io_bus_cmd_payload_write(_zz_io_bus_cmd_payload_write),  // i
+        .io_bus_cmd_payload_address (system_mainBusDecoder_logic_masterPipelined_cmd_payload_address[31:0]), // i
+        .io_bus_cmd_payload_data    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_data[31:0]   ), // i
+        .io_bus_cmd_payload_mask    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_mask[3:0]    ), // i
+        .io_bus_rsp_valid(system_ram_io_bus_rsp_valid),  // o
+        .io_bus_rsp_payload_data(system_ram_io_bus_rsp_payload_data[31:0]),  // o
+        .io_mainClk(io_mainClk),  // i
+        .resetCtrl_systemReset(resetCtrl_systemReset)  // i
     );
     RAMPPLToApb RAMPPLToApb (
-        .io_pipelinedMemoryBus_cmd_valid(system_apbBridge_io_pipelinedMemoryBus_cmd_valid),  //i
-        .io_pipelinedMemoryBus_cmd_ready(system_apbBridge_io_pipelinedMemoryBus_cmd_ready),  //o
-        .io_pipelinedMemoryBus_cmd_payload_write(_zz_io_pipelinedMemoryBus_cmd_payload_write),  //i
-        .io_pipelinedMemoryBus_cmd_payload_address (system_mainBusDecoder_logic_masterPipelined_cmd_payload_address[31:0]), //i
-        .io_pipelinedMemoryBus_cmd_payload_data    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_data[31:0]   ), //i
-        .io_pipelinedMemoryBus_cmd_payload_mask    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_mask[3:0]    ), //i
-        .io_pipelinedMemoryBus_rsp_valid(system_apbBridge_io_pipelinedMemoryBus_rsp_valid),  //o
-        .io_pipelinedMemoryBus_rsp_payload_data    (system_apbBridge_io_pipelinedMemoryBus_rsp_payload_data[31:0]        ), //o
-        .io_apb_PADDR(system_apbBridge_io_apb_PADDR[19:0]),  //o
-        .io_apb_PSEL(system_apbBridge_io_apb_PSEL),  //o
-        .io_apb_PENABLE(system_apbBridge_io_apb_PENABLE),  //o
-        .io_apb_PREADY(io_apb_decoder_io_input_PREADY),  //i
-        .io_apb_PWRITE(system_apbBridge_io_apb_PWRITE),  //o
-        .io_apb_PWDATA(system_apbBridge_io_apb_PWDATA[31:0]),  //o
-        .io_apb_PRDATA(io_apb_decoder_io_input_PRDATA[31:0]),  //i
-        .io_apb_PSLVERROR(io_apb_decoder_io_input_PSLVERROR),  //i
-        .io_mainClk(io_mainClk),  //i
-        .resetCtrl_systemReset(resetCtrl_systemReset)  //i
+        .io_pipelinedMemoryBus_cmd_valid(system_apbBridge_io_pipelinedMemoryBus_cmd_valid),  // i
+        .io_pipelinedMemoryBus_cmd_ready(system_apbBridge_io_pipelinedMemoryBus_cmd_ready),  // o
+        .io_pipelinedMemoryBus_cmd_payload_write(_zz_io_pipelinedMemoryBus_cmd_payload_write),  // i
+        .io_pipelinedMemoryBus_cmd_payload_address (system_mainBusDecoder_logic_masterPipelined_cmd_payload_address[31:0]), // i
+        .io_pipelinedMemoryBus_cmd_payload_data    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_data[31:0]   ), // i
+        .io_pipelinedMemoryBus_cmd_payload_mask    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_mask[3:0]    ), // i
+        .io_pipelinedMemoryBus_rsp_valid(system_apbBridge_io_pipelinedMemoryBus_rsp_valid),  // o
+        .io_pipelinedMemoryBus_rsp_payload_data    (system_apbBridge_io_pipelinedMemoryBus_rsp_payload_data[31:0]        ), // o
+        .io_apb_PADDR(system_apbBridge_io_apb_PADDR[19:0]),  // o
+        .io_apb_PSEL(system_apbBridge_io_apb_PSEL),  // o
+        .io_apb_PENABLE(system_apbBridge_io_apb_PENABLE),  // o
+        .io_apb_PREADY(io_apb_decoder_io_input_PREADY),  // i
+        .io_apb_PWRITE(system_apbBridge_io_apb_PWRITE),  // o
+        .io_apb_PWDATA(system_apbBridge_io_apb_PWDATA[31:0]),  // o
+        .io_apb_PRDATA(io_apb_decoder_io_input_PRDATA[31:0]),  // i
+        .io_apb_PSLVERROR(io_apb_decoder_io_input_PSLVERROR),  // i
+        .io_mainClk(io_mainClk),  // i
+        .resetCtrl_systemReset(resetCtrl_systemReset)  // i
     );
-    Apb3GPIO Apb3GPIO (
-        .io_apb_PADDR         (system_gpioACtrl_io_apb_PADDR[3:0]),          //i
-        .io_apb_PSEL          (apb3Router_1_io_outputs_0_PSEL),              //i
-        .io_apb_PENABLE       (apb3Router_1_io_outputs_0_PENABLE),           //i
-        .io_apb_PREADY        (system_gpioACtrl_io_apb_PREADY),              //o
-        .io_apb_PWRITE        (apb3Router_1_io_outputs_0_PWRITE),            //i
-        .io_apb_PWDATA        (apb3Router_1_io_outputs_0_PWDATA[31:0]),      //i
-        .io_apb_PRDATA        (system_gpioACtrl_io_apb_PRDATA[31:0]),        //o
-        .io_apb_PSLVERROR     (system_gpioACtrl_io_apb_PSLVERROR),           //o
-        .io_gpio_read         (io_gpioA_read[31:0]),                         //i
-        .io_gpio_write        (system_gpioACtrl_io_gpio_write[31:0]),        //o
-        .io_gpio_writeEnable  (system_gpioACtrl_io_gpio_writeEnable[31:0]),  //o
-        .io_mainClk           (io_mainClk),                                  //i
-        .resetCtrl_systemReset(resetCtrl_systemReset)                        //i
+    Apb3GPIO Apb3GPIO1 (
+        .io_apb_PADDR         (system_gpioACtrl_io_apb_PADDR[3:0]),          // i
+        .io_apb_PSEL          (apb3Router_1_io_outputs_0_PSEL),              // i
+        .io_apb_PENABLE       (apb3Router_1_io_outputs_0_PENABLE),           // i
+        .io_apb_PREADY        (system_gpioACtrl_io_apb_PREADY),              // o
+        .io_apb_PWRITE        (apb3Router_1_io_outputs_0_PWRITE),            // i
+        .io_apb_PWDATA        (apb3Router_1_io_outputs_0_PWDATA[31:0]),      // i
+        .io_apb_PRDATA        (system_gpioACtrl_io_apb_PRDATA[31:0]),        // o
+        .io_apb_PSLVERROR     (system_gpioACtrl_io_apb_PSLVERROR),           // o
+        .io_gpio_read         (io_gpioA_read[31:0]),                         // i
+        .io_gpio_write        (system_gpioACtrl_io_gpio_write[31:0]),        // o
+        .io_gpio_writeEnable  (system_gpioACtrl_io_gpio_writeEnable[31:0]),  // o
+        .io_mainClk           (io_mainClk),                                  // i
+        .resetCtrl_systemReset(resetCtrl_systemReset)                        // i
+    );
+    Apb3GPIO2 Apb3GPIO2 (
+        .io_apb_PADDR         (system_gpioACtrl_io_apb_PADDR2),              // i
+        .io_apb_PSEL          (apb3Router_1_io_outputs_3_PSEL),              // i
+        .io_apb_PENABLE       (apb3Router_1_io_outputs_3_PENABLE),           // i
+        .io_apb_PREADY        (system_gpioACtrl_io_apb_PREADY2),             // o
+        .io_apb_PWRITE        (apb3Router_1_io_outputs_3_PWRITE),            // i
+        .io_apb_PWDATA        (apb3Router_1_io_outputs_3_PWDATA[31:0]),      // i
+        .io_apb_PRDATA        (system_gpioACtrl_io_apb_PRDATA[31:0]),        // o
+        .AFIO                 (),        // i
+        .GPIO                 (GPIO),                                        // io
+        .clk                  (io_mainClk),                                  // i
+        .rst                  (resetCtrl_systemReset)                        // i
     );
     Apb3UART Apb3UART (
-        .io_apb_PADDR         (system_uartCtrl_io_apb_PADDR[4:0]),       //i
-        .io_apb_PSEL          (apb3Router_1_io_outputs_1_PSEL),          //i
-        .io_apb_PENABLE       (apb3Router_1_io_outputs_1_PENABLE),       //i
-        .io_apb_PREADY        (system_uartCtrl_io_apb_PREADY),           //o
-        .io_apb_PWRITE        (apb3Router_1_io_outputs_1_PWRITE),        //i
-        .io_apb_PWDATA        (apb3Router_1_io_outputs_1_PWDATA[31:0]),  //i
-        .io_apb_PRDATA        (system_uartCtrl_io_apb_PRDATA[31:0]),     //o
-        .io_uart_txd          (system_uartCtrl_io_uart_txd),             //o
-        .io_uart_rxd          (io_uart_rxd),                             //i
-        .io_interrupt         (system_uartCtrl_io_interrupt),            //o
-        .io_mainClk           (io_mainClk),                              //i
-        .resetCtrl_systemReset(resetCtrl_systemReset)                    //i
+        .io_apb_PADDR         (system_uartCtrl_io_apb_PADDR[4:0]),       // i
+        .io_apb_PSEL          (apb3Router_1_io_outputs_1_PSEL),          // i
+        .io_apb_PENABLE       (apb3Router_1_io_outputs_1_PENABLE),       // i
+        .io_apb_PREADY        (system_uartCtrl_io_apb_PREADY),           // o
+        .io_apb_PWRITE        (apb3Router_1_io_outputs_1_PWRITE),        // i
+        .io_apb_PWDATA        (apb3Router_1_io_outputs_1_PWDATA[31:0]),  // i
+        .io_apb_PRDATA        (system_uartCtrl_io_apb_PRDATA[31:0]),     // o
+        .io_uart_txd          (system_uartCtrl_io_uart_txd),             // o
+        .io_uart_rxd          (io_uart_rxd),                             // i
+        .io_interrupt         (system_uartCtrl_io_interrupt),            // o
+        .io_mainClk           (io_mainClk),                              // i
+        .resetCtrl_systemReset(resetCtrl_systemReset)                    // i
     );
     Apb3Timer Apb3Timer (
-        .io_apb_PADDR         (system_timer_io_apb_PADDR[7:0]),          //i
-        .io_apb_PSEL          (apb3Router_1_io_outputs_2_PSEL),          //i
-        .io_apb_PENABLE       (apb3Router_1_io_outputs_2_PENABLE),       //i
-        .io_apb_PREADY        (system_timer_io_apb_PREADY),              //o
-        .io_apb_PWRITE        (apb3Router_1_io_outputs_2_PWRITE),        //i
-        .io_apb_PWDATA        (apb3Router_1_io_outputs_2_PWDATA[31:0]),  //i
-        .io_apb_PRDATA        (system_timer_io_apb_PRDATA[31:0]),        //o
-        .io_apb_PSLVERROR     (system_timer_io_apb_PSLVERROR),           //o
-        .io_interrupt         (system_timer_io_interrupt),               //o
-        .io_mainClk           (io_mainClk),                              //i
-        .resetCtrl_systemReset(resetCtrl_systemReset)                    //i
+        .io_apb_PADDR         (system_timer_io_apb_PADDR[7:0]),          // i
+        .io_apb_PSEL          (apb3Router_1_io_outputs_2_PSEL),          // i
+        .io_apb_PENABLE       (apb3Router_1_io_outputs_2_PENABLE),       // i
+        .io_apb_PREADY        (system_timer_io_apb_PREADY),              // o
+        .io_apb_PWRITE        (apb3Router_1_io_outputs_2_PWRITE),        // i
+        .io_apb_PWDATA        (apb3Router_1_io_outputs_2_PWDATA[31:0]),  // i
+        .io_apb_PRDATA        (system_timer_io_apb_PRDATA[31:0]),        // o
+        .io_apb_PSLVERROR     (system_timer_io_apb_PSLVERROR),           // o
+        .io_interrupt         (system_timer_io_interrupt),               // o
+        .io_mainClk           (io_mainClk),                              // i
+        .resetCtrl_systemReset(resetCtrl_systemReset)                    // i
     );
     Apb3Decoder Apb3Decoder (
-        .io_input_PADDR     (system_apbBridge_io_apb_PADDR[19:0]),    //i
-        .io_input_PSEL      (system_apbBridge_io_apb_PSEL),           //i
-        .io_input_PENABLE   (system_apbBridge_io_apb_PENABLE),        //i
-        .io_input_PREADY    (io_apb_decoder_io_input_PREADY),         //o
-        .io_input_PWRITE    (system_apbBridge_io_apb_PWRITE),         //i
-        .io_input_PWDATA    (system_apbBridge_io_apb_PWDATA[31:0]),   //i
-        .io_input_PRDATA    (io_apb_decoder_io_input_PRDATA[31:0]),   //o
-        .io_input_PSLVERROR (io_apb_decoder_io_input_PSLVERROR),      //o
-        .io_output_PADDR    (io_apb_decoder_io_output_PADDR[19:0]),   //o
-        .io_output_PSEL     (io_apb_decoder_io_output_PSEL[2:0]),     //o
-        .io_output_PENABLE  (io_apb_decoder_io_output_PENABLE),       //o
-        .io_output_PREADY   (apb3Router_1_io_input_PREADY),           //i
-        .io_output_PWRITE   (io_apb_decoder_io_output_PWRITE),        //o
-        .io_output_PWDATA   (io_apb_decoder_io_output_PWDATA[31:0]),  //o
-        .io_output_PRDATA   (apb3Router_1_io_input_PRDATA[31:0]),     //i
-        .io_output_PSLVERROR(apb3Router_1_io_input_PSLVERROR)         //i
+        .io_input_PADDR     (system_apbBridge_io_apb_PADDR[19:0]),    // i
+        .io_input_PSEL      (system_apbBridge_io_apb_PSEL),           // i
+        .io_input_PENABLE   (system_apbBridge_io_apb_PENABLE),        // i
+        .io_input_PREADY    (io_apb_decoder_io_input_PREADY),         // o
+        .io_input_PWRITE    (system_apbBridge_io_apb_PWRITE),         // i
+        .io_input_PWDATA    (system_apbBridge_io_apb_PWDATA[31:0]),   // i
+        .io_input_PRDATA    (io_apb_decoder_io_input_PRDATA[31:0]),   // o
+        .io_input_PSLVERROR (io_apb_decoder_io_input_PSLVERROR),      // o
+        .io_output_PADDR    (io_apb_decoder_io_output_PADDR[19:0]),   // o
+        .io_output_PSEL     (io_apb_decoder_io_output_PSEL[3:0]),     // o
+        .io_output_PENABLE  (io_apb_decoder_io_output_PENABLE),       // o
+        .io_output_PREADY   (apb3Router_1_io_input_PREADY),           // i
+        .io_output_PWRITE   (io_apb_decoder_io_output_PWRITE),        // o
+        .io_output_PWDATA   (io_apb_decoder_io_output_PWDATA[31:0]),  // o
+        .io_output_PRDATA   (apb3Router_1_io_input_PRDATA[31:0]),     // i
+        .io_output_PSLVERROR(apb3Router_1_io_input_PSLVERROR)         // i
     );
     Apb3Router Apb3Router (
-        .io_input_PADDR        (io_apb_decoder_io_output_PADDR[19:0]),    //i
-        .io_input_PSEL         (io_apb_decoder_io_output_PSEL[2:0]),      //i
-        .io_input_PENABLE      (io_apb_decoder_io_output_PENABLE),        //i
-        .io_input_PREADY       (apb3Router_1_io_input_PREADY),            //o
-        .io_input_PWRITE       (io_apb_decoder_io_output_PWRITE),         //i
-        .io_input_PWDATA       (io_apb_decoder_io_output_PWDATA[31:0]),   //i
-        .io_input_PRDATA       (apb3Router_1_io_input_PRDATA[31:0]),      //o
-        .io_input_PSLVERROR    (apb3Router_1_io_input_PSLVERROR),         //o
-        .io_outputs_0_PADDR    (apb3Router_1_io_outputs_0_PADDR[19:0]),   //o
-        .io_outputs_0_PSEL     (apb3Router_1_io_outputs_0_PSEL),          //o
-        .io_outputs_0_PENABLE  (apb3Router_1_io_outputs_0_PENABLE),       //o
-        .io_outputs_0_PREADY   (system_gpioACtrl_io_apb_PREADY),          //i
-        .io_outputs_0_PWRITE   (apb3Router_1_io_outputs_0_PWRITE),        //o
-        .io_outputs_0_PWDATA   (apb3Router_1_io_outputs_0_PWDATA[31:0]),  //o
-        .io_outputs_0_PRDATA   (system_gpioACtrl_io_apb_PRDATA[31:0]),    //i
-        .io_outputs_0_PSLVERROR(system_gpioACtrl_io_apb_PSLVERROR),       //i
-        .io_outputs_1_PADDR    (apb3Router_1_io_outputs_1_PADDR[19:0]),   //o
-        .io_outputs_1_PSEL     (apb3Router_1_io_outputs_1_PSEL),          //o
-        .io_outputs_1_PENABLE  (apb3Router_1_io_outputs_1_PENABLE),       //o
-        .io_outputs_1_PREADY   (system_uartCtrl_io_apb_PREADY),           //i
-        .io_outputs_1_PWRITE   (apb3Router_1_io_outputs_1_PWRITE),        //o
-        .io_outputs_1_PWDATA   (apb3Router_1_io_outputs_1_PWDATA[31:0]),  //o
-        .io_outputs_1_PRDATA   (system_uartCtrl_io_apb_PRDATA[31:0]),     //i
-        .io_outputs_1_PSLVERROR(1'b0),                                    //i
-        .io_outputs_2_PADDR    (apb3Router_1_io_outputs_2_PADDR[19:0]),   //o
-        .io_outputs_2_PSEL     (apb3Router_1_io_outputs_2_PSEL),          //o
-        .io_outputs_2_PENABLE  (apb3Router_1_io_outputs_2_PENABLE),       //o
-        .io_outputs_2_PREADY   (system_timer_io_apb_PREADY),              //i
-        .io_outputs_2_PWRITE   (apb3Router_1_io_outputs_2_PWRITE),        //o
-        .io_outputs_2_PWDATA   (apb3Router_1_io_outputs_2_PWDATA[31:0]),  //o
-        .io_outputs_2_PRDATA   (system_timer_io_apb_PRDATA[31:0]),        //i
-        .io_outputs_2_PSLVERROR(system_timer_io_apb_PSLVERROR),           //i
-        .io_mainClk            (io_mainClk),                              //i
-        .resetCtrl_systemReset (resetCtrl_systemReset)                    //i
+        .io_input_PADDR        (io_apb_decoder_io_output_PADDR[19:0]),    // i
+        .io_input_PSEL         (io_apb_decoder_io_output_PSEL[3:0]),      // i
+        .io_input_PENABLE      (io_apb_decoder_io_output_PENABLE),        // i
+        .io_input_PREADY       (apb3Router_1_io_input_PREADY),            // o
+        .io_input_PWRITE       (io_apb_decoder_io_output_PWRITE),         // i
+        .io_input_PWDATA       (io_apb_decoder_io_output_PWDATA[31:0]),   // i
+        .io_input_PRDATA       (apb3Router_1_io_input_PRDATA[31:0]),      // o
+        .io_input_PSLVERROR    (apb3Router_1_io_input_PSLVERROR),         // o
+        .io_outputs_0_PADDR    (apb3Router_1_io_outputs_0_PADDR[19:0]),   // o
+        .io_outputs_0_PSEL     (apb3Router_1_io_outputs_0_PSEL),          // o
+        .io_outputs_0_PENABLE  (apb3Router_1_io_outputs_0_PENABLE),       // o
+        .io_outputs_0_PREADY   (system_gpioACtrl_io_apb_PREADY),          // i
+        .io_outputs_0_PWRITE   (apb3Router_1_io_outputs_0_PWRITE),        // o
+        .io_outputs_0_PWDATA   (apb3Router_1_io_outputs_0_PWDATA[31:0]),  // o
+        .io_outputs_0_PRDATA   (system_gpioACtrl_io_apb_PRDATA[31:0]),    // i
+        .io_outputs_0_PSLVERROR(system_gpioACtrl_io_apb_PSLVERROR),       // i
+        .io_outputs_1_PADDR    (apb3Router_1_io_outputs_1_PADDR[19:0]),   // o
+        .io_outputs_1_PSEL     (apb3Router_1_io_outputs_1_PSEL),          // o
+        .io_outputs_1_PENABLE  (apb3Router_1_io_outputs_1_PENABLE),       // o
+        .io_outputs_1_PREADY   (system_uartCtrl_io_apb_PREADY),           // i
+        .io_outputs_1_PWRITE   (apb3Router_1_io_outputs_1_PWRITE),        // o
+        .io_outputs_1_PWDATA   (apb3Router_1_io_outputs_1_PWDATA[31:0]),  // o
+        .io_outputs_1_PRDATA   (system_uartCtrl_io_apb_PRDATA[31:0]),     // i
+        .io_outputs_1_PSLVERROR(1'b0),                                    // i
+        .io_outputs_2_PADDR    (apb3Router_1_io_outputs_2_PADDR[19:0]),   // o
+        .io_outputs_2_PSEL     (apb3Router_1_io_outputs_2_PSEL),          // o
+        .io_outputs_2_PENABLE  (apb3Router_1_io_outputs_2_PENABLE),       // o
+        .io_outputs_2_PREADY   (system_timer_io_apb_PREADY),              // i
+        .io_outputs_2_PWRITE   (apb3Router_1_io_outputs_2_PWRITE),        // o
+        .io_outputs_2_PWDATA   (apb3Router_1_io_outputs_2_PWDATA[31:0]),  // o
+        .io_outputs_2_PRDATA   (system_timer_io_apb_PRDATA[31:0]),        // i
+        .io_outputs_2_PSLVERROR(system_timer_io_apb_PSLVERROR),           // i
+
+        .io_outputs_3_PADDR    (apb3Router_1_io_outputs_3_PADDR[19:0]),   // o new
+        .io_outputs_3_PSEL     (apb3Router_1_io_outputs_3_PSEL),          // o new
+        .io_outputs_3_PENABLE  (apb3Router_1_io_outputs_3_PENABLE),       // o new
+        .io_outputs_3_PREADY   (system_gpioACtrl_io_apb_PREADY2),         // i new
+        .io_outputs_3_PWRITE   (apb3Router_1_io_outputs_3_PWRITE),        // o new
+        .io_outputs_3_PWDATA   (apb3Router_1_io_outputs_3_PWDATA[31:0]),  // o new
+        .io_outputs_3_PRDATA   (system_gpioACtrl_io_apb_PRDATA2[31:0]),   // i new
+        .io_outputs_3_PSLVERROR(1'b0),                                    // i new
+
+        .io_mainClk            (io_mainClk),                              // i
+        .resetCtrl_systemReset (resetCtrl_systemReset)                    // i
     );
     initial begin
         resetCtrl_systemClkResetCounter = 6'h0;
@@ -438,6 +479,7 @@ module Murax (
     assign io_gpioA_writeEnable = system_gpioACtrl_io_gpio_writeEnable;
     assign io_uart_txd = system_uartCtrl_io_uart_txd;
     assign system_gpioACtrl_io_apb_PADDR = apb3Router_1_io_outputs_0_PADDR[3:0];
+    assign system_gpioACtrl_io_apb_PADDR2 = apb3Router_1_io_outputs_3_PADDR[4:2];  // new
     assign system_uartCtrl_io_apb_PADDR = apb3Router_1_io_outputs_1_PADDR[4:0];
     assign system_timer_io_apb_PADDR = apb3Router_1_io_outputs_2_PADDR[7:0];
     assign system_mainBusDecoder_logic_masterPipelined_cmd_valid = system_mainBusArbiter_io_masterBus_cmd_valid;

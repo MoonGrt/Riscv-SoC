@@ -79,7 +79,7 @@ def save_bytes_to_files(instructions, output_dir):
 
 
 if __name__ == '__main__':
-    input_file_path = 'F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/gpio.hex'
+    input_file_path = 'test.hex'
     output_file_path = 'ram'
     instructions = extract_code(input_file_path)
 

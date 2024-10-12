@@ -19,6 +19,7 @@ module tb_Murax;
     wire [31:0] io_gpioA_write;
     wire [31:0] io_gpioA_writeEnable;
     wire        io_uart_txd;
+    wire [15:0] GPIO;
 
     initial begin
         forever #(T / 2) clk = ~clk;
@@ -35,12 +36,15 @@ module tb_Murax;
         .io_jtag_tms         (io_jtag_tms),
         .io_jtag_tdi         (io_jtag_tdi),
         .io_jtag_tck         (io_jtag_tck),
-        .io_gpioA_read       (io_gpioA_read),
-        .io_uart_rxd         (io_uart_rxd),
         .io_jtag_tdo         (io_jtag_tdo),
+
+        .GPIO                (GPIO),
+
+        .io_gpioA_read       (io_gpioA_read),
         .io_gpioA_write      (io_gpioA_write),
         .io_gpioA_writeEnable(io_gpioA_writeEnable),
-        .io_uart_txd         (io_uart_txd)
+        .io_uart_txd         (io_uart_txd),
+        .io_uart_rxd         (io_uart_rxd)
     );
 
 endmodule
