@@ -2524,10 +2524,10 @@ module VexRiscv (
 
     always @(*) begin
         case (execute_ALU_BITWISE_CTRL)
-            AluBitwiseCtrlEnum_AND_1: begin
+            AluBitwiseCtrlEnum_AND_1: begin  // 0'b10
                 execute_IntAluPlugin_bitwise = (execute_SRC1 & execute_SRC2);
             end
-            AluBitwiseCtrlEnum_OR_1: begin
+            AluBitwiseCtrlEnum_OR_1: begin  // 0'b01
                 execute_IntAluPlugin_bitwise = (execute_SRC1 | execute_SRC2);
             end
             default: begin

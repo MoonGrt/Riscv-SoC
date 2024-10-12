@@ -9,6 +9,7 @@ module Apb3Router (
     input  wire [31:0] io_input_PWDATA,
     output wire [31:0] io_input_PRDATA,
     output wire        io_input_PSLVERROR,
+
     output wire [19:0] io_outputs_0_PADDR,
     output wire [ 0:0] io_outputs_0_PSEL,
     output wire        io_outputs_0_PENABLE,
@@ -50,23 +51,21 @@ module Apb3Router (
     reg         _zz_io_input_PREADY;
     reg  [31:0] _zz_io_input_PRDATA;
     reg         _zz_io_input_PSLVERROR;
-    wire        _zz_selIndex;
-    wire        _zz_selIndex_1;
-    reg  [ 1:0] selIndex;
+    reg  [ 3:0] selIndex;
 
     always @(*) begin
         case (selIndex)
-            2'b00: begin
+            4'b0001: begin
                 _zz_io_input_PREADY = io_outputs_0_PREADY;
                 _zz_io_input_PRDATA = io_outputs_0_PRDATA;
                 _zz_io_input_PSLVERROR = io_outputs_0_PSLVERROR;
             end
-            2'b01: begin
+            4'b0010: begin
                 _zz_io_input_PREADY = io_outputs_1_PREADY;
                 _zz_io_input_PRDATA = io_outputs_1_PRDATA;
                 _zz_io_input_PSLVERROR = io_outputs_1_PSLVERROR;
             end
-            2'b10: begin
+            4'b0100: begin
                 _zz_io_input_PREADY = io_outputs_2_PREADY;
                 _zz_io_input_PRDATA = io_outputs_2_PRDATA;
                 _zz_io_input_PSLVERROR = io_outputs_2_PSLVERROR;
@@ -101,13 +100,11 @@ module Apb3Router (
     assign io_outputs_3_PWRITE = io_input_PWRITE;  // new
     assign io_outputs_3_PWDATA = io_input_PWDATA;  // new
 
-    assign _zz_selIndex = io_input_PSEL[1];
-    assign _zz_selIndex_1 = io_input_PSEL[2];
     assign io_input_PREADY = _zz_io_input_PREADY;
     assign io_input_PRDATA = _zz_io_input_PRDATA;
     assign io_input_PSLVERROR = _zz_io_input_PSLVERROR;
     always @(posedge io_mainClk) begin
-        selIndex <= {_zz_selIndex_1, _zz_selIndex};
+        selIndex <= io_input_PSEL;
     end
 
 endmodule

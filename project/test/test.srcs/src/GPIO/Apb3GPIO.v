@@ -5,7 +5,7 @@ module Apb3GPIO (
     input wire resetCtrl_systemReset,
 
     input  wire [ 3:0] io_apb_PADDR,
-    input  wire [ 0:0] io_apb_PSEL,
+    input  wire        io_apb_PSEL,
     input  wire        io_apb_PENABLE,
     input  wire        io_apb_PWRITE,
     input  wire [31:0] io_apb_PWDATA,
@@ -54,10 +54,10 @@ module Apb3GPIO (
         endcase
     end
 
-    assign ctrl_askWrite = ((io_apb_PSEL[0] && io_apb_PENABLE) && io_apb_PWRITE);
-    assign ctrl_askRead = ((io_apb_PSEL[0] && io_apb_PENABLE) && (!io_apb_PWRITE));
-    assign ctrl_doWrite = (((io_apb_PSEL[0] && io_apb_PENABLE) && io_apb_PREADY) && io_apb_PWRITE);
-    assign ctrl_doRead = (((io_apb_PSEL[0] && io_apb_PENABLE) && io_apb_PREADY) && (! io_apb_PWRITE));
+    assign ctrl_askWrite = ((io_apb_PSEL && io_apb_PENABLE) && io_apb_PWRITE);
+    assign ctrl_askRead = ((io_apb_PSEL && io_apb_PENABLE) && (!io_apb_PWRITE));
+    assign ctrl_doWrite = (((io_apb_PSEL && io_apb_PENABLE) && io_apb_PREADY) && io_apb_PWRITE);
+    assign ctrl_doRead = (((io_apb_PSEL && io_apb_PENABLE) && io_apb_PREADY) && (! io_apb_PWRITE));
     assign io_apb_PSLVERROR = ((ctrl_doWrite && ctrl_writeErrorFlag) || (ctrl_doRead && ctrl_readErrorFlag));
     assign io_gpio_write = io_gpio_write_driver;
     assign io_gpio_writeEnable = io_gpio_writeEnable_driver;

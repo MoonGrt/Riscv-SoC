@@ -329,7 +329,7 @@ module Murax (
         .io_apb_PREADY        (system_gpioACtrl_io_apb_PREADY2),             // o
         .io_apb_PWRITE        (apb3Router_1_io_outputs_3_PWRITE),            // i
         .io_apb_PWDATA        (apb3Router_1_io_outputs_3_PWDATA[31:0]),      // i
-        .io_apb_PRDATA        (system_gpioACtrl_io_apb_PRDATA[31:0]),        // o
+        .io_apb_PRDATA        (system_gpioACtrl_io_apb_PRDATA2[31:0]),       // o
         .AFIO                 (),        // i
         .GPIO                 (GPIO),                                        // io
         .clk                  (io_mainClk),                                  // i
