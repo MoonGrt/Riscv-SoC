@@ -287,7 +287,7 @@ module Murax (
         .io_mainClk(io_mainClk),  // i
         .resetCtrl_systemReset(resetCtrl_systemReset)  // i
     );
-    RAMPPLToApb RAMPPLToApb (
+    Apb3Bridge Apb3Bridge (
         .io_pipelinedMemoryBus_cmd_valid(system_apbBridge_io_pipelinedMemoryBus_cmd_valid),  // i
         .io_pipelinedMemoryBus_cmd_ready(system_apbBridge_io_pipelinedMemoryBus_cmd_ready),  // o
         .io_pipelinedMemoryBus_cmd_payload_write(_zz_io_pipelinedMemoryBus_cmd_payload_write),  // i

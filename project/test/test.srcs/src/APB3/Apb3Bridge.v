@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module RAMPPLToApb (
+module Apb3Bridge (
     input  wire        io_pipelinedMemoryBus_cmd_valid,
     output wire        io_pipelinedMemoryBus_cmd_ready,
     input  wire        io_pipelinedMemoryBus_cmd_payload_write,
