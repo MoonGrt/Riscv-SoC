@@ -8,7 +8,8 @@ module Murax (
     output wire        io_jtag_tdo,
     input  wire        io_jtag_tck,
 
-    inout  wire [15:0] GPIO,  // new
+    inout  wire [15:0] GPIOA,  // GPIO2
+    inout  wire [15:0] GPIOB,  // GPIO2
 
     input  wire [31:0] io_gpioA_read,
     output wire [31:0] io_gpioA_write,
@@ -22,9 +23,10 @@ module Murax (
     reg         system_ram_io_bus_cmd_valid;
     reg         system_apbBridge_io_pipelinedMemoryBus_cmd_valid;
     wire [ 3:0] system_gpioACtrl_io_apb_PADDR;
-    wire [ 2:0] system_gpioACtrl_io_apb_PADDR2;  // new PADDR for GPIO2
+    wire [15:0] system_gpioCtrl_io_apb_PADDR;  // GPIO2 PADDR
     wire [ 4:0] system_uartCtrl_io_apb_PADDR;
     wire [ 7:0] system_timer_io_apb_PADDR;
+    wire [15:0] system_wdgCtrl_io_apb_PADDR;  // WDG PADDR
     wire        io_asyncReset_buffercc_io_dataOut;
     wire        system_mainBusArbiter_io_iBus_cmd_ready;
     wire        system_mainBusArbiter_io_iBus_rsp_valid;
@@ -81,11 +83,16 @@ module Murax (
     wire [31:0] system_gpioACtrl_io_gpio_write;
     wire [31:0] system_gpioACtrl_io_gpio_writeEnable;
 
-    wire        system_gpioACtrl_io_apb_PREADY2;  // new
-    wire [31:0] system_gpioACtrl_io_apb_PRDATA2;  // new
-    wire        system_gpioACtrl_io_apb_PSLVERROR2;  // new
-    wire [31:0] system_gpioACtrl_io_gpio_write2;  // new
-    wire [31:0] system_gpioACtrl_io_gpio_writeEnable2;  // new
+    wire        system_gpioCtrl_io_apb_PREADY;  // GPIO2
+    wire [31:0] system_gpioCtrl_io_apb_PRDATA;  // GPIO2
+    wire        system_gpioCtrl_io_apb_PSLVERROR;  // GPIO2
+    wire [31:0] system_gpioCtrl_io_gpio_write;  // GPIO2
+    wire [31:0] system_gpioCtrl_io_gpio_writeEnable;  // GPIO2
+    wire        system_wdgCtrl_io_apb_PREADY;  // WDG
+    wire [31:0] system_wdgCtrl_io_apb_PRDATA;  // WDG
+    wire        system_wdgCtrl_io_apb_PSLVERROR;  // WDG
+    wire [31:0] system_wdgCtrl_io_gpio_write;  // WDG
+    wire [31:0] system_wdgCtrl_io_gpio_writeEnable;  // WDG
 
     wire        system_uartCtrl_io_apb_PREADY;
     wire [31:0] system_uartCtrl_io_apb_PRDATA;
@@ -99,7 +106,7 @@ module Murax (
     wire [31:0] io_apb_decoder_io_input_PRDATA;
     wire        io_apb_decoder_io_input_PSLVERROR;
     wire [19:0] io_apb_decoder_io_output_PADDR;
-    wire [ 3:0] io_apb_decoder_io_output_PSEL;
+    wire [15:0] io_apb_decoder_io_output_PSEL;
     wire        io_apb_decoder_io_output_PENABLE;
     wire        io_apb_decoder_io_output_PWRITE;
     wire [31:0] io_apb_decoder_io_output_PWDATA;
@@ -122,11 +129,17 @@ module Murax (
     wire        apb3Router_1_io_outputs_2_PWRITE;
     wire [31:0] apb3Router_1_io_outputs_2_PWDATA;
 
-    wire [19:0] apb3Router_1_io_outputs_3_PADDR;  // new device
-    wire [ 0:0] apb3Router_1_io_outputs_3_PSEL;  // new device
-    wire        apb3Router_1_io_outputs_3_PENABLE;  // new device
-    wire        apb3Router_1_io_outputs_3_PWRITE;  // new device
-    wire [31:0] apb3Router_1_io_outputs_3_PWDATA;  // new device
+    wire [19:0] apb3Router_1_io_outputs_3_PADDR;  // GPIO2
+    wire [ 0:0] apb3Router_1_io_outputs_3_PSEL;  // GPIO2
+    wire        apb3Router_1_io_outputs_3_PENABLE;  // GPIO2
+    wire        apb3Router_1_io_outputs_3_PWRITE;  // GPIO2
+    wire [31:0] apb3Router_1_io_outputs_3_PWDATA;  // GPIO2
+
+    wire [19:0] apb3Router_1_io_outputs_4_PADDR;  // WDG
+    wire [ 0:0] apb3Router_1_io_outputs_4_PSEL;  // WDG
+    wire        apb3Router_1_io_outputs_4_PENABLE;  // WDG
+    wire        apb3Router_1_io_outputs_4_PWRITE;  // WDG
+    wire [31:0] apb3Router_1_io_outputs_4_PWDATA;  // WDG
 
     reg  [31:0] _zz_system_mainBusDecoder_logic_masterPipelined_rsp_payload_data;
     reg         resetCtrl_mainClkResetUnbuffered;
@@ -276,38 +289,38 @@ module Murax (
         .resetCtrl_mainClkReset        (resetCtrl_mainClkReset)                              // i
     );
     RAMPPL RAMPPL (
-        .io_bus_cmd_valid(system_ram_io_bus_cmd_valid),  // i
-        .io_bus_cmd_ready(system_ram_io_bus_cmd_ready),  // o
-        .io_bus_cmd_payload_write(_zz_io_bus_cmd_payload_write),  // i
-        .io_bus_cmd_payload_address (system_mainBusDecoder_logic_masterPipelined_cmd_payload_address[31:0]), // i
-        .io_bus_cmd_payload_data    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_data[31:0]   ), // i
-        .io_bus_cmd_payload_mask    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_mask[3:0]    ), // i
-        .io_bus_rsp_valid(system_ram_io_bus_rsp_valid),  // o
-        .io_bus_rsp_payload_data(system_ram_io_bus_rsp_payload_data[31:0]),  // o
-        .io_mainClk(io_mainClk),  // i
-        .resetCtrl_systemReset(resetCtrl_systemReset)  // i
+        .io_bus_cmd_valid(system_ram_io_bus_cmd_valid),                                                       // i
+        .io_bus_cmd_ready(system_ram_io_bus_cmd_ready),                                                       // o
+        .io_bus_cmd_payload_write(_zz_io_bus_cmd_payload_write),                                              // i
+        .io_bus_cmd_payload_address (system_mainBusDecoder_logic_masterPipelined_cmd_payload_address[31:0]),  // i
+        .io_bus_cmd_payload_data(system_mainBusDecoder_logic_masterPipelined_cmd_payload_data[31:0]),         // i
+        .io_bus_cmd_payload_mask(system_mainBusDecoder_logic_masterPipelined_cmd_payload_mask[3:0]),          // i
+        .io_bus_rsp_valid(system_ram_io_bus_rsp_valid),                                                       // o
+        .io_bus_rsp_payload_data(system_ram_io_bus_rsp_payload_data[31:0]),                                   // o
+        .io_mainClk(io_mainClk),                                                                              // i
+        .resetCtrl_systemReset(resetCtrl_systemReset)                                                         // i
     );
     Apb3Bridge Apb3Bridge (
-        .io_pipelinedMemoryBus_cmd_valid(system_apbBridge_io_pipelinedMemoryBus_cmd_valid),  // i
-        .io_pipelinedMemoryBus_cmd_ready(system_apbBridge_io_pipelinedMemoryBus_cmd_ready),  // o
-        .io_pipelinedMemoryBus_cmd_payload_write(_zz_io_pipelinedMemoryBus_cmd_payload_write),  // i
-        .io_pipelinedMemoryBus_cmd_payload_address (system_mainBusDecoder_logic_masterPipelined_cmd_payload_address[31:0]), // i
-        .io_pipelinedMemoryBus_cmd_payload_data    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_data[31:0]   ), // i
-        .io_pipelinedMemoryBus_cmd_payload_mask    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_mask[3:0]    ), // i
-        .io_pipelinedMemoryBus_rsp_valid(system_apbBridge_io_pipelinedMemoryBus_rsp_valid),  // o
-        .io_pipelinedMemoryBus_rsp_payload_data    (system_apbBridge_io_pipelinedMemoryBus_rsp_payload_data[31:0]        ), // o
-        .io_apb_PADDR(system_apbBridge_io_apb_PADDR[19:0]),  // o
-        .io_apb_PSEL(system_apbBridge_io_apb_PSEL),  // o
-        .io_apb_PENABLE(system_apbBridge_io_apb_PENABLE),  // o
-        .io_apb_PREADY(io_apb_decoder_io_input_PREADY),  // i
-        .io_apb_PWRITE(system_apbBridge_io_apb_PWRITE),  // o
-        .io_apb_PWDATA(system_apbBridge_io_apb_PWDATA[31:0]),  // o
-        .io_apb_PRDATA(io_apb_decoder_io_input_PRDATA[31:0]),  // i
-        .io_apb_PSLVERROR(io_apb_decoder_io_input_PSLVERROR),  // i
-        .io_mainClk(io_mainClk),  // i
-        .resetCtrl_systemReset(resetCtrl_systemReset)  // i
+        .io_pipelinedMemoryBus_cmd_valid(system_apbBridge_io_pipelinedMemoryBus_cmd_valid),                                  // i
+        .io_pipelinedMemoryBus_cmd_ready(system_apbBridge_io_pipelinedMemoryBus_cmd_ready),                                  // o
+        .io_pipelinedMemoryBus_cmd_payload_write(_zz_io_pipelinedMemoryBus_cmd_payload_write),                               // i
+        .io_pipelinedMemoryBus_cmd_payload_address (system_mainBusDecoder_logic_masterPipelined_cmd_payload_address[31:0]),  // i
+        .io_pipelinedMemoryBus_cmd_payload_data(system_mainBusDecoder_logic_masterPipelined_cmd_payload_data[31:0]),         // i
+        .io_pipelinedMemoryBus_cmd_payload_mask(system_mainBusDecoder_logic_masterPipelined_cmd_payload_mask[3:0]),          // i
+        .io_pipelinedMemoryBus_rsp_valid(system_apbBridge_io_pipelinedMemoryBus_rsp_valid),                                  // o
+        .io_pipelinedMemoryBus_rsp_payload_data(system_apbBridge_io_pipelinedMemoryBus_rsp_payload_data[31:0]),              // o
+        .io_apb_PADDR(system_apbBridge_io_apb_PADDR[19:0]),                                                                  // o
+        .io_apb_PSEL(system_apbBridge_io_apb_PSEL),                                                                          // o
+        .io_apb_PENABLE(system_apbBridge_io_apb_PENABLE),                                                                    // o
+        .io_apb_PREADY(io_apb_decoder_io_input_PREADY),                                                                      // i
+        .io_apb_PWRITE(system_apbBridge_io_apb_PWRITE),                                                                      // o
+        .io_apb_PWDATA(system_apbBridge_io_apb_PWDATA[31:0]),                                                                // o
+        .io_apb_PRDATA(io_apb_decoder_io_input_PRDATA[31:0]),                                                                // i
+        .io_apb_PSLVERROR(io_apb_decoder_io_input_PSLVERROR),                                                                // i
+        .io_mainClk(io_mainClk),                                                                                             // i
+        .resetCtrl_systemReset(resetCtrl_systemReset)                                                                        // i
     );
-    Apb3GPIO Apb3GPIO1 (
+    Apb3GPIO Apb3GPIO (
         .io_apb_PADDR         (system_gpioACtrl_io_apb_PADDR[3:0]),          // i
         .io_apb_PSEL          (apb3Router_1_io_outputs_0_PSEL),              // i
         .io_apb_PENABLE       (apb3Router_1_io_outputs_0_PENABLE),           // i
@@ -322,18 +335,33 @@ module Murax (
         .io_mainClk           (io_mainClk),                                  // i
         .resetCtrl_systemReset(resetCtrl_systemReset)                        // i
     );
-    Apb3GPIO2 Apb3GPIO2 (
-        .io_apb_PADDR         (system_gpioACtrl_io_apb_PADDR2),              // i
+    Apb3GPIORouter Apb3GPIORouter (
+        .io_apb_PCLK          (io_mainClk),                                  // i
+        .io_apb_PRESET        (resetCtrl_systemReset),                       // i
+        .io_apb_PADDR         (system_gpioCtrl_io_apb_PADDR),                // i
         .io_apb_PSEL          (apb3Router_1_io_outputs_3_PSEL),              // i
         .io_apb_PENABLE       (apb3Router_1_io_outputs_3_PENABLE),           // i
-        .io_apb_PREADY        (system_gpioACtrl_io_apb_PREADY2),             // o
+        .io_apb_PREADY        (system_gpioCtrl_io_apb_PREADY),               // o
         .io_apb_PWRITE        (apb3Router_1_io_outputs_3_PWRITE),            // i
-        .io_apb_PWDATA        (apb3Router_1_io_outputs_3_PWDATA[31:0]),      // i
-        .io_apb_PRDATA        (system_gpioACtrl_io_apb_PRDATA2[31:0]),       // o
-        .AFIO                 (),        // i
-        .GPIO                 (GPIO),                                        // io
-        .clk                  (io_mainClk),                                  // i
-        .rst                  (resetCtrl_systemReset)                        // i
+        .io_apb_PWDATA        (apb3Router_1_io_outputs_3_PWDATA),            // i
+        .io_apb_PRDATA        (system_gpioCtrl_io_apb_PRDATA),               // o
+        .AFIOA                (),                                            // i
+        .GPIOA                (GPIOA),                                       // io
+        .AFIOB                (),                                            // i
+        .GPIOB                (GPIOB)                                        // io
+    );
+    Apb3WDGRouter Apb3WDGRouter (
+        .io_apb_PCLK          (io_mainClk),                                  // i
+        .io_apb_PRESET        (resetCtrl_systemReset),                       // i
+        .io_apb_PADDR         (system_wdgCtrl_io_apb_PADDR),                 // i
+        .io_apb_PSEL          (apb3Router_1_io_outputs_4_PSEL),              // i
+        .io_apb_PENABLE       (apb3Router_1_io_outputs_4_PENABLE),           // i
+        .io_apb_PREADY        (system_wdgCtrl_io_apb_PREADY),                // o
+        .io_apb_PWRITE        (apb3Router_1_io_outputs_4_PWRITE),            // i
+        .io_apb_PWDATA        (apb3Router_1_io_outputs_4_PWDATA),            // i
+        .io_apb_PRDATA        (system_wdgCtrl_io_apb_PRDATA),                // o
+        .IWDG_rst             (),                                            // o
+        .WWDG_rst             ()                                             // o
     );
     Apb3UART Apb3UART (
         .io_apb_PADDR         (system_uartCtrl_io_apb_PADDR[4:0]),       // i
@@ -362,7 +390,71 @@ module Murax (
         .io_mainClk           (io_mainClk),                              // i
         .resetCtrl_systemReset(resetCtrl_systemReset)                    // i
     );
-    Apb3Decoder Apb3Decoder (
+    // Apb3Decoder Apb3Decoder (
+    //     .io_input_PADDR     (system_apbBridge_io_apb_PADDR[19:0]),    // i
+    //     .io_input_PSEL      (system_apbBridge_io_apb_PSEL),           // i
+    //     .io_input_PENABLE   (system_apbBridge_io_apb_PENABLE),        // i
+    //     .io_input_PREADY    (io_apb_decoder_io_input_PREADY),         // o
+    //     .io_input_PWRITE    (system_apbBridge_io_apb_PWRITE),         // i
+    //     .io_input_PWDATA    (system_apbBridge_io_apb_PWDATA[31:0]),   // i
+    //     .io_input_PRDATA    (io_apb_decoder_io_input_PRDATA[31:0]),   // o
+    //     .io_input_PSLVERROR (io_apb_decoder_io_input_PSLVERROR),      // o
+    //     .io_output_PADDR    (io_apb_decoder_io_output_PADDR[19:0]),   // o
+    //     .io_output_PSEL     (io_apb_decoder_io_output_PSEL),          // o
+    //     .io_output_PENABLE  (io_apb_decoder_io_output_PENABLE),       // o
+    //     .io_output_PREADY   (apb3Router_1_io_input_PREADY),           // i
+    //     .io_output_PWRITE   (io_apb_decoder_io_output_PWRITE),        // o
+    //     .io_output_PWDATA   (io_apb_decoder_io_output_PWDATA[31:0]),  // o
+    //     .io_output_PRDATA   (apb3Router_1_io_input_PRDATA[31:0]),     // i
+    //     .io_output_PSLVERROR(apb3Router_1_io_input_PSLVERROR)         // i
+    // );
+    // Apb3Router Apb3Router (
+    //     .io_input_PADDR        (io_apb_decoder_io_output_PADDR[19:0]),    // i
+    //     .io_input_PSEL         (io_apb_decoder_io_output_PSEL),           // i
+    //     .io_input_PENABLE      (io_apb_decoder_io_output_PENABLE),        // i
+    //     .io_input_PREADY       (apb3Router_1_io_input_PREADY),            // o
+    //     .io_input_PWRITE       (io_apb_decoder_io_output_PWRITE),         // i
+    //     .io_input_PWDATA       (io_apb_decoder_io_output_PWDATA[31:0]),   // i
+    //     .io_input_PRDATA       (apb3Router_1_io_input_PRDATA[31:0]),      // o
+    //     .io_input_PSLVERROR    (apb3Router_1_io_input_PSLVERROR),         // o
+    //     .io_outputs_0_PADDR    (apb3Router_1_io_outputs_0_PADDR[19:0]),   // o
+    //     .io_outputs_0_PSEL     (apb3Router_1_io_outputs_0_PSEL),          // o
+    //     .io_outputs_0_PENABLE  (apb3Router_1_io_outputs_0_PENABLE),       // o
+    //     .io_outputs_0_PREADY   (system_gpioACtrl_io_apb_PREADY),          // i
+    //     .io_outputs_0_PWRITE   (apb3Router_1_io_outputs_0_PWRITE),        // o
+    //     .io_outputs_0_PWDATA   (apb3Router_1_io_outputs_0_PWDATA[31:0]),  // o
+    //     .io_outputs_0_PRDATA   (system_gpioACtrl_io_apb_PRDATA[31:0]),    // i
+    //     .io_outputs_0_PSLVERROR(system_gpioACtrl_io_apb_PSLVERROR),       // i
+    //     .io_outputs_1_PADDR    (apb3Router_1_io_outputs_1_PADDR[19:0]),   // o
+    //     .io_outputs_1_PSEL     (apb3Router_1_io_outputs_1_PSEL),          // o
+    //     .io_outputs_1_PENABLE  (apb3Router_1_io_outputs_1_PENABLE),       // o
+    //     .io_outputs_1_PREADY   (system_uartCtrl_io_apb_PREADY),           // i
+    //     .io_outputs_1_PWRITE   (apb3Router_1_io_outputs_1_PWRITE),        // o
+    //     .io_outputs_1_PWDATA   (apb3Router_1_io_outputs_1_PWDATA[31:0]),  // o
+    //     .io_outputs_1_PRDATA   (system_uartCtrl_io_apb_PRDATA[31:0]),     // i
+    //     .io_outputs_1_PSLVERROR(1'b0),                                    // i
+    //     .io_outputs_2_PADDR    (apb3Router_1_io_outputs_2_PADDR[19:0]),   // o
+    //     .io_outputs_2_PSEL     (apb3Router_1_io_outputs_2_PSEL),          // o
+    //     .io_outputs_2_PENABLE  (apb3Router_1_io_outputs_2_PENABLE),       // o
+    //     .io_outputs_2_PREADY   (system_timer_io_apb_PREADY),              // i
+    //     .io_outputs_2_PWRITE   (apb3Router_1_io_outputs_2_PWRITE),        // o
+    //     .io_outputs_2_PWDATA   (apb3Router_1_io_outputs_2_PWDATA[31:0]),  // o
+    //     .io_outputs_2_PRDATA   (system_timer_io_apb_PRDATA[31:0]),        // i
+    //     .io_outputs_2_PSLVERROR(system_timer_io_apb_PSLVERROR),           // i
+
+    //     .io_outputs_3_PADDR    (apb3Router_1_io_outputs_3_PADDR[19:0]),   // o GPIO2
+    //     .io_outputs_3_PSEL     (apb3Router_1_io_outputs_3_PSEL),          // o GPIO2
+    //     .io_outputs_3_PENABLE  (apb3Router_1_io_outputs_3_PENABLE),       // o GPIO2
+    //     .io_outputs_3_PREADY   (system_gpioCtrl_io_apb_PREADY),         // i GPIO2
+    //     .io_outputs_3_PWRITE   (apb3Router_1_io_outputs_3_PWRITE),        // o GPIO2
+    //     .io_outputs_3_PWDATA   (apb3Router_1_io_outputs_3_PWDATA[31:0]),  // o GPIO2
+    //     .io_outputs_3_PRDATA   (system_gpioCtrl_io_apb_PRDATA[31:0]),   // i GPIO2
+    //     .io_outputs_3_PSLVERROR(1'b0),                                    // i GPIO2
+
+    //     .io_mainClk            (io_mainClk),                              // i
+    //     .resetCtrl_systemReset (resetCtrl_systemReset)                    // i
+    // );
+    Apb3PRouter Apb3PRouter (
         .io_input_PADDR     (system_apbBridge_io_apb_PADDR[19:0]),    // i
         .io_input_PSEL      (system_apbBridge_io_apb_PSEL),           // i
         .io_input_PENABLE   (system_apbBridge_io_apb_PENABLE),        // i
@@ -371,24 +463,7 @@ module Murax (
         .io_input_PWDATA    (system_apbBridge_io_apb_PWDATA[31:0]),   // i
         .io_input_PRDATA    (io_apb_decoder_io_input_PRDATA[31:0]),   // o
         .io_input_PSLVERROR (io_apb_decoder_io_input_PSLVERROR),      // o
-        .io_output_PADDR    (io_apb_decoder_io_output_PADDR[19:0]),   // o
-        .io_output_PSEL     (io_apb_decoder_io_output_PSEL[3:0]),     // o
-        .io_output_PENABLE  (io_apb_decoder_io_output_PENABLE),       // o
-        .io_output_PREADY   (apb3Router_1_io_input_PREADY),           // i
-        .io_output_PWRITE   (io_apb_decoder_io_output_PWRITE),        // o
-        .io_output_PWDATA   (io_apb_decoder_io_output_PWDATA[31:0]),  // o
-        .io_output_PRDATA   (apb3Router_1_io_input_PRDATA[31:0]),     // i
-        .io_output_PSLVERROR(apb3Router_1_io_input_PSLVERROR)         // i
-    );
-    Apb3Router Apb3Router (
-        .io_input_PADDR        (io_apb_decoder_io_output_PADDR[19:0]),    // i
-        .io_input_PSEL         (io_apb_decoder_io_output_PSEL[3:0]),      // i
-        .io_input_PENABLE      (io_apb_decoder_io_output_PENABLE),        // i
-        .io_input_PREADY       (apb3Router_1_io_input_PREADY),            // o
-        .io_input_PWRITE       (io_apb_decoder_io_output_PWRITE),         // i
-        .io_input_PWDATA       (io_apb_decoder_io_output_PWDATA[31:0]),   // i
-        .io_input_PRDATA       (apb3Router_1_io_input_PRDATA[31:0]),      // o
-        .io_input_PSLVERROR    (apb3Router_1_io_input_PSLVERROR),         // o
+
         .io_outputs_0_PADDR    (apb3Router_1_io_outputs_0_PADDR[19:0]),   // o
         .io_outputs_0_PSEL     (apb3Router_1_io_outputs_0_PSEL),          // o
         .io_outputs_0_PENABLE  (apb3Router_1_io_outputs_0_PENABLE),       // o
@@ -414,14 +489,22 @@ module Murax (
         .io_outputs_2_PRDATA   (system_timer_io_apb_PRDATA[31:0]),        // i
         .io_outputs_2_PSLVERROR(system_timer_io_apb_PSLVERROR),           // i
 
-        .io_outputs_3_PADDR    (apb3Router_1_io_outputs_3_PADDR[19:0]),   // o new
-        .io_outputs_3_PSEL     (apb3Router_1_io_outputs_3_PSEL),          // o new
-        .io_outputs_3_PENABLE  (apb3Router_1_io_outputs_3_PENABLE),       // o new
-        .io_outputs_3_PREADY   (system_gpioACtrl_io_apb_PREADY2),         // i new
-        .io_outputs_3_PWRITE   (apb3Router_1_io_outputs_3_PWRITE),        // o new
-        .io_outputs_3_PWDATA   (apb3Router_1_io_outputs_3_PWDATA[31:0]),  // o new
-        .io_outputs_3_PRDATA   (system_gpioACtrl_io_apb_PRDATA2[31:0]),   // i new
-        .io_outputs_3_PSLVERROR(1'b0),                                    // i new
+        .io_outputs_3_PADDR    (apb3Router_1_io_outputs_3_PADDR[19:0]),   // o GPIO2
+        .io_outputs_3_PSEL     (apb3Router_1_io_outputs_3_PSEL),          // o GPIO2
+        .io_outputs_3_PENABLE  (apb3Router_1_io_outputs_3_PENABLE),       // o GPIO2
+        .io_outputs_3_PREADY   (system_gpioCtrl_io_apb_PREADY),         // i GPIO2
+        .io_outputs_3_PWRITE   (apb3Router_1_io_outputs_3_PWRITE),        // o GPIO2
+        .io_outputs_3_PWDATA   (apb3Router_1_io_outputs_3_PWDATA[31:0]),  // o GPIO2
+        .io_outputs_3_PRDATA   (system_gpioCtrl_io_apb_PRDATA[31:0]),   // i GPIO2
+        .io_outputs_3_PSLVERROR(1'b0),                                    // i GPIO2
+        .io_outputs_4_PADDR    (apb3Router_1_io_outputs_4_PADDR[19:0]),   // o WDG
+        .io_outputs_4_PSEL     (apb3Router_1_io_outputs_4_PSEL),          // o WDG
+        .io_outputs_4_PENABLE  (apb3Router_1_io_outputs_4_PENABLE),       // o WDG
+        .io_outputs_4_PREADY   (system_wdgCtrl_io_apb_PREADY),         // i WDG
+        .io_outputs_4_PWRITE   (apb3Router_1_io_outputs_4_PWRITE),        // o WDG
+        .io_outputs_4_PWDATA   (apb3Router_1_io_outputs_4_PWDATA[31:0]),  // o WDG
+        .io_outputs_4_PRDATA   (system_wdgCtrl_io_apb_PRDATA[31:0]),   // i WDG
+        .io_outputs_4_PSLVERROR(1'b0),                                    // i WDG
 
         .io_mainClk            (io_mainClk),                              // i
         .resetCtrl_systemReset (resetCtrl_systemReset)                    // i
@@ -479,9 +562,10 @@ module Murax (
     assign io_gpioA_writeEnable = system_gpioACtrl_io_gpio_writeEnable;
     assign io_uart_txd = system_uartCtrl_io_uart_txd;
     assign system_gpioACtrl_io_apb_PADDR = apb3Router_1_io_outputs_0_PADDR[3:0];
-    assign system_gpioACtrl_io_apb_PADDR2 = apb3Router_1_io_outputs_3_PADDR[4:2];  // new
+    assign system_gpioCtrl_io_apb_PADDR = apb3Router_1_io_outputs_3_PADDR[15:0];  // GPIO2
     assign system_uartCtrl_io_apb_PADDR = apb3Router_1_io_outputs_1_PADDR[4:0];
     assign system_timer_io_apb_PADDR = apb3Router_1_io_outputs_2_PADDR[7:0];
+    assign system_wdgCtrl_io_apb_PADDR = apb3Router_1_io_outputs_3_PADDR[15:0];  // WDG
     assign system_mainBusDecoder_logic_masterPipelined_cmd_valid = system_mainBusArbiter_io_masterBus_cmd_valid;
     assign system_mainBusDecoder_logic_masterPipelined_cmd_payload_write = system_mainBusArbiter_io_masterBus_cmd_payload_write;
     assign system_mainBusDecoder_logic_masterPipelined_cmd_payload_address = system_mainBusArbiter_io_masterBus_cmd_payload_address;

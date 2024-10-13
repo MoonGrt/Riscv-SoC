@@ -1,15 +1,16 @@
 `timescale 1ns / 1ps
 
-module Apb3Router (
+module Apb3PRouter (
     input  wire [19:0] io_input_PADDR,
-    input  wire [15:0] io_input_PSEL,
+    input  wire [ 0:0] io_input_PSEL,
     input  wire        io_input_PENABLE,
-    output wire        io_input_PREADY,
+    output reg         io_input_PREADY,
     input  wire        io_input_PWRITE,
     input  wire [31:0] io_input_PWDATA,
     output wire [31:0] io_input_PRDATA,
-    output wire        io_input_PSLVERROR,
+    output reg         io_input_PSLVERROR,
 
+    // GPIO
     output wire [19:0] io_outputs_0_PADDR,
     output wire [ 0:0] io_outputs_0_PSEL,
     output wire        io_outputs_0_PENABLE,
@@ -18,6 +19,7 @@ module Apb3Router (
     output wire [31:0] io_outputs_0_PWDATA,
     input  wire [31:0] io_outputs_0_PRDATA,
     input  wire        io_outputs_0_PSLVERROR,
+    // UART
     output wire [19:0] io_outputs_1_PADDR,
     output wire [ 0:0] io_outputs_1_PSEL,
     output wire        io_outputs_1_PENABLE,
@@ -26,6 +28,7 @@ module Apb3Router (
     output wire [31:0] io_outputs_1_PWDATA,
     input  wire [31:0] io_outputs_1_PRDATA,
     input  wire        io_outputs_1_PSLVERROR,
+    // Timer
     output wire [19:0] io_outputs_2_PADDR,
     output wire [ 0:0] io_outputs_2_PSEL,
     output wire        io_outputs_2_PENABLE,
@@ -34,33 +37,74 @@ module Apb3Router (
     output wire [31:0] io_outputs_2_PWDATA,
     input  wire [31:0] io_outputs_2_PRDATA,
     input  wire        io_outputs_2_PSLVERROR,
-
-    output wire [19:0] io_outputs_3_PADDR,  // GPIO2
-    output wire [15:0] io_outputs_3_PSEL,  // GPIO2
-    output wire        io_outputs_3_PENABLE,  // GPIO2
-    input  wire        io_outputs_3_PREADY,  // GPIO2
-    output wire        io_outputs_3_PWRITE,  // GPIO2
-    output wire [31:0] io_outputs_3_PWDATA,  // GPIO2
-    input  wire [31:0] io_outputs_3_PRDATA,  // GPIO2
-    input  wire        io_outputs_3_PSLVERROR,  // GPIO2
-    output wire [19:0] io_outputs_4_PADDR,  // WDG
-    output wire [ 0:0] io_outputs_4_PSEL,  // WDG
-    output wire        io_outputs_4_PENABLE,  // WDG
-    input  wire        io_outputs_4_PREADY,  // WDG
-    output wire        io_outputs_4_PWRITE,  // WDG
-    output wire [31:0] io_outputs_4_PWDATA,  // WDG
-    input  wire [31:0] io_outputs_4_PRDATA,  // WDG
-    input  wire        io_outputs_4_PSLVERROR,  // WDG
+    // GPIO2
+    output wire [19:0] io_outputs_3_PADDR,
+    output wire [15:0] io_outputs_3_PSEL,
+    output wire        io_outputs_3_PENABLE,
+    input  wire        io_outputs_3_PREADY,
+    output wire        io_outputs_3_PWRITE,
+    output wire [31:0] io_outputs_3_PWDATA,
+    input  wire [31:0] io_outputs_3_PRDATA,
+    input  wire        io_outputs_3_PSLVERROR,
+    // WDG
+    output wire [19:0] io_outputs_4_PADDR,
+    output wire [ 0:0] io_outputs_4_PSEL,
+    output wire        io_outputs_4_PENABLE,
+    input  wire        io_outputs_4_PREADY,
+    output wire        io_outputs_4_PWRITE,
+    output wire [31:0] io_outputs_4_PWDATA,
+    input  wire [31:0] io_outputs_4_PRDATA,
+    input  wire        io_outputs_4_PSLVERROR,
 
     input  wire        io_mainClk,
     input  wire        resetCtrl_systemReset
 );
 
+    wire when_Apb3Decoder_l88;
     reg         _zz_io_input_PREADY;
     reg  [31:0] _zz_io_input_PRDATA;
     reg         _zz_io_input_PSLVERROR;
     reg  [15:0] selIndex;
+    reg  [15:0] Apb3PSEL;
 
+    assign io_output_PADDR   = io_input_PADDR;
+    assign io_output_PENABLE = io_input_PENABLE;
+    assign io_output_PWRITE  = io_input_PWRITE;
+    assign io_output_PWDATA  = io_input_PWDATA;
+    always @(*) begin
+        // Apb3PSEL[0] = (((io_input_PADDR & (20'hFF000)) == 20'h00000) && io_input_PSEL[0]);
+        // Apb3PSEL[1] = (((io_input_PADDR & (20'hFF000)) == 20'h10000) && io_input_PSEL[0]);
+        // Apb3PSEL[2] = (((io_input_PADDR & (20'hFF000)) == 20'h20000) && io_input_PSEL[0]);
+        // Apb3PSEL[3] = (((io_input_PADDR & (20'hFF000)) == 20'h30000) && io_input_PSEL[0]);  // GPIO2
+        // Apb3PSEL[4] = (((io_input_PADDR & (20'hFF000)) == 20'h40000) && io_input_PSEL[0]);  // WDG
+        Apb3PSEL[0] = ((io_input_PADDR[19:16] == 4'd0) && io_input_PSEL[0]);
+        Apb3PSEL[1] = ((io_input_PADDR[19:16] == 4'd1) && io_input_PSEL[0]);
+        Apb3PSEL[2] = ((io_input_PADDR[19:16] == 4'd2) && io_input_PSEL[0]);
+        Apb3PSEL[3] = ((io_input_PADDR[19:16] == 4'd3) && io_input_PSEL[0]);  // GPIO2
+        Apb3PSEL[4] = ((io_input_PADDR[19:16] == 4'd4) && io_input_PSEL[0]);  // WDG
+    end
+
+    always @(*) begin
+        io_input_PREADY = _zz_io_input_PREADY;
+        if (when_Apb3Decoder_l88) begin
+            io_input_PREADY = 1'b1;
+        end
+    end
+
+    assign io_input_PRDATA = _zz_io_input_PRDATA;
+    always @(*) begin
+        io_input_PSLVERROR = _zz_io_input_PSLVERROR;
+        if (when_Apb3Decoder_l88) begin
+            io_input_PSLVERROR = 1'b1;
+        end
+    end
+
+    assign when_Apb3Decoder_l88 = (io_input_PSEL[0] && (Apb3PSEL == 16'h0000));
+
+
+
+
+    always @(posedge io_mainClk) selIndex <= io_input_PSEL;
     always @(*) begin
         case (selIndex)
             16'h0001: begin
@@ -92,33 +136,35 @@ module Apb3Router (
         endcase
     end
 
+    // GPIO
     assign io_outputs_0_PADDR = io_input_PADDR;
     assign io_outputs_0_PENABLE = io_input_PENABLE;
-    assign io_outputs_0_PSEL[0] = io_input_PSEL[0];
+    assign io_outputs_0_PSEL = Apb3PSEL[0];
     assign io_outputs_0_PWRITE = io_input_PWRITE;
     assign io_outputs_0_PWDATA = io_input_PWDATA;
+    // UART
     assign io_outputs_1_PADDR = io_input_PADDR;
     assign io_outputs_1_PENABLE = io_input_PENABLE;
-    assign io_outputs_1_PSEL[0] = io_input_PSEL[1];
+    assign io_outputs_1_PSEL = Apb3PSEL[1];
     assign io_outputs_1_PWRITE = io_input_PWRITE;
     assign io_outputs_1_PWDATA = io_input_PWDATA;
+    // Timer
     assign io_outputs_2_PADDR = io_input_PADDR;
     assign io_outputs_2_PENABLE = io_input_PENABLE;
-    assign io_outputs_2_PSEL[0] = io_input_PSEL[2];
+    assign io_outputs_2_PSEL = Apb3PSEL[2];
     assign io_outputs_2_PWRITE = io_input_PWRITE;
     assign io_outputs_2_PWDATA = io_input_PWDATA;
-
-    assign io_outputs_3_PADDR = io_input_PADDR;  // GPIO2
-    assign io_outputs_3_PENABLE = io_input_PENABLE;  // GPIO2
-    assign io_outputs_3_PSEL[0] = io_input_PSEL[3];  // GPIO2
-    assign io_outputs_3_PWRITE = io_input_PWRITE;  // GPIO2
-    assign io_outputs_3_PWDATA = io_input_PWDATA;  // GPIO2
-
-    assign io_input_PREADY = _zz_io_input_PREADY;
-    assign io_input_PRDATA = _zz_io_input_PRDATA;
-    assign io_input_PSLVERROR = _zz_io_input_PSLVERROR;
-    always @(posedge io_mainClk) begin
-        selIndex <= io_input_PSEL;
-    end
+    // GPIO2
+    assign io_outputs_3_PADDR = io_input_PADDR;
+    assign io_outputs_3_PENABLE = io_input_PENABLE;
+    assign io_outputs_3_PSEL = Apb3PSEL[3];
+    assign io_outputs_3_PWRITE = io_input_PWRITE;
+    assign io_outputs_3_PWDATA = io_input_PWDATA;
+    // WDG
+    assign io_outputs_4_PADDR = io_input_PADDR;
+    assign io_outputs_4_PENABLE = io_input_PENABLE;
+    assign io_outputs_4_PSEL = Apb3PSEL[4];
+    assign io_outputs_4_PWRITE = io_input_PWRITE;
+    assign io_outputs_4_PWDATA = io_input_PWDATA;
 
 endmodule
