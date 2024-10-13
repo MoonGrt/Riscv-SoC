@@ -18,6 +18,14 @@ module Murax (
     input  wire        io_uart_rxd
 );
 
+    /* GPIO AFIO */
+    wire        USART1_RX = GPIOB[0];
+    wire        USART1_TX;
+    wire        USART2_RX = GPIOB[2];
+    wire        USART2_TX;
+    wire [15:0] AFIOA;
+    wire [15:0] AFIOB = {12'b0, USART2_TX, 1'bz, USART1_TX, 1'bz};  // RX 有问题
+
     wire [ 7:0] system_cpu_debug_bus_cmd_payload_address;
     wire        system_cpu_dBus_cmd_ready;
     reg         system_ram_io_bus_cmd_valid;
@@ -27,6 +35,7 @@ module Murax (
     wire [ 4:0] system_uartCtrl_io_apb_PADDR;
     wire [ 7:0] system_timer_io_apb_PADDR;
     wire [15:0] system_wdgCtrl_io_apb_PADDR;  // WDG PADDR
+    wire [15:0] system_usartCtrl_io_apb_PADDR;  // USART PADDR
     wire        io_asyncReset_buffercc_io_dataOut;
     wire        system_mainBusArbiter_io_iBus_cmd_ready;
     wire        system_mainBusArbiter_io_iBus_rsp_valid;
@@ -82,17 +91,21 @@ module Murax (
     wire        system_gpioACtrl_io_apb_PSLVERROR;
     wire [31:0] system_gpioACtrl_io_gpio_write;
     wire [31:0] system_gpioACtrl_io_gpio_writeEnable;
-
-    wire        system_gpioCtrl_io_apb_PREADY;  // GPIO2
-    wire [31:0] system_gpioCtrl_io_apb_PRDATA;  // GPIO2
-    wire        system_gpioCtrl_io_apb_PSLVERROR;  // GPIO2
-    wire [31:0] system_gpioCtrl_io_gpio_write;  // GPIO2
+    wire        system_gpioCtrl_io_apb_PREADY;        // GPIO2
+    wire [31:0] system_gpioCtrl_io_apb_PRDATA;        // GPIO2
+    wire        system_gpioCtrl_io_apb_PSLVERROR;     // GPIO2
+    wire [31:0] system_gpioCtrl_io_gpio_write;        // GPIO2
     wire [31:0] system_gpioCtrl_io_gpio_writeEnable;  // GPIO2
-    wire        system_wdgCtrl_io_apb_PREADY;  // WDG
-    wire [31:0] system_wdgCtrl_io_apb_PRDATA;  // WDG
-    wire        system_wdgCtrl_io_apb_PSLVERROR;  // WDG
-    wire [31:0] system_wdgCtrl_io_gpio_write;  // WDG
-    wire [31:0] system_wdgCtrl_io_gpio_writeEnable;  // WDG
+    wire        system_wdgCtrl_io_apb_PREADY;         // WDG
+    wire [31:0] system_wdgCtrl_io_apb_PRDATA;         // WDG
+    wire        system_wdgCtrl_io_apb_PSLVERROR;      // WDG
+    wire [31:0] system_wdgCtrl_io_gpio_write;         // WDG
+    wire [31:0] system_wdgCtrl_io_gpio_writeEnable;   // WDG
+    wire        system_usartCtrl_io_apb_PREADY;         // USART
+    wire [31:0] system_usartCtrl_io_apb_PRDATA;         // USART
+    wire        system_usartCtrl_io_apb_PSLVERROR;      // USART
+    wire [31:0] system_usartCtrl_io_gpio_write;         // USART
+    wire [31:0] system_usartCtrl_io_gpio_writeEnable;   // USART
 
     wire        system_uartCtrl_io_apb_PREADY;
     wire [31:0] system_uartCtrl_io_apb_PRDATA;
@@ -128,19 +141,21 @@ module Murax (
     wire        apb3Router_1_io_outputs_2_PENABLE;
     wire        apb3Router_1_io_outputs_2_PWRITE;
     wire [31:0] apb3Router_1_io_outputs_2_PWDATA;
-
     wire [19:0] apb3Router_1_io_outputs_3_PADDR;  // GPIO2
     wire [ 0:0] apb3Router_1_io_outputs_3_PSEL;  // GPIO2
     wire        apb3Router_1_io_outputs_3_PENABLE;  // GPIO2
     wire        apb3Router_1_io_outputs_3_PWRITE;  // GPIO2
     wire [31:0] apb3Router_1_io_outputs_3_PWDATA;  // GPIO2
-
     wire [19:0] apb3Router_1_io_outputs_4_PADDR;  // WDG
     wire [ 0:0] apb3Router_1_io_outputs_4_PSEL;  // WDG
     wire        apb3Router_1_io_outputs_4_PENABLE;  // WDG
     wire        apb3Router_1_io_outputs_4_PWRITE;  // WDG
     wire [31:0] apb3Router_1_io_outputs_4_PWDATA;  // WDG
-
+    wire [19:0] apb3Router_1_io_outputs_5_PADDR;  // USART
+    wire [ 0:0] apb3Router_1_io_outputs_5_PSEL;  // USART
+    wire        apb3Router_1_io_outputs_5_PENABLE;  // USART
+    wire        apb3Router_1_io_outputs_5_PWRITE;  // USART
+    wire [31:0] apb3Router_1_io_outputs_5_PWDATA;  // USART
     reg  [31:0] _zz_system_mainBusDecoder_logic_masterPipelined_rsp_payload_data;
     reg         resetCtrl_mainClkResetUnbuffered;
     reg  [ 5:0] resetCtrl_systemClkResetCounter;
@@ -345,9 +360,10 @@ module Murax (
         .io_apb_PWRITE        (apb3Router_1_io_outputs_3_PWRITE),            // i
         .io_apb_PWDATA        (apb3Router_1_io_outputs_3_PWDATA),            // i
         .io_apb_PRDATA        (system_gpioCtrl_io_apb_PRDATA),               // o
-        .AFIOA                (),                                            // i
+        .io_apb_PSLVERROR     (system_gpioCtrl_io_apb_PSLVERROR),            // o
+        .AFIOA                (AFIOA),                                       // i
         .GPIOA                (GPIOA),                                       // io
-        .AFIOB                (),                                            // i
+        .AFIOB                (AFIOB),                                       // i
         .GPIOB                (GPIOB)                                        // io
     );
     Apb3WDGRouter Apb3WDGRouter (
@@ -360,8 +376,25 @@ module Murax (
         .io_apb_PWRITE        (apb3Router_1_io_outputs_4_PWRITE),            // i
         .io_apb_PWDATA        (apb3Router_1_io_outputs_4_PWDATA),            // i
         .io_apb_PRDATA        (system_wdgCtrl_io_apb_PRDATA),                // o
+        .io_apb_PSLVERROR     (system_wdgCtrl_io_apb_PSLVERROR),             // o
         .IWDG_rst             (),                                            // o
         .WWDG_rst             ()                                             // o
+    );
+    Apb3USARTRouter Apb3USARTRouter (
+        .io_apb_PCLK          (io_mainClk),                                  // i
+        .io_apb_PRESET        (resetCtrl_systemReset),                       // i
+        .io_apb_PADDR         (system_usartCtrl_io_apb_PADDR),               // i
+        .io_apb_PSEL          (apb3Router_1_io_outputs_5_PSEL),              // i
+        .io_apb_PENABLE       (apb3Router_1_io_outputs_5_PENABLE),           // i
+        .io_apb_PREADY        (system_usartCtrl_io_apb_PREADY),              // o
+        .io_apb_PWRITE        (apb3Router_1_io_outputs_5_PWRITE),            // i
+        .io_apb_PWDATA        (apb3Router_1_io_outputs_5_PWDATA),            // i
+        .io_apb_PRDATA        (system_usartCtrl_io_apb_PRDATA),              // o
+        .io_apb_PSLVERROR     (system_usartCtrl_io_apb_PSLVERROR),           // o
+        .USART1_RX            (USART1_RX),                                   // i
+        .USART1_TX            (USART1_TX),                                   // io
+        .USART2_RX            (USART2_RX),                                   // i
+        .USART2_TX            (USART2_TX)                                    // io
     );
     Apb3UART Apb3UART (
         .io_apb_PADDR         (system_uartCtrl_io_apb_PADDR[4:0]),       // i
@@ -488,23 +521,30 @@ module Murax (
         .io_outputs_2_PWDATA   (apb3Router_1_io_outputs_2_PWDATA[31:0]),  // o
         .io_outputs_2_PRDATA   (system_timer_io_apb_PRDATA[31:0]),        // i
         .io_outputs_2_PSLVERROR(system_timer_io_apb_PSLVERROR),           // i
-
         .io_outputs_3_PADDR    (apb3Router_1_io_outputs_3_PADDR[19:0]),   // o GPIO2
         .io_outputs_3_PSEL     (apb3Router_1_io_outputs_3_PSEL),          // o GPIO2
         .io_outputs_3_PENABLE  (apb3Router_1_io_outputs_3_PENABLE),       // o GPIO2
-        .io_outputs_3_PREADY   (system_gpioCtrl_io_apb_PREADY),         // i GPIO2
+        .io_outputs_3_PREADY   (system_gpioCtrl_io_apb_PREADY),           // i GPIO2
         .io_outputs_3_PWRITE   (apb3Router_1_io_outputs_3_PWRITE),        // o GPIO2
         .io_outputs_3_PWDATA   (apb3Router_1_io_outputs_3_PWDATA[31:0]),  // o GPIO2
-        .io_outputs_3_PRDATA   (system_gpioCtrl_io_apb_PRDATA[31:0]),   // i GPIO2
-        .io_outputs_3_PSLVERROR(1'b0),                                    // i GPIO2
+        .io_outputs_3_PRDATA   (system_gpioCtrl_io_apb_PRDATA[31:0]),     // i GPIO2
+        .io_outputs_3_PSLVERROR(system_gpioCtrl_io_apb_PSLVERROR),        // i GPIO2
         .io_outputs_4_PADDR    (apb3Router_1_io_outputs_4_PADDR[19:0]),   // o WDG
         .io_outputs_4_PSEL     (apb3Router_1_io_outputs_4_PSEL),          // o WDG
         .io_outputs_4_PENABLE  (apb3Router_1_io_outputs_4_PENABLE),       // o WDG
-        .io_outputs_4_PREADY   (system_wdgCtrl_io_apb_PREADY),         // i WDG
+        .io_outputs_4_PREADY   (system_wdgCtrl_io_apb_PREADY),            // i WDG
         .io_outputs_4_PWRITE   (apb3Router_1_io_outputs_4_PWRITE),        // o WDG
         .io_outputs_4_PWDATA   (apb3Router_1_io_outputs_4_PWDATA[31:0]),  // o WDG
-        .io_outputs_4_PRDATA   (system_wdgCtrl_io_apb_PRDATA[31:0]),   // i WDG
-        .io_outputs_4_PSLVERROR(1'b0),                                    // i WDG
+        .io_outputs_4_PRDATA   (system_wdgCtrl_io_apb_PRDATA[31:0]),      // i WDG
+        .io_outputs_4_PSLVERROR(system_wdgCtrl_io_apb_PSLVERROR),         // i WDG
+        .io_outputs_5_PADDR    (apb3Router_1_io_outputs_5_PADDR[19:0]),   // o USART
+        .io_outputs_5_PSEL     (apb3Router_1_io_outputs_5_PSEL),          // o USART
+        .io_outputs_5_PENABLE  (apb3Router_1_io_outputs_5_PENABLE),       // o USART
+        .io_outputs_5_PREADY   (system_usartCtrl_io_apb_PREADY),          // i USART
+        .io_outputs_5_PWRITE   (apb3Router_1_io_outputs_5_PWRITE),        // o USART
+        .io_outputs_5_PWDATA   (apb3Router_1_io_outputs_5_PWDATA[31:0]),  // o USART
+        .io_outputs_5_PRDATA   (system_usartCtrl_io_apb_PRDATA[31:0]),    // i USART
+        .io_outputs_5_PSLVERROR(system_usartCtrl_io_apb_PSLVERROR),       // i USART
 
         .io_mainClk            (io_mainClk),                              // i
         .resetCtrl_systemReset (resetCtrl_systemReset)                    // i
@@ -565,7 +605,8 @@ module Murax (
     assign system_gpioCtrl_io_apb_PADDR = apb3Router_1_io_outputs_3_PADDR[15:0];  // GPIO2
     assign system_uartCtrl_io_apb_PADDR = apb3Router_1_io_outputs_1_PADDR[4:0];
     assign system_timer_io_apb_PADDR = apb3Router_1_io_outputs_2_PADDR[7:0];
-    assign system_wdgCtrl_io_apb_PADDR = apb3Router_1_io_outputs_3_PADDR[15:0];  // WDG
+    assign system_wdgCtrl_io_apb_PADDR = apb3Router_1_io_outputs_4_PADDR[15:0];  // WDG
+    assign system_usartCtrl_io_apb_PADDR = apb3Router_1_io_outputs_5_PADDR[15:0];  // USART
     assign system_mainBusDecoder_logic_masterPipelined_cmd_valid = system_mainBusArbiter_io_masterBus_cmd_valid;
     assign system_mainBusDecoder_logic_masterPipelined_cmd_payload_write = system_mainBusArbiter_io_masterBus_cmd_payload_write;
     assign system_mainBusDecoder_logic_masterPipelined_cmd_payload_address = system_mainBusArbiter_io_masterBus_cmd_payload_address;

@@ -55,6 +55,15 @@ module Apb3PRouter (
     output wire [31:0] io_outputs_4_PWDATA,
     input  wire [31:0] io_outputs_4_PRDATA,
     input  wire        io_outputs_4_PSLVERROR,
+    // USART
+    output wire [19:0] io_outputs_5_PADDR,
+    output wire [ 0:0] io_outputs_5_PSEL,
+    output wire        io_outputs_5_PENABLE,
+    input  wire        io_outputs_5_PREADY,
+    output wire        io_outputs_5_PWRITE,
+    output wire [31:0] io_outputs_5_PWDATA,
+    input  wire [31:0] io_outputs_5_PRDATA,
+    input  wire        io_outputs_5_PSLVERROR,
 
     input  wire        io_mainClk,
     input  wire        resetCtrl_systemReset
@@ -75,16 +84,12 @@ module Apb3PRouter (
         if (resetCtrl_systemReset) begin
             Apb3PSEL <= 16'h0000;
         end else begin
-            // Apb3PSEL[0] = (((io_input_PADDR & (20'hFF000)) == 20'h00000) && io_input_PSEL[0]);
-            // Apb3PSEL[1] = (((io_input_PADDR & (20'hFF000)) == 20'h10000) && io_input_PSEL[0]);
-            // Apb3PSEL[2] = (((io_input_PADDR & (20'hFF000)) == 20'h20000) && io_input_PSEL[0]);
-            // Apb3PSEL[3] = (((io_input_PADDR & (20'hFF000)) == 20'h30000) && io_input_PSEL[0]);  // GPIO2
-            // Apb3PSEL[4] = (((io_input_PADDR & (20'hFF000)) == 20'h40000) && io_input_PSEL[0]);  // WDG
             Apb3PSEL[0] = ((io_input_PADDR[19:16] == 4'd0) && io_input_PSEL[0]);
             Apb3PSEL[1] = ((io_input_PADDR[19:16] == 4'd1) && io_input_PSEL[0]);
             Apb3PSEL[2] = ((io_input_PADDR[19:16] == 4'd2) && io_input_PSEL[0]);
             Apb3PSEL[3] = ((io_input_PADDR[19:16] == 4'd3) && io_input_PSEL[0]);  // GPIO2
             Apb3PSEL[4] = ((io_input_PADDR[19:16] == 4'd4) && io_input_PSEL[0]);  // WDG
+            Apb3PSEL[5] = ((io_input_PADDR[19:16] == 4'd5) && io_input_PSEL[0]);  // USART
         end
     end
 
@@ -142,6 +147,11 @@ module Apb3PRouter (
                     _zz_io_input_PRDATA = io_outputs_4_PRDATA;
                     _zz_io_input_PSLVERROR = io_outputs_4_PSLVERROR;
                 end
+                16'h0020: begin
+                    _zz_io_input_PREADY = io_outputs_5_PREADY;
+                    _zz_io_input_PRDATA = io_outputs_5_PRDATA;
+                    _zz_io_input_PSLVERROR = io_outputs_5_PSLVERROR;
+                end
                 default: ;
             endcase
     end
@@ -176,5 +186,11 @@ module Apb3PRouter (
     assign io_outputs_4_PSEL = Apb3PSEL[4];
     assign io_outputs_4_PWRITE = io_input_PWRITE;
     assign io_outputs_4_PWDATA = io_input_PWDATA;
+    // USART
+    assign io_outputs_5_PADDR = io_input_PADDR;
+    assign io_outputs_5_PENABLE = io_input_PENABLE;
+    assign io_outputs_5_PSEL = Apb3PSEL[5];
+    assign io_outputs_5_PWRITE = io_input_PWRITE;
+    assign io_outputs_5_PWDATA = io_input_PWDATA;
 
 endmodule
