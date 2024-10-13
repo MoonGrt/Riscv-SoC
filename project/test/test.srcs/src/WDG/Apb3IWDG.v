@@ -14,9 +14,9 @@ module IWDG (
 
     // IWDG寄存器定义
     reg [15:0] KR;  // Key register
-    reg [ 2:0] PR;  // Prescaler register (假设使用 3 位预分频器)
+    reg [ 2:0] PR;  // Prescaler register (使用 3 位预分频器)
     reg [11:0] RLR;  // Reload register (12 位)
-    reg [ 1:0] SR;  // Status register (假设使用 2 位状态寄存器)
+    reg [ 1:0] SR;  // Status register (使用 2 位状态寄存器)
 
     // IWDG内部计数器和状态
     reg [31:0] counter, prescaler_counter;
@@ -35,8 +35,8 @@ module IWDG (
             if (io_apb_PSEL && io_apb_PENABLE && io_apb_PWRITE) begin
                 case (io_apb_PADDR)
                     2'b00:   KR <= io_apb_PWDATA[15:0];  // 写 Key register
-                    2'b01:   PR <= io_apb_PWDATA[2:0];  // 写 Prescaler register
-                    2'b10:   RLR <= io_apb_PWDATA[11:0];  // 写 Reload register
+                    2'b01:   if (write_en) PR <= io_apb_PWDATA[2:0];  // 写 Prescaler register
+                    2'b10:   if (write_en) RLR <= io_apb_PWDATA[11:0];  // 写 Reload register
                     default: ;  // 其他寄存器不处理
                 endcase
             end
@@ -60,37 +60,37 @@ module IWDG (
     always @(posedge io_apb_PCLK or posedge io_apb_PRESET) begin
         if (io_apb_PRESET) begin
             counter <= 32'h00000000;
+            write_en <= 1'b0;
             IWDG_en <= 1'b0;
             IWDG_rst <= 1'b0;
             prescaler_counter <= 16'h0000;
             SR <= 2'b00;
         end else begin
             // 看门狗计时器启用条件
-            case (KR)
-                16'h5555: write_en <= 1'b1;  // 写使能
-                16'h0000: write_en <= 1'b0;  // 写失能
-                16'hAAAA: if (write_en) counter <= {20'b0, RLR};  // 重载计数器
-                16'hCCCC: begin  // 看门狗使能
-                    if (write_en) begin
-                        IWDG_en <= 1'b1;
-                        SR      <= 2'b00;  // 清除状态寄存器
+            if (KR)
+                case (KR)
+                    16'h5555: write_en <= 1'b1;  // 写使能
+                    16'hAAAA: if (write_en) counter <= {20'b0, RLR};  // 重载计数器
+                    16'hCCCC: begin  // 看门狗使能
+                        if (write_en) begin
+                            IWDG_en <= 1'b1;
+                            SR      <= 2'b00;  // 清除状态寄存器
+                        end
                     end
-                end
-            endcase
+                    default: write_en <= 1'b0;  // 写失能
+                endcase
 
             // 分频器计数逻辑
             if (IWDG_en) begin
-                if (prescaler_counter == (1 << PR) - 1) begin
+                if (prescaler_counter == (4 << PR) - 1) begin
                     prescaler_counter <= 16'h0000;  // 分频计数器重置
                     if (counter > 0) begin
                         counter <= counter - 1;  // 分频后主计数器减少
                     end else begin
                         IWDG_rst <= 1'b1;  // 计数器达到 0 时发出复位信号
-                        SR        <= 2'b01;  // 状态寄存器置位
+                        SR       <= 2'b01;  // 状态寄存器置位
                     end
-                end else begin
-                    prescaler_counter <= prescaler_counter + 1;  // 分频计数器增加
-                end
+                end else prescaler_counter <= prescaler_counter + 1;  // 分频计数器增加
             end
         end
     end

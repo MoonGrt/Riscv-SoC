@@ -5,19 +5,16 @@ module tb_Murax;
     // Murax Parameters
     parameter T = 10;
 
-    // Murax Inputs
     reg         rst_n = 0;
     reg         clk = 0;
     reg         io_jtag_tms = 0;
     reg         io_jtag_tdi = 0;
     reg         io_jtag_tck = 0;
-    reg  [31:0] io_gpioA_read = 0;
-    reg         io_uart_rxd = 0;
-
-    // Murax Outputs
     wire        io_jtag_tdo;
+    reg  [31:0] io_gpioA_read = 0;
     wire [31:0] io_gpioA_write;
     wire [31:0] io_gpioA_writeEnable;
+    reg         io_uart_rxd = 0;
     wire        io_uart_txd;
     wire [15:0] GPIOA, GPIOB;
 

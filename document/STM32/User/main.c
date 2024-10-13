@@ -44,6 +44,16 @@ void IWDG(void)
     }
 }
 
+void WWDG(void)
+{
+    /*WWDG初始化*/
+    WWDG_SetPrescaler(WWDG_Prescaler_8); // 设置预分频为8
+    WWDG_SetWindowValue(0x40 | 21);      // 设置窗口值，窗口时间为30ms
+    WWDG_Enable(0x40 | 54);              // 使能并第一次喂狗，超时时间为50ms
+    /*喂狗*/
+    WWDG_SetCounter(0x40 | 54);          // 重装计数器，喂狗
+}
+
 int main(void)
 {
     GPIO();

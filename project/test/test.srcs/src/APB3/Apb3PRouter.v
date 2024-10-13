@@ -67,21 +67,25 @@ module Apb3PRouter (
     reg  [15:0] selIndex;
     reg  [15:0] Apb3PSEL;
 
-    assign io_output_PADDR   = io_input_PADDR;
-    assign io_output_PENABLE = io_input_PENABLE;
-    assign io_output_PWRITE  = io_input_PWRITE;
-    assign io_output_PWDATA  = io_input_PWDATA;
+    // assign io_output_PADDR   = io_input_PADDR;
+    // assign io_output_PENABLE = io_input_PENABLE;
+    // assign io_output_PWRITE  = io_input_PWRITE;
+    // assign io_output_PWDATA  = io_input_PWDATA;
     always @(*) begin
-        // Apb3PSEL[0] = (((io_input_PADDR & (20'hFF000)) == 20'h00000) && io_input_PSEL[0]);
-        // Apb3PSEL[1] = (((io_input_PADDR & (20'hFF000)) == 20'h10000) && io_input_PSEL[0]);
-        // Apb3PSEL[2] = (((io_input_PADDR & (20'hFF000)) == 20'h20000) && io_input_PSEL[0]);
-        // Apb3PSEL[3] = (((io_input_PADDR & (20'hFF000)) == 20'h30000) && io_input_PSEL[0]);  // GPIO2
-        // Apb3PSEL[4] = (((io_input_PADDR & (20'hFF000)) == 20'h40000) && io_input_PSEL[0]);  // WDG
-        Apb3PSEL[0] = ((io_input_PADDR[19:16] == 4'd0) && io_input_PSEL[0]);
-        Apb3PSEL[1] = ((io_input_PADDR[19:16] == 4'd1) && io_input_PSEL[0]);
-        Apb3PSEL[2] = ((io_input_PADDR[19:16] == 4'd2) && io_input_PSEL[0]);
-        Apb3PSEL[3] = ((io_input_PADDR[19:16] == 4'd3) && io_input_PSEL[0]);  // GPIO2
-        Apb3PSEL[4] = ((io_input_PADDR[19:16] == 4'd4) && io_input_PSEL[0]);  // WDG
+        if (resetCtrl_systemReset) begin
+            Apb3PSEL <= 16'h0000;
+        end else begin
+            // Apb3PSEL[0] = (((io_input_PADDR & (20'hFF000)) == 20'h00000) && io_input_PSEL[0]);
+            // Apb3PSEL[1] = (((io_input_PADDR & (20'hFF000)) == 20'h10000) && io_input_PSEL[0]);
+            // Apb3PSEL[2] = (((io_input_PADDR & (20'hFF000)) == 20'h20000) && io_input_PSEL[0]);
+            // Apb3PSEL[3] = (((io_input_PADDR & (20'hFF000)) == 20'h30000) && io_input_PSEL[0]);  // GPIO2
+            // Apb3PSEL[4] = (((io_input_PADDR & (20'hFF000)) == 20'h40000) && io_input_PSEL[0]);  // WDG
+            Apb3PSEL[0] = ((io_input_PADDR[19:16] == 4'd0) && io_input_PSEL[0]);
+            Apb3PSEL[1] = ((io_input_PADDR[19:16] == 4'd1) && io_input_PSEL[0]);
+            Apb3PSEL[2] = ((io_input_PADDR[19:16] == 4'd2) && io_input_PSEL[0]);
+            Apb3PSEL[3] = ((io_input_PADDR[19:16] == 4'd3) && io_input_PSEL[0]);  // GPIO2
+            Apb3PSEL[4] = ((io_input_PADDR[19:16] == 4'd4) && io_input_PSEL[0]);  // WDG
+        end
     end
 
     always @(*) begin
@@ -104,36 +108,42 @@ module Apb3PRouter (
 
 
 
-    always @(posedge io_mainClk) selIndex <= io_input_PSEL;
+    always @(posedge io_mainClk) selIndex <= Apb3PSEL;
     always @(*) begin
-        case (selIndex)
-            16'h0001: begin
-                _zz_io_input_PREADY = io_outputs_0_PREADY;
-                _zz_io_input_PRDATA = io_outputs_0_PRDATA;
-                _zz_io_input_PSLVERROR = io_outputs_0_PSLVERROR;
-            end
-            16'h0002: begin
-                _zz_io_input_PREADY = io_outputs_1_PREADY;
-                _zz_io_input_PRDATA = io_outputs_1_PRDATA;
-                _zz_io_input_PSLVERROR = io_outputs_1_PSLVERROR;
-            end
-            16'h0004: begin
-                _zz_io_input_PREADY = io_outputs_2_PREADY;
-                _zz_io_input_PRDATA = io_outputs_2_PRDATA;
-                _zz_io_input_PSLVERROR = io_outputs_2_PSLVERROR;
-            end
-            16'h0008: begin
-                _zz_io_input_PREADY = io_outputs_3_PREADY;
-                _zz_io_input_PRDATA = io_outputs_3_PRDATA;
-                _zz_io_input_PSLVERROR = io_outputs_3_PSLVERROR;
-            end
-            16'h0010: begin
-                _zz_io_input_PREADY = io_outputs_4_PREADY;
-                _zz_io_input_PRDATA = io_outputs_4_PRDATA;
-                _zz_io_input_PSLVERROR = io_outputs_4_PSLVERROR;
-            end
-            default: ;
-        endcase
+        if (resetCtrl_systemReset) begin
+            _zz_io_input_PREADY <= 1'b1;
+            _zz_io_input_PRDATA <= 32'h0;
+            _zz_io_input_PSLVERROR <= 1'b0;
+        end
+        else
+            case (selIndex)
+                16'h0001: begin
+                    _zz_io_input_PREADY = io_outputs_0_PREADY;
+                    _zz_io_input_PRDATA = io_outputs_0_PRDATA;
+                    _zz_io_input_PSLVERROR = io_outputs_0_PSLVERROR;
+                end
+                16'h0002: begin
+                    _zz_io_input_PREADY = io_outputs_1_PREADY;
+                    _zz_io_input_PRDATA = io_outputs_1_PRDATA;
+                    _zz_io_input_PSLVERROR = io_outputs_1_PSLVERROR;
+                end
+                16'h0004: begin
+                    _zz_io_input_PREADY = io_outputs_2_PREADY;
+                    _zz_io_input_PRDATA = io_outputs_2_PRDATA;
+                    _zz_io_input_PSLVERROR = io_outputs_2_PSLVERROR;
+                end
+                16'h0008: begin
+                    _zz_io_input_PREADY = io_outputs_3_PREADY;
+                    _zz_io_input_PRDATA = io_outputs_3_PRDATA;
+                    _zz_io_input_PSLVERROR = io_outputs_3_PSLVERROR;
+                end
+                16'h0010: begin
+                    _zz_io_input_PREADY = io_outputs_4_PREADY;
+                    _zz_io_input_PRDATA = io_outputs_4_PRDATA;
+                    _zz_io_input_PSLVERROR = io_outputs_4_PSLVERROR;
+                end
+                default: ;
+            endcase
     end
 
     // GPIO

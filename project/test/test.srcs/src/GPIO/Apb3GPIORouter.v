@@ -45,24 +45,34 @@ module Apb3GPIORouter (
     assign io_apb_PSLVERROR = _zz_io_apb_PSLVERROR;
     always @(posedge io_apb_PCLK) selIndex <= io_apb_PSEL;
     always @(*) begin
-        case (selIndex)
-            16'h0001: begin
-                _zz_io_apb_PREADY = io_apb_PREADY_GPIOA;
-                _zz_io_apb_PRDATA = io_apb_PRDATA_GPIOA;
-                _zz_io_apb_PSLVERROR = io_apb_PSLVERROR_GPIOA;
-            end
-            16'h0002: begin
-                _zz_io_apb_PREADY = io_apb_PREADY_GPIOB;
-                _zz_io_apb_PRDATA = io_apb_PRDATA_GPIOB;
-                _zz_io_apb_PSLVERROR = io_apb_PSLVERROR_GPIOB;
-            end
-            default: ;
-        endcase
+        if (io_apb_PRESET) begin
+            _zz_io_apb_PREADY <= 1'b1;
+            _zz_io_apb_PRDATA <= 32'h0;
+            _zz_io_apb_PSLVERROR <= 1'b0;
+        end
+        else
+            case (selIndex)
+                16'h0001: begin
+                    _zz_io_apb_PREADY = io_apb_PREADY_GPIOA;
+                    _zz_io_apb_PRDATA = io_apb_PRDATA_GPIOA;
+                    _zz_io_apb_PSLVERROR = io_apb_PSLVERROR_GPIOA;
+                end
+                16'h0002: begin
+                    _zz_io_apb_PREADY = io_apb_PREADY_GPIOB;
+                    _zz_io_apb_PRDATA = io_apb_PRDATA_GPIOB;
+                    _zz_io_apb_PSLVERROR = io_apb_PSLVERROR_GPIOB;
+                end
+                default: ;
+            endcase
     end
 
     always @(*) begin
-        Apb3PSEL[0] = ((io_apb_PADDR[15:12] == 4'd0) && io_apb_PSEL[0]);  // GPIOA
-        Apb3PSEL[1] = ((io_apb_PADDR[15:12] == 4'd1) && io_apb_PSEL[0]);  // GPIOB
+        if (io_apb_PRESET) begin
+            Apb3PSEL <= 16'h0000;
+        end else begin
+            Apb3PSEL[0] = ((io_apb_PADDR[15:12] == 4'd0) && io_apb_PSEL[0]);  // GPIOA
+            Apb3PSEL[1] = ((io_apb_PADDR[15:12] == 4'd1) && io_apb_PSEL[0]);  // GPIOB
+        end
     end
 
     Apb3GPIO2 Apb3GPIOA (
