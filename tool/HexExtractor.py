@@ -40,12 +40,12 @@ def extract_code(file_path):
 
 def save_bytes_to_files(instructions, output_dir):
     """
-    将每条指令的每个字节保存到四个不同的文件中，确保每个文件写入1024字节数据。
+    将每条指令的每个字节保存到四个不同的文件中，确保每个文件写入4096字节数据。
     """
     file_names = [f'{output_dir}.bin', f'{output_dir}0.bin', f'{output_dir}1.bin', f'{output_dir}2.bin', f'{output_dir}3.bin']
 
     # 每个文件的最大字节数
-    max_bytes = 1024
+    max_bytes = 4096
 
     # 记录每个文件的字节内容
     bytes_content = [[] for _ in range(5)]
@@ -58,14 +58,14 @@ def save_bytes_to_files(instructions, output_dir):
         bytes_content[3].append(instruction[4:6])  # 第三个字节
         bytes_content[4].append(instruction[6:8])  # 第四个字节
 
-    # 将字节内容写入文件，并确保文件大小为1024字节
+    # 将字节内容写入文件，并确保文件大小为4096字节
     for i in range(5):
         with open(file_names[i], 'w') as file:
             # 写入实际字节
             for byte in bytes_content[i]:
                 file.write(byte + '\n')
 
-            # 填充0到1024字节
+            # 填充0到4096字节
             if len(bytes_content[i]) < max_bytes:
                 # 计算需要填充的零数量
                 padding_size = max_bytes - len(bytes_content[i])

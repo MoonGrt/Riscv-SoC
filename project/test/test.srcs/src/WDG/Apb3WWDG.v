@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps
+
 module WWDG (
     input  wire        io_apb_PCLK,     // APB 时钟
     input  wire        io_apb_PRESET,   // APB 复位信号，高电平复位

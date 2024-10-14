@@ -18,17 +18,19 @@ module Apb3GPIORouter (
     inout wire [15:0] GPIOB
 );
 
-    reg  [15:0] Apb3PSEL;
+    reg  [15:0] Apb3PSEL = 16'h0000;
+    // GPIOA
     wire [ 2:0] io_apb_PADDR_GPIOA = io_apb_PADDR[4:2];
-    wire [15:0] io_apb_PSEL_GPIOA = Apb3PSEL[0];
+    wire        io_apb_PSEL_GPIOA = Apb3PSEL[0];
     wire        io_apb_PENABLE_GPIOA = io_apb_PENABLE;
     wire        io_apb_PREADY_GPIOA;
     wire        io_apb_PWRITE_GPIOA = io_apb_PWRITE;
     wire [31:0] io_apb_PWDATA_GPIOA = io_apb_PWDATA;
     wire [31:0] io_apb_PRDATA_GPIOA;
     wire        io_apb_PSLVERROR_GPIOA = 1'b0;
+    // GPIOB
     wire [ 2:0] io_apb_PADDR_GPIOB = io_apb_PADDR[4:2];
-    wire [15:0] io_apb_PSEL_GPIOB = Apb3PSEL[1];
+    wire        io_apb_PSEL_GPIOB = Apb3PSEL[1];
     wire        io_apb_PENABLE_GPIOB = io_apb_PENABLE;
     wire        io_apb_PREADY_GPIOB;
     wire        io_apb_PWRITE_GPIOB = io_apb_PWRITE;
@@ -43,7 +45,7 @@ module Apb3GPIORouter (
     assign io_apb_PREADY = _zz_io_apb_PREADY;
     assign io_apb_PRDATA = _zz_io_apb_PRDATA;
     assign io_apb_PSLVERROR = _zz_io_apb_PSLVERROR;
-    always @(posedge io_apb_PCLK) selIndex <= io_apb_PSEL;
+    always @(posedge io_apb_PCLK) selIndex <= Apb3PSEL;
     always @(*) begin
         if (io_apb_PRESET) begin
             _zz_io_apb_PREADY <= 1'b1;
@@ -68,7 +70,7 @@ module Apb3GPIORouter (
 
     always @(*) begin
         if (io_apb_PRESET) begin
-            Apb3PSEL <= 16'h0000;
+            Apb3PSEL = 16'h0000;
         end else begin
             Apb3PSEL[0] = ((io_apb_PADDR[15:12] == 4'd0) && io_apb_PSEL[0]);  // GPIOA
             Apb3PSEL[1] = ((io_apb_PADDR[15:12] == 4'd1) && io_apb_PSEL[0]);  // GPIOB

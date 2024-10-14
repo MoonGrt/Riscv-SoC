@@ -1,16 +1,19 @@
+`timescale 1ns / 1ps
+
 module Apb3USART (
     input  wire        io_apb_PCLK,     // APB 时钟
     input  wire        io_apb_PRESET,   // APB 复位信号，高电平复位
-    input  wire [15:0] io_apb_PADDR,    // 地址总线
+    input  wire [ 2:0] io_apb_PADDR,    // 地址总线
     input  wire        io_apb_PSEL,     // 选择信号
     input  wire        io_apb_PENABLE,  // 使能信号
     input  wire        io_apb_PWRITE,   // 写信号
-    input  wire [15:0] io_apb_PWDATA,   // 写数据总线
+    input  wire [31:0] io_apb_PWDATA,   // 写数据总线
     output wire        io_apb_PREADY,   // APB 准备信号
-    output reg  [15:0] io_apb_PRDATA,   // 读数据总线
+    output reg  [31:0] io_apb_PRDATA,   // 读数据总线
 
-    input  wire RX,  // UART 接收数据输入
-    output reg  TX   // UART 发送数据输出
+    input  wire USART_RX,  // UART 接收数据输入
+    output wire USART_TX,  // UART 发送数据输出
+    output wire interrupt  // 中断输出
 );
 
     // USART 寄存器定义
@@ -19,8 +22,36 @@ module Apb3USART (
     reg [15:0] BRR;  // 波特率寄存器
     reg [15:0] CR1;  // 控制寄存器1
     reg [15:0] CR2;  // 控制寄存器2
-    reg [15:0] CR3;  // 控制寄存器3
+    reg [15:0] CR3;  // 控制寄存器3  暂时不支持流控制和其他高级功能
     reg [15:0] GTPR;  // 集团寄存器
+
+    // USART StreamFifo 接口定义
+    wire io_push_ready_TX;
+    reg io_push_valid_TX;
+    reg [7:0] io_push_payload_TX;
+    wire io_pop_ready_TX;
+    wire io_pop_valid_TX;
+    wire [7:0] io_pop_payload_TX;
+    wire [4:0] io_availability_TX;
+    wire io_push_ready_RX;
+    wire io_push_valid_RX;
+    wire [7:0] io_push_payload_RX;
+    wire io_pop_ready_RX;
+    wire io_pop_valid_RX;
+    wire [7:0] io_pop_payload_RX;
+    wire [4:0] io_occupancy_RX;
+
+    // USART Config 接口定义
+    wire [2:0] io_config_frame_dataLength = CR1[12] ? 3'b000 : 3'b111;
+    wire [0:0] io_config_frame_stop = CR2[13];
+    wire [1:0] io_config_frame_parity = CR1[9];
+    wire [19:0] io_config_clockDivider = BRR[15:4];
+    wire UE = CR1[13];
+    wire RE = CR1[2];
+    wire TE = CR1[3];
+    wire io_readError;
+    wire io_writeBreak = 1'b0;
+    wire io_readBreak;
 
     // APB 写寄存器逻辑
     assign io_apb_PREADY = 1'b1;  // APB 准备信号始终为高，表示设备始终准备好
@@ -35,58 +66,102 @@ module Apb3USART (
             GTPR <= 16'h0000;
         end else begin
             if (io_apb_PSEL && io_apb_PENABLE && io_apb_PWRITE) begin
-                case (io_apb_PADDR[15:0])
-                    16'h0000: SR <= io_apb_PWDATA;  // 写状态寄存器
-                    16'h0004: DR <= io_apb_PWDATA;  // 写数据寄存器
-                    16'h0008: BRR <= io_apb_PWDATA;  // 写波特率寄存器
-                    16'h000C: CR1 <= io_apb_PWDATA;  // 写控制寄存器1
-                    16'h0010: CR2 <= io_apb_PWDATA;  // 写控制寄存器2
-                    16'h0014: CR3 <= io_apb_PWDATA;  // 写控制寄存器3
-                    16'h0018: GTPR <= io_apb_PWDATA;  // 写集团寄存器
-                    default:  ;  // 其他寄存器不处理
+                case (io_apb_PADDR)
+                    3'b000:  SR <= io_apb_PWDATA[15:0];  // 写 SR
+                    3'b001:  DR <= io_apb_PWDATA[15:0];  // 写 DR
+                    3'b010:  BRR <= io_apb_PWDATA[15:0];  // 写 BRR
+                    3'b011:  CR1 <= io_apb_PWDATA[15:0];  // 写 CR1
+                    3'b100:  CR2 <= io_apb_PWDATA[15:0];  // 写 CR2
+                    3'b101:  CR3 <= io_apb_PWDATA[15:0];  // 写 CR3
+                    3'b110:  GTPR <= io_apb_PWDATA[15:0];  // 写 GTPR
+                    default: ;  // 其他寄存器不处理
                 endcase
             end
         end
     end
-
     // APB 读寄存器逻辑
     always @(*) begin
         if (io_apb_PRESET) io_apb_PRDATA = 16'h0000;
         else if (io_apb_PSEL && io_apb_PENABLE && ~io_apb_PWRITE) begin
-            case (io_apb_PADDR[15:0])
-                16'h0000: io_apb_PRDATA <= SR;  // 读状态寄存器
-                16'h0004: io_apb_PRDATA <= DR;  // 读数据寄存器
-                16'h0008: io_apb_PRDATA <= BRR;  // 读波特率寄存器
-                16'h000C: io_apb_PRDATA <= CR1;  // 读控制寄存器1
-                16'h0010: io_apb_PRDATA <= CR2;  // 读控制寄存器2
-                16'h0014: io_apb_PRDATA <= CR3;  // 读控制寄存器3
-                16'h0018: io_apb_PRDATA <= GTPR;  // 读集团寄存器
-                default:  io_apb_PRDATA <= 16'h0000;
+            case (io_apb_PADDR)
+                3'b000:  io_apb_PRDATA <= {16'b0, SR};  // 读 SR
+                3'b001:  io_apb_PRDATA <= {16'b0, DR};  // 读 DR
+                3'b010:  io_apb_PRDATA <= {16'b0, BRR};  // 读 BRR
+                3'b011:  io_apb_PRDATA <= {16'b0, CR1};  // 读 CR1
+                3'b100:  io_apb_PRDATA <= {16'b0, CR2};  // 读 CR2
+                3'b101:  io_apb_PRDATA <= {16'b0, CR3};  // 读 CR3
+                3'b110:  io_apb_PRDATA <= {16'b0, GTPR};  // 读 GTPR
+                default: io_apb_PRDATA <= 16'h0000;  // 默认返回0
             endcase
         end
     end
 
-    // 可以添加发送和接收逻辑的子模块实例化
-    wire tx_ready;  // 发送准备信号
-    wire rx_ready;  // 接收准备信号
 
-    // // 发送模块实例
-    // Tx_Module tx_inst (
-    //     .clk  (io_apb_PCLK),
-    //     .reset(io_apb_PRESET),
-    //     .start(CR1[0]),         // 控制信号
-    //     .data (DR),             // 要发送的数据
-    //     .TX   (TX),             // 发送输出
-    //     .ready(tx_ready)        // 发送准备信号
-    // );
+    // StreamFifo 接口
+    reg TXFifo_push = 1'b0;
+    always @(posedge io_apb_PCLK)
+        TXFifo_push <= io_apb_PSEL && io_apb_PENABLE && io_apb_PWRITE && io_apb_PADDR == 3'b001;
+    always @(posedge io_apb_PCLK or posedge io_apb_PRESET) begin
+        if (io_apb_PRESET) begin
+            io_push_valid_TX   <= 1'b0;
+            io_push_payload_TX <= 8'h00;
+        end else begin
+            io_push_valid_TX   <= 1'b0;
+            io_push_payload_TX <= 8'h00;
+            if (TXFifo_push) begin
+                io_push_valid_TX   <= 1'b1;
+                io_push_payload_TX <= DR[7:0];
+            end
+        end
+    end
 
-    // // 接收模块实例
-    // Rx_Module rx_inst (
-    //     .clk  (io_apb_PCLK),
-    //     .reset(io_apb_PRESET),
-    //     .RX   (RX),             // 接收输入
-    //     .data (DR),             // 接收的数据
-    //     .ready(rx_ready)        // 接收准备信号
-    // );
+    // 串口收发逻辑
+    StreamFifo_UART StreamFifo_UART_TX (
+        .io_push_ready        (io_push_ready_TX),          // o
+        .io_push_valid        (io_push_valid_TX),          // i
+        .io_push_payload      (io_push_payload_TX),        // i
+        .io_pop_ready         (io_pop_ready_TX),           // i
+        .io_pop_valid         (io_pop_valid_TX),           // o
+        .io_pop_payload       (io_pop_payload_TX),         // o
+        .io_flush             (1'b0),                      // i
+        .io_occupancy         (),                          // o
+        .io_availability      (io_availability_TX),        // o
+        .io_mainClk           (io_apb_PCLK),               // i
+        .resetCtrl_systemReset(io_apb_PRESET | ~TE | ~UE)  // i
+    );
+    UartCtrl UartCtrl (
+        .io_config_frame_dataLength(io_config_frame_dataLength),  // i
+        .io_config_frame_stop      (io_config_frame_stop),        // i
+        .io_config_frame_parity    (io_config_frame_parity),      // i
+        .io_config_clockDivider    (io_config_clockDivider),      // i
+        .io_write_ready            (io_pop_ready_TX),             // o
+        .io_write_valid            (io_pop_valid_TX),             // i
+        .io_write_payload          (io_pop_payload_TX),           // i
+        .io_read_ready             (io_push_ready_RX),            // i
+        .io_read_valid             (io_push_valid_RX),            // o
+        .io_read_payload           (io_push_payload_RX),          // o
+        .io_uart_txd               (USART_TX),                    // o
+        .io_uart_rxd               (1'b0),                        // i
+        .io_readError              (io_readError),                // o
+        .io_writeBreak             (io_writeBreak),               // i
+        .io_readBreak              (io_readBreak),                // o
+        .io_uart_rxen              (RE & UE),                     // i
+        .io_uart_txen              (TE & UE),                     // i
+        .io_mainClk                (io_apb_PCLK),                 // i
+        .resetCtrl_systemReset     (io_apb_PRESET)                // i
+    );
+    StreamFifo_UART StreamFifo_UART_RX (
+        .io_push_ready        (io_push_ready_RX),          // o
+        .io_push_valid        (io_push_valid_RX),          // i
+        .io_push_payload      (io_push_payload_RX),        // i
+        .io_pop_ready         (io_pop_ready_RX),           // i
+        .io_pop_valid         (io_pop_valid_RX),           // o
+        .io_pop_payload       (io_pop_payload_RX),         // o
+        .io_flush             (1'b0),                      // i
+        .io_occupancy         (),                          // o
+        .io_availability      (io_occupancy_RX),           // o
+        .io_mainClk           (io_apb_PCLK),               // i
+        .resetCtrl_systemReset(io_apb_PRESET | ~(RE & UE))  // i
+    );
 
 endmodule

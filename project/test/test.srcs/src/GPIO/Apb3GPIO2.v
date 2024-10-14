@@ -55,52 +55,76 @@ module Apb3GPIO2 (
     end
     // APB 读寄存器逻辑
     always @(*) begin
-        if (io_apb_PRESET)
-            io_apb_PRDATA = 32'h00000000;
+        if (io_apb_PRESET) io_apb_PRDATA = 32'h00000000;
         else if (io_apb_PSEL && io_apb_PENABLE && ~io_apb_PWRITE) begin
             case (io_apb_PADDR)
-                3'b000:  io_apb_PRDATA = CRL;  // 读CRL
-                3'b001:  io_apb_PRDATA = CRH;  // 读CRH
-                3'b010:  io_apb_PRDATA = {16'h0000, IDR};  // 读IDR
-                3'b011:  io_apb_PRDATA = {16'h0000, ODR};  // 读ODR
-                3'b110:  io_apb_PRDATA = {16'h0000, LCKR};  // 读LCKR
+                3'b000:  io_apb_PRDATA = CRL;  // 读 CRL
+                3'b001:  io_apb_PRDATA = CRH;  // 读 CRH
+                3'b010:  io_apb_PRDATA = {16'h0000, IDR};  // 读 IDR
+                3'b011:  io_apb_PRDATA = {16'h0000, ODR};  // 读 ODR
+                3'b110:  io_apb_PRDATA = {16'h0000, LCKR};  // 读 LCKR
                 default: io_apb_PRDATA = 32'h00000000;  // 默认返回0
             endcase
         end
     end
 
 
-    // GPIO的inout双向控制逻辑
+    // GPIO 的 inout 双向控制逻辑
     genvar i;
     generate
         for (i = 0; i < 16; i = i + 1) begin
-            assign GPIO[i] = (gpio_dir[i]) ? ODR[i] : 1'bz; // 输出时为gpio_out，否则为高阻态
-            always @(posedge io_apb_PCLK or posedge io_apb_PRESET) begin
-                if (io_apb_PRESET) IDR[i] <= 1'bz;  // 默认所有引脚为高阻态
-                else if (!gpio_dir[i]) IDR[i] <= GPIO[i];  // 输入模式时读取GPIO值
-            end
-
+            assign GPIO[i] = ODR[i];
             assign gpio_dir[i] = (gpio_ctrl[i*4+:2] == 2'b00) ? 1'b0 : 1'b1;  // gpio_ctrl[i*4+:2]==MODE 输入模式时gpio_dir为0，输出模式时gpio_dir为1
+            // always @(*) begin
             always @(posedge io_apb_PCLK or posedge io_apb_PRESET) begin
-                if (io_apb_PRESET) begin
-                    ODR[i] <= 1'bz;  // 默认所有引脚为高阻态
-                end else if (BSR[i] | BRR[i]) begin
-                    // 设置ODR和输出类型
-                    case (gpio_ctrl[i*4+3])  // gpio_ctrl[i*4+3]==MODE[1]
-                        1'b0: begin
-                            if (BSR[i]) ODR[i] <= 1'b1;
-                            else if (BRR[i])
-                                ODR[i] <= gpio_ctrl[i*4+2] ? 1'bz : 1'b0;  // 输出类型为推挽时，输出为0，否则为高阻态
-                        end
-                        1'b1: begin
-                            if (AFIO[i]) ODR[i] <= 1'b1;
-                            else
-                                ODR[i] <= gpio_ctrl[i*4+2] ? 1'bz : 1'b0;  // 输出类型为推挽时，输出为0，否则为高阻态
-                        end
-                        default: ;
-                    endcase
+                if (io_apb_PRESET) ODR[i] <= 1'bz;
+                else if (gpio_dir[i]) begin  // 输出模式
+                    IDR[i] <= 1'bz;  // 输出模式时IDR为高阻态
+                    if (gpio_ctrl[i*4+3]) begin  // 复用 IO 引脚
+                        ODR[i] <= AFIO[i] ? 1'b1 : (gpio_ctrl[i*4+2] ? 1'bz : 1'b0);  // 输出类型为推挽时，输出为0，否则为高阻态
+                    end else begin  // 普通 IO 引脚
+                        if (BSR[i]) ODR[i] <= 1'b1;
+                        if (BRR[i])
+                            ODR[i] <= gpio_ctrl[i*4+2] ? 1'bz : 1'b0;  // 输出类型为推挽时，输出为0，否则为高阻态
+                    end
+                end else begin
+                    IDR[i] <= GPIO[i];  // 输入模式时读取GPIO值
+                    ODR[i] <= 1'bz;  // 输入模式时GPIO为高阻态
                 end
             end
+
+            // assign GPIO[i] = (gpio_dir[i]) ? ODR[i] : 1'bz; // 输出时为gpio_out，否则为高阻态
+            // always @(posedge io_apb_PCLK or posedge io_apb_PRESET) begin
+            //     if (io_apb_PRESET) IDR[i] <= 1'bz;  // 默认所有引脚为高阻态
+            //     else if (~gpio_dir[i]) IDR[i] <= GPIO[i];  // 输入模式时读取GPIO值
+            // end
+            // assign gpio_dir[i] = (gpio_ctrl[i*4+:2] == 2'b00) ? 1'b0 : 1'b1;  // gpio_ctrl[i*4+:2]==MODE 输入模式时gpio_dir为0，输出模式时gpio_dir为1
+            // always @(posedge io_apb_PCLK or posedge io_apb_PRESET) begin
+            //     if (io_apb_PRESET) begin
+            //         ODR[i] <= 1'bz;  // 默认所有引脚为高阻态
+            //     // end else if ((BSR[i] | BRR[i]) & gpio_dir[i]) begin
+            //     //     case (gpio_ctrl[i*4+3])  // gpio_ctrl[i*4+3]==MODE[1]
+            //     //         1'b0: begin
+            //     //             if (BSR[i]) ODR[i] <= 1'b1;
+            //     //             else if (BRR[i])
+            //     //                 ODR[i] <= gpio_ctrl[i*4+2] ? 1'bz : 1'b0;  // 输出类型为推挽时，输出为0，否则为高阻态
+            //     //         end
+            //     //         default: begin
+            //     //             if (AFIO[i]) ODR[i] <= 1'b1;
+            //     //             else
+            //     //                 ODR[i] <= gpio_ctrl[i*4+2] ? 1'bz : 1'b0;  // 输出类型为推挽时，输出为0，否则为高阻态
+            //     //         end
+            //     //     endcase
+            //     // end
+            //     end else begin
+            //         if (gpio_ctrl[i*4+3]) begin  // 复用 IO 引脚
+            //             ODR[i] <= AFIO[i] ? 1'b1 : (gpio_ctrl[i*4+2] ? 1'bz : 1'b0);  // 输出类型为推挽时，输出为0，否则为高阻态
+            //         end else begin  // 普通 IO 引脚
+            //             if (BSR[i]) ODR[i] <= 1'b1;
+            //             if (BRR[i]) ODR[i] <= gpio_ctrl[i*4+2] ? 1'bz : 1'b0;  // 输出类型为推挽时，输出为0，否则为高阻态
+            //         end
+            //     end
+            // end
         end
     endgenerate
 

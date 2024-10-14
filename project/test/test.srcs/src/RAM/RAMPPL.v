@@ -20,10 +20,10 @@ module RAMPPL (
     reg         _zz_io_bus_rsp_valid;
     wire [29:0] _zz_io_bus_rsp_payload_data;
     wire [31:0] _zz_io_bus_rsp_payload_data_1;
-    reg  [ 7:0] ram_symbol0 [0:1023];
-    reg  [ 7:0] ram_symbol1 [0:1023];
-    reg  [ 7:0] ram_symbol2 [0:1023];
-    reg  [ 7:0] ram_symbol3 [0:1023];
+    reg  [ 7:0] ram_symbol0 [0:4096];
+    reg  [ 7:0] ram_symbol1 [0:4096];
+    reg  [ 7:0] ram_symbol2 [0:4096];
+    reg  [ 7:0] ram_symbol3 [0:4096];
     reg  [ 7:0] _zz_ramsymbol_read;
     reg  [ 7:0] _zz_ramsymbol_read_1;
     reg  [ 7:0] _zz_ramsymbol_read_2;

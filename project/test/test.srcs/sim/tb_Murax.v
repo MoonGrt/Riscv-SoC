@@ -18,6 +18,8 @@ module tb_Murax;
     wire        io_uart_txd;
     wire [15:0] GPIOA, GPIOB;
 
+    assign GPIOB = {12'bz, 1'b1, 1'bz, 1'b1, 1'bz};
+
     initial begin
         forever #(T / 2) clk = ~clk;
     end

@@ -19,12 +19,12 @@ module Murax (
 );
 
     /* GPIO AFIO */
-    wire        USART1_RX = GPIOB[0];
     wire        USART1_TX;
-    wire        USART2_RX = GPIOB[2];
+    wire        USART1_RX = GPIOB[1];
     wire        USART2_TX;
+    wire        USART2_RX = GPIOB[3];
     wire [15:0] AFIOA;
-    wire [15:0] AFIOB = {12'b0, USART2_TX, 1'bz, USART1_TX, 1'bz};  // RX 有问题
+    wire [15:0] AFIOB = {12'bz, 1'bz, USART2_TX, 1'bz, USART1_TX};
 
     wire [ 7:0] system_cpu_debug_bus_cmd_payload_address;
     wire        system_cpu_dBus_cmd_ready;
@@ -219,7 +219,7 @@ module Murax (
         .io_dBus_cmd_ready(system_mainBusArbiter_io_dBus_cmd_ready),  // o
         .io_dBus_cmd_payload_wr(toplevel_system_cpu_dBus_cmd_halfPipe_payload_wr),  // i
         .io_dBus_cmd_payload_mask(toplevel_system_cpu_dBus_cmd_halfPipe_payload_mask[3:0]),  // i
-        .io_dBus_cmd_payload_address      (toplevel_system_cpu_dBus_cmd_halfPipe_payload_address[31:0]       ), // i
+        .io_dBus_cmd_payload_address(toplevel_system_cpu_dBus_cmd_halfPipe_payload_address[31:0]), // i
         .io_dBus_cmd_payload_data(toplevel_system_cpu_dBus_cmd_halfPipe_payload_data[31:0]),  // i
         .io_dBus_cmd_payload_size(toplevel_system_cpu_dBus_cmd_halfPipe_payload_size[1:0]),  // i
         .io_dBus_rsp_ready(system_mainBusArbiter_io_dBus_rsp_ready),  // o
@@ -228,11 +228,11 @@ module Murax (
         .io_masterBus_cmd_valid(system_mainBusArbiter_io_masterBus_cmd_valid),  // o
         .io_masterBus_cmd_ready(system_mainBusDecoder_logic_masterPipelined_cmd_ready),  // i
         .io_masterBus_cmd_payload_write(system_mainBusArbiter_io_masterBus_cmd_payload_write),  // o
-        .io_masterBus_cmd_payload_address (system_mainBusArbiter_io_masterBus_cmd_payload_address[31:0]      ), // o
-        .io_masterBus_cmd_payload_data    (system_mainBusArbiter_io_masterBus_cmd_payload_data[31:0]         ), // o
-        .io_masterBus_cmd_payload_mask    (system_mainBusArbiter_io_masterBus_cmd_payload_mask[3:0]          ), // o
+        .io_masterBus_cmd_payload_address(system_mainBusArbiter_io_masterBus_cmd_payload_address[31:0]), // o
+        .io_masterBus_cmd_payload_data(system_mainBusArbiter_io_masterBus_cmd_payload_data[31:0]), // o
+        .io_masterBus_cmd_payload_mask(system_mainBusArbiter_io_masterBus_cmd_payload_mask[3:0]), // o
         .io_masterBus_rsp_valid(system_mainBusDecoder_logic_masterPipelined_rsp_valid),  // i
-        .io_masterBus_rsp_payload_data    (system_mainBusDecoder_logic_masterPipelined_rsp_payload_data[31:0]), // i
+        .io_masterBus_rsp_payload_data(system_mainBusDecoder_logic_masterPipelined_rsp_payload_data[31:0]), // i
         .io_mainClk(io_mainClk),  // i
         .resetCtrl_systemReset(resetCtrl_systemReset)  // i
     );
@@ -392,9 +392,11 @@ module Murax (
         .io_apb_PRDATA        (system_usartCtrl_io_apb_PRDATA),              // o
         .io_apb_PSLVERROR     (system_usartCtrl_io_apb_PSLVERROR),           // o
         .USART1_RX            (USART1_RX),                                   // i
-        .USART1_TX            (USART1_TX),                                   // io
+        .USART1_TX            (USART1_TX),                                   // o
+        .USART1_interrupt     (),                            // o
         .USART2_RX            (USART2_RX),                                   // i
-        .USART2_TX            (USART2_TX)                                    // io
+        .USART2_TX            (USART2_TX),                                   // o
+        .USART2_interrupt     ()                             // o
     );
     Apb3UART Apb3UART (
         .io_apb_PADDR         (system_uartCtrl_io_apb_PADDR[4:0]),       // i

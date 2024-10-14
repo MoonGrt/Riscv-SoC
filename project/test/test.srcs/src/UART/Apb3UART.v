@@ -112,7 +112,7 @@ module Apb3UART (
         .io_config_clockDivider(bridge_uartConfigReg_clockDivider[19:0]),  //i
         .io_write_valid(bridge_write_streamUnbuffered_queueWithOccupancy_io_pop_valid),  //i
         .io_write_ready(uartCtrl_1_io_write_ready),  //o
-        .io_write_payload           (bridge_write_streamUnbuffered_queueWithOccupancy_io_pop_payload[7:0]), //i
+        .io_write_payload(bridge_write_streamUnbuffered_queueWithOccupancy_io_pop_payload[7:0]), //i
         .io_read_valid(uartCtrl_1_io_read_valid),  //o
         .io_read_ready(system_uartCtrl_uartCtrl_1_io_read_queueWithOccupancy_io_push_ready),  //i
         .io_read_payload(uartCtrl_1_io_read_payload[7:0]),  //o
@@ -121,6 +121,8 @@ module Apb3UART (
         .io_readError(uartCtrl_1_io_readError),  //o
         .io_writeBreak(bridge_misc_doBreak),  //i
         .io_readBreak(uartCtrl_1_io_readBreak),  //o
+        .io_uart_rxen(1'b1),  // i
+        .io_uart_txen(1'b1),  // i
         .io_mainClk(io_mainClk),  //i
         .resetCtrl_systemReset(resetCtrl_systemReset)  //i
     );
@@ -133,7 +135,7 @@ module Apb3UART (
         .io_pop_payload(bridge_write_streamUnbuffered_queueWithOccupancy_io_pop_payload[7:0]),  //o
         .io_flush(1'b0),  //i
         .io_occupancy(bridge_write_streamUnbuffered_queueWithOccupancy_io_occupancy[4:0]),  //o
-        .io_availability       (bridge_write_streamUnbuffered_queueWithOccupancy_io_availability[4:0]), //o
+        .io_availability(bridge_write_streamUnbuffered_queueWithOccupancy_io_availability[4:0]), //o
         .io_mainClk(io_mainClk),  //i
         .resetCtrl_systemReset(resetCtrl_systemReset)  //i
     );
@@ -143,10 +145,10 @@ module Apb3UART (
         .io_push_payload(uartCtrl_1_io_read_payload[7:0]),  //i
         .io_pop_valid(system_uartCtrl_uartCtrl_1_io_read_queueWithOccupancy_io_pop_valid),  //o
         .io_pop_ready(system_uartCtrl_uartCtrl_1_io_read_queueWithOccupancy_io_pop_ready),  //i
-        .io_pop_payload        (system_uartCtrl_uartCtrl_1_io_read_queueWithOccupancy_io_pop_payload[7:0] ), //o
+        .io_pop_payload(system_uartCtrl_uartCtrl_1_io_read_queueWithOccupancy_io_pop_payload[7:0] ), //o
         .io_flush(1'b0),  //i
         .io_occupancy(system_uartCtrl_uartCtrl_1_io_read_queueWithOccupancy_io_occupancy[4:0]),  //o
-        .io_availability       (system_uartCtrl_uartCtrl_1_io_read_queueWithOccupancy_io_availability[4:0]), //o
+        .io_availability(system_uartCtrl_uartCtrl_1_io_read_queueWithOccupancy_io_availability[4:0]), //o
         .io_mainClk(io_mainClk),  //i
         .resetCtrl_systemReset(resetCtrl_systemReset)  //i
     );
@@ -176,17 +178,17 @@ module Apb3UART (
         io_apb_PRDATA = 32'h0;
         case (io_apb_PADDR)
             5'h0: begin
-                io_apb_PRDATA[16:16] = (bridge_read_streamBreaked_valid ^ 1'b0);
                 io_apb_PRDATA[7:0]   = bridge_read_streamBreaked_payload;
+                io_apb_PRDATA[16:16] = (bridge_read_streamBreaked_valid ^ 1'b0);
             end
             5'h04: begin
-                io_apb_PRDATA[20:16] = _zz_io_apb_PRDATA;
-                io_apb_PRDATA[15:15] = bridge_write_streamUnbuffered_queueWithOccupancy_io_pop_valid;
-                io_apb_PRDATA[28:24] = system_uartCtrl_uartCtrl_1_io_read_queueWithOccupancy_io_occupancy;
                 io_apb_PRDATA[0:0] = bridge_interruptCtrl_writeIntEnable;
                 io_apb_PRDATA[1:1] = bridge_interruptCtrl_readIntEnable;
                 io_apb_PRDATA[8:8] = bridge_interruptCtrl_writeInt;
                 io_apb_PRDATA[9:9] = bridge_interruptCtrl_readInt;
+                io_apb_PRDATA[15:15] = bridge_write_streamUnbuffered_queueWithOccupancy_io_pop_valid;
+                io_apb_PRDATA[20:16] = _zz_io_apb_PRDATA;
+                io_apb_PRDATA[28:24] = system_uartCtrl_uartCtrl_1_io_read_queueWithOccupancy_io_occupancy;
             end
             5'h10: begin
                 io_apb_PRDATA[0:0] = bridge_misc_readError;

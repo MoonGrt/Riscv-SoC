@@ -1,4 +1,3 @@
-// StreamFifo_1 replaced by StreamFifo
 `timescale 1ns / 1ps
 
 module StreamFifo_UART (
@@ -49,7 +48,7 @@ module StreamFifo_UART (
     wire [7:0] logic_pop_sync_readArbitation_translated_payload;
     wire       logic_pop_sync_readArbitation_fire;
     reg  [4:0] logic_pop_sync_popReg;
-    reg  [7:0] logic_ram                                        [0:15];
+    reg  [7:0] logic_ram[0:15];
 
     always @(posedge io_mainClk) begin
         if (_zz_1) begin

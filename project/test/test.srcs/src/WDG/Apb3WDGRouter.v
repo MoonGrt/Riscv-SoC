@@ -17,16 +17,18 @@ module Apb3WDGRouter (
 );
 
     reg  [15:0] Apb3PSEL;
+    // IWDG
     wire [ 2:0] io_apb_PADDR_IWDG = io_apb_PADDR[4:2];
-    wire [15:0] io_apb_PSEL_IWDG = Apb3PSEL[0];
+    wire        io_apb_PSEL_IWDG = Apb3PSEL[0];
     wire        io_apb_PENABLE_IWDG = io_apb_PENABLE;
     wire        io_apb_PREADY_IWDG;
     wire        io_apb_PWRITE_IWDG = io_apb_PWRITE;
     wire [31:0] io_apb_PWDATA_IWDG = io_apb_PWDATA;
     wire [31:0] io_apb_PRDATA_IWDG;
     wire        io_apb_PSLVERROR_IWDG = 1'b0;
+    //WWDG
     wire [ 2:0] io_apb_PADDR_WWDG = io_apb_PADDR[4:2];
-    wire [15:0] io_apb_PSEL_WWDG = Apb3PSEL[1];
+    wire        io_apb_PSEL_WWDG = Apb3PSEL[1];
     wire        io_apb_PENABLE_WWDG = io_apb_PENABLE;
     wire        io_apb_PREADY_WWDG;
     wire        io_apb_PWRITE_WWDG = io_apb_PWRITE;

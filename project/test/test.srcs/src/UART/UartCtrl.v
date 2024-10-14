@@ -16,6 +16,8 @@ module UartCtrl (
     output wire        io_readError,
     input  wire        io_writeBreak,
     output wire        io_readBreak,
+    input  wire        io_uart_rxen,
+    input  wire        io_uart_txen,
     input  wire        io_mainClk,
     input  wire        resetCtrl_systemReset
 );
@@ -45,33 +47,33 @@ module UartCtrl (
 
 
     UartCtrlTx tx (
-        .io_configFrame_dataLength(io_config_frame_dataLength[2:0]),  //i
-        .io_configFrame_stop      (io_config_frame_stop),             //i
-        .io_configFrame_parity    (io_config_frame_parity[1:0]),      //i
-        .io_samplingTick          (clockDivider_tickReg),             //i
-        .io_write_valid           (io_write_thrown_valid),            //i
-        .io_write_ready           (tx_io_write_ready),                //o
-        .io_write_payload         (io_write_thrown_payload[7:0]),     //i
-        .io_cts                   (1'b0),                             //i
-        .io_txd                   (tx_io_txd),                        //o
-        .io_break                 (io_writeBreak),                    //i
-        .io_mainClk               (io_mainClk),                       //i
-        .resetCtrl_systemReset    (resetCtrl_systemReset)             //i
+        .io_configFrame_dataLength(io_config_frame_dataLength[2:0]),       //i
+        .io_configFrame_stop      (io_config_frame_stop),                  //i
+        .io_configFrame_parity    (io_config_frame_parity[1:0]),           //i
+        .io_samplingTick          (clockDivider_tickReg),                  //i
+        .io_write_valid           (io_write_thrown_valid),                 //i
+        .io_write_ready           (tx_io_write_ready),                     //o
+        .io_write_payload         (io_write_thrown_payload[7:0]),          //i
+        .io_cts                   (1'b0),                                  //i
+        .io_txd                   (tx_io_txd),                             //o
+        .io_break                 (io_writeBreak),                         //i
+        .io_mainClk               (io_mainClk),                            //i
+        .resetCtrl_systemReset    (resetCtrl_systemReset | ~io_uart_txen)  //i
     );
     UartCtrlRx rx (
-        .io_configFrame_dataLength(io_config_frame_dataLength[2:0]),  //i
-        .io_configFrame_stop      (io_config_frame_stop),             //i
-        .io_configFrame_parity    (io_config_frame_parity[1:0]),      //i
-        .io_samplingTick          (clockDivider_tickReg),             //i
-        .io_read_valid            (rx_io_read_valid),                 //o
-        .io_read_ready            (io_read_ready),                    //i
-        .io_read_payload          (rx_io_read_payload[7:0]),          //o
-        .io_rxd                   (io_uart_rxd),                      //i
-        .io_rts                   (rx_io_rts),                        //o
-        .io_error                 (rx_io_error),                      //o
-        .io_break                 (rx_io_break),                      //o
-        .io_mainClk               (io_mainClk),                       //i
-        .resetCtrl_systemReset    (resetCtrl_systemReset)             //i
+        .io_configFrame_dataLength(io_config_frame_dataLength[2:0]),       //i
+        .io_configFrame_stop      (io_config_frame_stop),                  //i
+        .io_configFrame_parity    (io_config_frame_parity[1:0]),           //i
+        .io_samplingTick          (clockDivider_tickReg),                  //i
+        .io_read_valid            (rx_io_read_valid),                      //o
+        .io_read_ready            (io_read_ready),                         //i
+        .io_read_payload          (rx_io_read_payload[7:0]),               //o
+        .io_rxd                   (io_uart_rxd),                           //i
+        .io_rts                   (rx_io_rts),                             //o
+        .io_error                 (rx_io_error),                           //o
+        .io_break                 (rx_io_break),                           //o
+        .io_mainClk               (io_mainClk),                            //i
+        .resetCtrl_systemReset    (resetCtrl_systemReset | ~io_uart_rxen)  //i
     );
 `ifndef SYNTHESIS
     always @(*) begin
