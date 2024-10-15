@@ -17,47 +17,71 @@ module Apb3USART (
 );
 
     // USART 寄存器定义
-    reg [15:0] SR;  // 状态寄存器
-    reg [15:0] DR;  // 数据寄存器
-    reg [15:0] BRR;  // 波特率寄存器
-    reg [15:0] CR1;  // 控制寄存器1
-    reg [15:0] CR2;  // 控制寄存器2
-    reg [15:0] CR3;  // 控制寄存器3  暂时不支持流控制和其他高级功能
-    reg [15:0] GTPR;  // 集团寄存器
+    wire [15:0] SR;  // 状态寄存器
+    reg  [15:0] DR;  // 数据寄存器
+    reg  [15:0] BRR;  // 波特率寄存器
+    reg  [15:0] CR1;  // 控制寄存器1
+    reg  [15:0] CR2;  // 控制寄存器2
+    reg  [15:0] CR3;  // 控制寄存器3  暂时不支持流控制和其他高级功能
+    reg  [15:0] GTPR;  // 保护时间和预分频寄存器  暂时不支持
 
     // USART StreamFifo 接口定义
-    wire io_push_ready_TX;
-    reg io_push_valid_TX;
-    reg [7:0] io_push_payload_TX;
-    wire io_pop_ready_TX;
-    wire io_pop_valid_TX;
+    wire       io_push_ready_TX;
+    reg        io_push_valid_TX;
+    reg  [7:0] io_push_payload_TX;
+    wire       io_pop_ready_TX;
+    wire       io_pop_valid_TX;
     wire [7:0] io_pop_payload_TX;
     wire [4:0] io_availability_TX;
-    wire io_push_ready_RX;
-    wire io_push_valid_RX;
+    wire [4:0] io_occupancy_TX;
+    wire       io_push_ready_RX;
+    wire       io_push_valid_RX;
     wire [7:0] io_push_payload_RX;
-    wire io_pop_ready_RX;
-    wire io_pop_valid_RX;
+    wire       io_pop_ready_RX;
+    wire       io_pop_valid_RX;
     wire [7:0] io_pop_payload_RX;
+    wire [4:0] io_availability_RX;
     wire [4:0] io_occupancy_RX;
 
     // USART Config 接口定义
-    wire [2:0] io_config_frame_dataLength = CR1[12] ? 3'b000 : 3'b111;
-    wire [0:0] io_config_frame_stop = CR2[13];
-    wire [1:0] io_config_frame_parity = CR1[9];
-    wire [19:0] io_config_clockDivider = BRR[15:4];
-    wire UE = CR1[13];
-    wire RE = CR1[2];
-    wire TE = CR1[3];
-    wire io_readError;
-    wire io_writeBreak = 1'b0;
-    wire io_readBreak;
+    // SR
+    wire        PE   = 1'bz;
+    wire        IDLE = 1'bz;
+    wire        RXNE = (io_occupancy_RX == 5'b10000) && (io_pop_valid_RX);
+    wire        TC   = 1'bz;
+    wire        TXE  = 1'bz;
+    assign      SR   = {8'bz, TXE, TC, RXNE, IDLE, 3'bz, PE};
+    // CR1
+    wire        RE     = CR1[2];
+    wire        TE     = CR1[3];
+    wire        IDLEIE = CR1[4];
+    wire        RXNEIE = CR1[5];
+    wire        TCIE   = CR1[6];
+    wire        TXEIE  = CR1[7];
+    wire        PEIE   = CR1[8];
+    wire        PS     = CR1[9];
+    wire        PCE    = CR1[10];
+    wire [ 2:0] M      = CR1[12] ? 3'b000 : 3'b111;
+    wire        UE     = CR1[13];
+    // CR2
+    wire [ 1:0] STOP = CR2[13:12];
+    // CR3
+    wire        DMAT = CR3[7];
+    wire        DMAR = CR3[6];
+    // BRR
+    wire [11:0] DIV_Mantissa = BRR[15:4];
+    wire [ 3:0] DIV_Fraction = BRR[ 3:0];
+
+    // USART 状态寄存器
+    wire        io_readError;
+    wire        io_writeBreak = 1'b0;
+    wire        io_readBreak;
 
     // APB 写寄存器逻辑
     assign io_apb_PREADY = 1'b1;  // APB 准备信号始终为高，表示设备始终准备好
     always @(posedge io_apb_PCLK or posedge io_apb_PRESET) begin
         if (io_apb_PRESET) begin
-            SR   <= 16'h0000;
+            // SR   <= 16'h0000;
             DR   <= 16'h0000;
             BRR  <= 16'h0000;
             CR1  <= 16'h0000;
@@ -67,7 +91,7 @@ module Apb3USART (
         end else begin
             if (io_apb_PSEL && io_apb_PENABLE && io_apb_PWRITE) begin
                 case (io_apb_PADDR)
-                    3'b000:  SR <= io_apb_PWDATA[15:0];  // 写 SR
+                    // 3'b000:  SR <= io_apb_PWDATA[15:0];  // 写 SR  // 暂时不可写入
                     3'b001:  DR <= io_apb_PWDATA[15:0];  // 写 DR
                     3'b010:  BRR <= io_apb_PWDATA[15:0];  // 写 BRR
                     3'b011:  CR1 <= io_apb_PWDATA[15:0];  // 写 CR1
@@ -117,50 +141,50 @@ module Apb3USART (
 
     // 串口收发逻辑
     StreamFifo_UART StreamFifo_UART_TX (
-        .io_push_ready        (io_push_ready_TX),          // o
-        .io_push_valid        (io_push_valid_TX),          // i
-        .io_push_payload      (io_push_payload_TX),        // i
-        .io_pop_ready         (io_pop_ready_TX),           // i
-        .io_pop_valid         (io_pop_valid_TX),           // o
-        .io_pop_payload       (io_pop_payload_TX),         // o
-        .io_flush             (1'b0),                      // i
-        .io_occupancy         (),                          // o
-        .io_availability      (io_availability_TX),        // o
-        .io_mainClk           (io_apb_PCLK),               // i
-        .resetCtrl_systemReset(io_apb_PRESET | ~TE | ~UE)  // i
+        .io_push_ready        (io_push_ready_TX),           // o
+        .io_push_valid        (io_push_valid_TX),           // i
+        .io_push_payload      (io_push_payload_TX),         // i
+        .io_pop_ready         (io_pop_ready_TX),            // i
+        .io_pop_valid         (io_pop_valid_TX),            // o
+        .io_pop_payload       (io_pop_payload_TX),          // o
+        .io_flush             (1'b0),                       // i
+        .io_occupancy         (io_occupancy_TX),            // o
+        .io_availability      (io_availability_TX),         // o
+        .io_mainClk           (io_apb_PCLK),                // i
+        .resetCtrl_systemReset(io_apb_PRESET | ~(RE & UE))  // i
     );
     UartCtrl UartCtrl (
-        .io_config_frame_dataLength(io_config_frame_dataLength),  // i
-        .io_config_frame_stop      (io_config_frame_stop),        // i
-        .io_config_frame_parity    (io_config_frame_parity),      // i
-        .io_config_clockDivider    (io_config_clockDivider),      // i
-        .io_write_ready            (io_pop_ready_TX),             // o
-        .io_write_valid            (io_pop_valid_TX),             // i
-        .io_write_payload          (io_pop_payload_TX),           // i
-        .io_read_ready             (io_push_ready_RX),            // i
-        .io_read_valid             (io_push_valid_RX),            // o
-        .io_read_payload           (io_push_payload_RX),          // o
-        .io_uart_txd               (USART_TX),                    // o
-        .io_uart_rxd               (1'b0),                        // i
-        .io_readError              (io_readError),                // o
-        .io_writeBreak             (io_writeBreak),               // i
-        .io_readBreak              (io_readBreak),                // o
-        .io_uart_rxen              (RE & UE),                     // i
-        .io_uart_txen              (TE & UE),                     // i
-        .io_mainClk                (io_apb_PCLK),                 // i
-        .resetCtrl_systemReset     (io_apb_PRESET)                // i
+        .io_config_frame_dataLength(M),                     // i
+        .io_config_frame_stop      (STOP[1]),               // i
+        .io_config_frame_parity    ({PS, PCE}),             // i
+        .io_config_clockDivider    ({8'b0, DIV_Mantissa}),  // i
+        .io_write_ready            (io_pop_ready_TX),       // o
+        .io_write_valid            (io_pop_valid_TX),       // i
+        .io_write_payload          (io_pop_payload_TX),     // i
+        .io_read_ready             (io_push_ready_RX),      // i
+        .io_read_valid             (io_push_valid_RX),      // o
+        .io_read_payload           (io_push_payload_RX),    // o
+        .io_uart_txd               (USART_TX),              // o
+        .io_uart_rxd               (1'b0),                  // i
+        .io_readError              (io_readError),          // o
+        .io_writeBreak             (io_writeBreak),         // i
+        .io_readBreak              (io_readBreak),          // o
+        .io_uart_rxen              (RE & UE),               // i
+        .io_uart_txen              (TE & UE),               // i
+        .io_mainClk                (io_apb_PCLK),           // i
+        .resetCtrl_systemReset     (io_apb_PRESET)          // i
     );
     StreamFifo_UART StreamFifo_UART_RX (
-        .io_push_ready        (io_push_ready_RX),          // o
-        .io_push_valid        (io_push_valid_RX),          // i
-        .io_push_payload      (io_push_payload_RX),        // i
-        .io_pop_ready         (io_pop_ready_RX),           // i
-        .io_pop_valid         (io_pop_valid_RX),           // o
-        .io_pop_payload       (io_pop_payload_RX),         // o
-        .io_flush             (1'b0),                      // i
-        .io_occupancy         (),                          // o
-        .io_availability      (io_occupancy_RX),           // o
-        .io_mainClk           (io_apb_PCLK),               // i
+        .io_push_ready        (io_push_ready_RX),           // o
+        .io_push_valid        (io_push_valid_RX),           // i
+        .io_push_payload      (io_push_payload_RX),         // i
+        .io_pop_ready         (io_pop_ready_RX),            // i
+        .io_pop_valid         (io_pop_valid_RX),            // o
+        .io_pop_payload       (io_pop_payload_RX),          // o
+        .io_flush             (1'b0),                       // i
+        .io_occupancy         (io_occupancy_RX),            // o
+        .io_availability      (io_availability_RX),         // o
+        .io_mainClk           (io_apb_PCLK),                // i
         .resetCtrl_systemReset(io_apb_PRESET | ~(RE & UE))  // i
     );
 

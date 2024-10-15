@@ -23,9 +23,9 @@ module UartCtrl (
 );
     localparam UartStopType_ONE = 1'd0;
     localparam UartStopType_TWO = 1'd1;
-    localparam UartParityType_NONE = 2'd0;
-    localparam UartParityType_EVEN = 2'd1;
-    localparam UartParityType_ODD = 2'd2;
+    localparam UartParityType_NONE = 2'b00;
+    localparam UartParityType_EVEN = 2'b10;
+    localparam UartParityType_ODD = 2'b11;
 
     wire        tx_io_write_ready;
     wire        tx_io_txd;
