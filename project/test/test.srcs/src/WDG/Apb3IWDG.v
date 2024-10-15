@@ -49,11 +49,11 @@ module IWDG (
         if (io_apb_PRESET) io_apb_PRDATA = 32'h00000000;
         else if (io_apb_PSEL && io_apb_PENABLE && ~io_apb_PWRITE) begin
             case (io_apb_PADDR)
-                2'b00:   io_apb_PRDATA <= {16'b0, KR};  // 读 Key register
-                2'b01:   io_apb_PRDATA <= {29'b0, PR};  // 读 Prescaler register
-                2'b10:   io_apb_PRDATA <= {20'b0, RLR};  // 读 Reload register
-                2'b11:   io_apb_PRDATA <= {30'b0, SR};  // 读 Status register
-                default: io_apb_PRDATA <= 32'h00000000;
+                2'b00:   io_apb_PRDATA = {16'b0, KR};  // 读 Key register
+                2'b01:   io_apb_PRDATA = {29'b0, PR};  // 读 Prescaler register
+                2'b10:   io_apb_PRDATA = {20'b0, RLR};  // 读 Reload register
+                2'b11:   io_apb_PRDATA = {30'b0, SR};  // 读 Status register
+                default: io_apb_PRDATA = 32'h00000000;
             endcase
         end
     end

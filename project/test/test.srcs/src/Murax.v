@@ -393,7 +393,7 @@ module Murax (
         .io_apb_PSLVERROR     (system_usartCtrl_io_apb_PSLVERROR),           // o
         .USART1_RX            (USART1_RX),                                   // i
         .USART1_TX            (USART1_TX),                                   // o
-        .USART1_interrupt     (),                            // o
+        .USART1_interrupt     (system_uartCtrl_io_interrupt),                // o  // USART interrupt
         .USART2_RX            (USART2_RX),                                   // i
         .USART2_TX            (USART2_TX),                                   // o
         .USART2_interrupt     ()                             // o
@@ -408,7 +408,7 @@ module Murax (
         .io_apb_PRDATA        (system_uartCtrl_io_apb_PRDATA[31:0]),     // o
         .io_uart_txd          (system_uartCtrl_io_uart_txd),             // o
         .io_uart_rxd          (io_uart_rxd),                             // i
-        .io_interrupt         (system_uartCtrl_io_interrupt),            // o
+        // .io_interrupt         (system_uartCtrl_io_interrupt),            // o  // old UART interrupt
         .io_mainClk           (io_mainClk),                              // i
         .resetCtrl_systemReset(resetCtrl_systemReset)                    // i
     );

@@ -18,11 +18,11 @@ module tb_Murax;
     wire        io_uart_txd;
 
     wire [15:0] GPIOA, GPIOB;
-    // assign GPIOB = {12'bz, USART2_RX, 1'bz, USART1_RX, 1'bz};
+    assign GPIOB = {12'bz, USART2_RX, 1'bz, USART1_RX, 1'bz};
 
     wire        USART1_TX = GPIOB[0];
     reg         USART1_RX = 1'b1;
-    wire        USART2_TX = GPIOB[1];
+    wire        USART2_TX = GPIOB[2];
     reg         USART2_RX = 1'b1;
 
     initial begin
@@ -31,8 +31,7 @@ module tb_Murax;
 
     initial begin
         #(T * 2) rst_n = 1;
-        // 调用task 模拟 UART 发送数据
-        sim_uart_tx(8'b10101010); // 发送数据
+        #17000 sim_uart_tx(8'b10101010);  // 调用task 模拟 UART 发送数据
     end
 
     Murax Murax (
@@ -58,17 +57,17 @@ module tb_Murax;
     task sim_uart_tx(input [7:0] data);
         integer i;
         begin
-            USART1_RX = 1;  // Idle状态
-            #100;
-            USART1_RX = 0;  // 开始位
-            #100;
+            USART1_RX = 1'b1;  // Idle状态
+            #150;
+            USART1_RX = 1'b0;  // 开始位
+            #150;
             // 发送数据位
             for (i = 0; i < 8; i = i + 1) begin
                 USART1_RX = data[i];  // 发送数据位
-                #100;
+                #150;
             end
-            USART1_RX = 1;  // 停止位
-            #100;
+            USART1_RX = 1'b1;  // 停止位
+            #150;
         end
     endtask
 

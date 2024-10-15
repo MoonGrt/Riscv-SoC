@@ -37,20 +37,23 @@ module Apb3USART (
     wire       io_push_ready_RX;
     wire       io_push_valid_RX;
     wire [7:0] io_push_payload_RX;
-    wire       io_pop_ready_RX;
+    reg        io_pop_ready_RX;
     wire       io_pop_valid_RX;
     wire [7:0] io_pop_payload_RX;
     wire [4:0] io_availability_RX;
     wire [4:0] io_occupancy_RX;
 
+    // USART 中断输出
+    assign interrupt = (PEIE & PE) | (TCIE & TC) | (RXNEIE & RXNE) | (TXEIE & TXE) | (IDLEIE & IDLE);
+
     // USART Config 接口定义
     // SR
     wire        PE   = 1'bz;
     wire        IDLE = 1'bz;
-    wire        RXNE = (io_occupancy_RX == 5'b10000) && (io_pop_valid_RX);
+    wire        RXNE = io_occupancy_RX ? 1'b1 : 1'b0;
     wire        TC   = 1'bz;
     wire        TXE  = 1'bz;
-    assign      SR   = {8'bz, TXE, TC, RXNE, IDLE, 3'bz, PE};
+    assign      SR   = {8'b0, TXE, TC, RXNE, IDLE, 3'b0, PE};
     // CR1
     wire        RE     = CR1[2];
     wire        TE     = CR1[3];
@@ -105,18 +108,27 @@ module Apb3USART (
     end
     // APB 读寄存器逻辑
     always @(*) begin
-        if (io_apb_PRESET) io_apb_PRDATA = 16'h0000;
-        else if (io_apb_PSEL && io_apb_PENABLE && ~io_apb_PWRITE) begin
-            case (io_apb_PADDR)
-                3'b000:  io_apb_PRDATA <= {16'b0, SR};  // 读 SR
-                3'b001:  io_apb_PRDATA <= {16'b0, DR};  // 读 DR
-                3'b010:  io_apb_PRDATA <= {16'b0, BRR};  // 读 BRR
-                3'b011:  io_apb_PRDATA <= {16'b0, CR1};  // 读 CR1
-                3'b100:  io_apb_PRDATA <= {16'b0, CR2};  // 读 CR2
-                3'b101:  io_apb_PRDATA <= {16'b0, CR3};  // 读 CR3
-                3'b110:  io_apb_PRDATA <= {16'b0, GTPR};  // 读 GTPR
-                default: io_apb_PRDATA <= 16'h0000;  // 默认返回0
-            endcase
+        if (io_apb_PRESET) begin
+            io_apb_PRDATA = 32'h00000000;  // 复位时返回0
+            io_pop_ready_RX = 1'b0;
+        end
+        else begin
+            io_pop_ready_RX = 1'b0;
+            if (io_apb_PSEL && io_apb_PENABLE && ~io_apb_PWRITE) begin
+                case (io_apb_PADDR)
+                    3'b000:  io_apb_PRDATA = {16'b0, SR};  // 读 SR
+                    3'b001:  begin 
+                        io_apb_PRDATA = io_pop_valid_RX ? {16'b0, io_pop_payload_RX} : 32'h00000000;  // 读
+                        io_pop_ready_RX = 1'b1;
+                    end
+                    3'b010:  io_apb_PRDATA = {16'b0, BRR};  // 读 BRR
+                    3'b011:  io_apb_PRDATA = {16'b0, CR1};  // 读 CR1
+                    3'b100:  io_apb_PRDATA = {16'b0, CR2};  // 读 CR2
+                    3'b101:  io_apb_PRDATA = {16'b0, CR3};  // 读 CR3
+                    3'b110:  io_apb_PRDATA = {16'b0, GTPR};  // 读 GTPR
+                    default: io_apb_PRDATA = 32'h00000000;  // 默认返回0
+                endcase
+            end
         end
     end
 
@@ -165,7 +177,7 @@ module Apb3USART (
         .io_read_valid             (io_push_valid_RX),      // o
         .io_read_payload           (io_push_payload_RX),    // o
         .io_uart_txd               (USART_TX),              // o
-        .io_uart_rxd               (1'b0),                  // i
+        .io_uart_rxd               (USART_RX),              // i
         .io_readError              (io_readError),          // o
         .io_writeBreak             (io_writeBreak),         // i
         .io_readBreak              (io_readBreak),          // o

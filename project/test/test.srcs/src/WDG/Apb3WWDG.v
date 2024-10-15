@@ -68,10 +68,10 @@ module WWDG (
         // else if (io_apb_PSEL && io_apb_PENABLE && ~io_apb_PWRITE) begin
         else begin
             case (io_apb_PADDR)
-                2'b00:   io_apb_PRDATA <= {24'h000000, CR};  // 读 Control register
-                2'b01:   io_apb_PRDATA <= {16'h000000, CFR};  // 读 Configuration register
-                2'b10:   io_apb_PRDATA <= {31'h0, SR};  // 读 Status register
-                default: io_apb_PRDATA <= 32'h00000000;
+                2'b00:   io_apb_PRDATA = {24'h000000, CR};  // 读 Control register
+                2'b01:   io_apb_PRDATA = {16'h000000, CFR};  // 读 Configuration register
+                2'b10:   io_apb_PRDATA = {31'h0, SR};  // 读 Status register
+                default: io_apb_PRDATA = 32'h00000000;
             endcase
         end
     end
