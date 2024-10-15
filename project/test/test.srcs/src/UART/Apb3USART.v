@@ -11,9 +11,10 @@ module Apb3USART (
     output wire        io_apb_PREADY,   // APB 准备信号
     output reg  [31:0] io_apb_PRDATA,   // 读数据总线
 
-    input  wire USART_RX,  // UART 接收数据输入
-    output wire USART_TX,  // UART 发送数据输出
-    output wire interrupt  // 中断输出
+    // USART 接口信号
+    input  wire USART_RX,  // USART 接收数据输入
+    output wire USART_TX,  // USART 发送数据输出
+    output wire interrupt  // USART 中断输出
 );
 
     // USART 寄存器定义

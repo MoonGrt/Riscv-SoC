@@ -12,15 +12,17 @@ module Apb3I2CRouter (
     output wire [31:0] io_apb_PRDATA,
     output wire        io_apb_PSLVERROR,
 
-    input wire [15:0] AFIOA,
-    inout wire [15:0] GPIOA,
-    input wire [15:0] AFIOB,
-    inout wire [15:0] GPIOB
+    input  wire I2C1_SDA,
+    output wire I2C1_SCL,
+    output wire I2C1_interrupt,
+    input  wire I2C2_SDA,
+    output wire I2C2_SCL,
+    output wire I2C2_interrupt
 );
 
     reg  [15:0] Apb3PSEL = 16'h0000;
     // GPIOA
-    wire [ 2:0] io_apb_PADDR_GPIOA = io_apb_PADDR[4:2];
+    wire [ 3:0] io_apb_PADDR_GPIOA = io_apb_PADDR[5:2];
     wire        io_apb_PSEL_GPIOA = Apb3PSEL[0];
     wire        io_apb_PENABLE_GPIOA = io_apb_PENABLE;
     wire        io_apb_PREADY_GPIOA;
@@ -29,7 +31,7 @@ module Apb3I2CRouter (
     wire [31:0] io_apb_PRDATA_GPIOA;
     wire        io_apb_PSLVERROR_GPIOA = 1'b0;
     // GPIOB
-    wire [ 2:0] io_apb_PADDR_GPIOB = io_apb_PADDR[4:2];
+    wire [ 3:0] io_apb_PADDR_GPIOB = io_apb_PADDR[5:2];
     wire        io_apb_PSEL_GPIOB = Apb3PSEL[1];
     wire        io_apb_PENABLE_GPIOB = io_apb_PENABLE;
     wire        io_apb_PREADY_GPIOB;
@@ -77,7 +79,7 @@ module Apb3I2CRouter (
         end
     end
 
-    Apb3GPIO2 Apb3GPIOA (
+    Apb3I2C Apb3I2C1 (
         .io_apb_PCLK   (io_apb_PCLK),           // i
         .io_apb_PRESET (io_apb_PRESET),         // i
         .io_apb_PADDR  (io_apb_PADDR_GPIOA),    // i
@@ -87,11 +89,12 @@ module Apb3I2CRouter (
         .io_apb_PWRITE (io_apb_PWRITE_GPIOA),   // i
         .io_apb_PWDATA (io_apb_PWDATA_GPIOA),   // i
         .io_apb_PRDATA (io_apb_PRDATA_GPIOA),   // o
-        .AFIO          (AFIOA),                 // i
-        .GPIO          (GPIOA)                  // o
+        .I2C_SDA       (I2C1_SDA),              // i
+        .I2C_SCL       (I2C1_SCL),              // o
+        .interrupt     (I2C1_interrupt)         // o
     );
 
-    Apb3GPIO2 Apb3GPIOB (
+    Apb3I2C Apb3I2C2 (
         .io_apb_PCLK   (io_apb_PCLK),           // i
         .io_apb_PRESET (io_apb_PRESET),         // i
         .io_apb_PADDR  (io_apb_PADDR_GPIOB),    // i
@@ -101,8 +104,9 @@ module Apb3I2CRouter (
         .io_apb_PWRITE (io_apb_PWRITE_GPIOB),   // i
         .io_apb_PWDATA (io_apb_PWDATA_GPIOB),   // i
         .io_apb_PRDATA (io_apb_PRDATA_GPIOB),   // o
-        .AFIO          (AFIOB),                 // i
-        .GPIO          (GPIOB)                  // o
+        .I2C_SDA       (I2C2_SDA),              // i
+        .I2C_SCL       (I2C2_SCL),              // o
+        .interrupt     (I2C1_interrupt)         // o
     );
 
 endmodule

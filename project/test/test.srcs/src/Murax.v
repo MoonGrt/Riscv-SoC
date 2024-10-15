@@ -19,12 +19,29 @@ module Murax (
 );
 
     /* GPIO AFIO */
+    // USART
     wire        USART1_TX;
     wire        USART1_RX = GPIOB[1];
     wire        USART2_TX;
     wire        USART2_RX = GPIOB[3];
+    // I2C
+    wire        I2C1_SDA;  // 有问题
+    wire        I2C1_SCL;
+    wire        I2C2_SDA;
+    wire        I2C2_SCL;
+    // SPI
+    wire        SPI1_SCK;
+    wire        SPI1_MOSI;
+    wire        SPI1_MISO = GPIOB[10];
+    wire        SPI1_CS;
+    wire        SPI2_SCK;
+    wire        SPI2_MOSI;
+    wire        SPI2_MISO = GPIOB[14];
+    wire        SPI2_CS;
+    // AFIO Contection
     wire [15:0] AFIOA;
-    wire [15:0] AFIOB = {12'bz, 1'bz, USART2_TX, 1'bz, USART1_TX};
+    wire [15:0] AFIOB = {SPI2_CS, 1'bz, SPI2_MOSI, SPI2_SCK, SPI1_CS, 1'bz, SPI1_MOSI, SPI1_SCK, 
+                         I2C2_SDA, I2C2_SCL, I2C1_SDA, I2C1_SCL, 1'bz, USART2_TX, 1'bz, USART1_TX};
 
     wire [ 7:0] system_cpu_debug_bus_cmd_payload_address;
     wire        system_cpu_dBus_cmd_ready;
@@ -36,6 +53,8 @@ module Murax (
     wire [ 7:0] system_timer_io_apb_PADDR;
     wire [15:0] system_wdgCtrl_io_apb_PADDR;  // WDG PADDR
     wire [15:0] system_usartCtrl_io_apb_PADDR;  // USART PADDR
+    wire [15:0] system_i2cCtrl_io_apb_PADDR;  // I2C PADDR
+    wire [15:0] system_spiCtrl_io_apb_PADDR;  // SPI PADDR
     wire        io_asyncReset_buffercc_io_dataOut;
     wire        system_mainBusArbiter_io_iBus_cmd_ready;
     wire        system_mainBusArbiter_io_iBus_rsp_valid;
@@ -106,7 +125,16 @@ module Murax (
     wire        system_usartCtrl_io_apb_PSLVERROR;      // USART
     wire [31:0] system_usartCtrl_io_gpio_write;         // USART
     wire [31:0] system_usartCtrl_io_gpio_writeEnable;   // USART
-
+    wire        system_i2cCtrl_io_apb_PREADY;         // I2C
+    wire [31:0] system_i2cCtrl_io_apb_PRDATA;         // I2C
+    wire        system_i2cCtrl_io_apb_PSLVERROR;      // I2C
+    wire [31:0] system_i2cCtrl_io_gpio_write;         // I2C
+    wire [31:0] system_i2cCtrl_io_gpio_writeEnable;   // I2C
+    wire        system_spiCtrl_io_apb_PREADY;         // SPI
+    wire [31:0] system_spiCtrl_io_apb_PRDATA;         // SPI
+    wire        system_spiCtrl_io_apb_PSLVERROR;      // SPI
+    wire [31:0] system_spiCtrl_io_gpio_write;         // SPI
+    wire [31:0] system_spiCtrl_io_gpio_writeEnable;   // SPI
     wire        system_uartCtrl_io_apb_PREADY;
     wire [31:0] system_uartCtrl_io_apb_PRDATA;
     wire        system_uartCtrl_io_uart_txd;
@@ -156,6 +184,16 @@ module Murax (
     wire        apb3Router_1_io_outputs_5_PENABLE;  // USART
     wire        apb3Router_1_io_outputs_5_PWRITE;  // USART
     wire [31:0] apb3Router_1_io_outputs_5_PWDATA;  // USART
+    wire [19:0] apb3Router_1_io_outputs_6_PADDR;  // I2C
+    wire [ 0:0] apb3Router_1_io_outputs_6_PSEL;  // I2C
+    wire        apb3Router_1_io_outputs_6_PENABLE;  // I2C
+    wire        apb3Router_1_io_outputs_6_PWRITE;  // I2C
+    wire [31:0] apb3Router_1_io_outputs_6_PWDATA;  // I2C
+    wire [19:0] apb3Router_1_io_outputs_7_PADDR;  // SPI
+    wire [ 0:0] apb3Router_1_io_outputs_7_PSEL;  // SPI
+    wire        apb3Router_1_io_outputs_7_PENABLE;  // SPI
+    wire        apb3Router_1_io_outputs_7_PWRITE;  // SPI
+    wire [31:0] apb3Router_1_io_outputs_7_PWDATA;  // SPI
     reg  [31:0] _zz_system_mainBusDecoder_logic_masterPipelined_rsp_payload_data;
     reg         resetCtrl_mainClkResetUnbuffered;
     reg  [ 5:0] resetCtrl_systemClkResetCounter;
@@ -398,6 +436,46 @@ module Murax (
         .USART2_TX            (USART2_TX),                                   // o
         .USART2_interrupt     ()                             // o
     );
+    Apb3I2CRouter Apb3I2CRouter (
+        .io_apb_PCLK          (io_mainClk),                                  // i
+        .io_apb_PRESET        (resetCtrl_systemReset),                       // i
+        .io_apb_PADDR         (system_i2cCtrl_io_apb_PADDR),                 // i
+        .io_apb_PSEL          (apb3Router_1_io_outputs_6_PSEL),              // i
+        .io_apb_PENABLE       (apb3Router_1_io_outputs_6_PENABLE),           // i
+        .io_apb_PREADY        (system_i2cCtrl_io_apb_PREADY),                // o
+        .io_apb_PWRITE        (apb3Router_1_io_outputs_6_PWRITE),            // i
+        .io_apb_PWDATA        (apb3Router_1_io_outputs_6_PWDATA),            // i
+        .io_apb_PRDATA        (system_i2cCtrl_io_apb_PRDATA),                // o
+        .io_apb_PSLVERROR     (system_i2cCtrl_io_apb_PSLVERROR),             // o
+        .I2C1_SDA             (I2C1_SDA),                                    // i
+        .I2C1_SCL             (I2C1_SCL),                                    // o
+        .I2C1_interrupt       (),                            // o  // SPI interrupt
+        .I2C2_SDA             (I2C1_SDA),                                    // i
+        .I2C2_SCL             (I2C2_SCL),                                    // o
+        .I2C2_interrupt       ()                             // o
+    );
+    Apb3SPIRouter Apb3SPIRouter (
+        .io_apb_PCLK          (io_mainClk),                                  // i
+        .io_apb_PRESET        (resetCtrl_systemReset),                       // i
+        .io_apb_PADDR         (system_spiCtrl_io_apb_PADDR),                 // i
+        .io_apb_PSEL          (apb3Router_1_io_outputs_7_PSEL),              // i
+        .io_apb_PENABLE       (apb3Router_1_io_outputs_7_PENABLE),           // i
+        .io_apb_PREADY        (system_spiCtrl_io_apb_PREADY),                // o
+        .io_apb_PWRITE        (apb3Router_1_io_outputs_7_PWRITE),            // i
+        .io_apb_PWDATA        (apb3Router_1_io_outputs_7_PWDATA),            // i
+        .io_apb_PRDATA        (system_spitCtrl_io_apb_PRDATA),               // o
+        .io_apb_PSLVERROR     (system_spitCtrl_io_apb_PSLVERROR),            // o
+        .SPI1_SCK             (SPI1_SCK),                                    // o
+        .SPI1_MOSI            (SPI1_MOSI),                                   // o
+        .SPI1_MISO            (SPI1_MISO),                                   // i
+        .SPI1_CS              (SPI1_CS),                                     // o
+        .SPI1_interrupt       (),                            // o  // SPI interrupt
+        .SPI2_SCK             (SPI2_SCK),                                    // o
+        .SPI2_MOSI            (SPI2_MOSI),                                   // o
+        .SPI2_MISO            (SPI2_MISO),                                   // i
+        .SPI2_CS              (SPI2_CS),                                     // o
+        .SPI2_interrupt       ()                             // o
+    );
     Apb3UART Apb3UART (
         .io_apb_PADDR         (system_uartCtrl_io_apb_PADDR[4:0]),       // i
         .io_apb_PSEL          (apb3Router_1_io_outputs_1_PSEL),          // i
@@ -547,6 +625,22 @@ module Murax (
         .io_outputs_5_PWDATA   (apb3Router_1_io_outputs_5_PWDATA[31:0]),  // o USART
         .io_outputs_5_PRDATA   (system_usartCtrl_io_apb_PRDATA[31:0]),    // i USART
         .io_outputs_5_PSLVERROR(system_usartCtrl_io_apb_PSLVERROR),       // i USART
+        .io_outputs_6_PADDR    (apb3Router_1_io_outputs_6_PADDR[19:0]),   // o I2C
+        .io_outputs_6_PSEL     (apb3Router_1_io_outputs_6_PSEL),          // o I2C
+        .io_outputs_6_PENABLE  (apb3Router_1_io_outputs_6_PENABLE),       // o I2C
+        .io_outputs_6_PREADY   (system_i2cCtrl_io_apb_PREADY),            // i I2C
+        .io_outputs_6_PWRITE   (apb3Router_1_io_outputs_6_PWRITE),        // o I2C
+        .io_outputs_6_PWDATA   (apb3Router_1_io_outputs_6_PWDATA[31:0]),  // o I2C
+        .io_outputs_6_PRDATA   (system_i2cCtrl_io_apb_PRDATA[31:0]),      // i I2C
+        .io_outputs_6_PSLVERROR(system_i2cCtrl_io_apb_PSLVERROR),         // i I2C
+        .io_outputs_7_PADDR    (apb3Router_1_io_outputs_7_PADDR[19:0]),   // o SPI
+        .io_outputs_7_PSEL     (apb3Router_1_io_outputs_7_PSEL),          // o SPI
+        .io_outputs_7_PENABLE  (apb3Router_1_io_outputs_7_PENABLE),       // o SPI
+        .io_outputs_7_PREADY   (system_spiCtrl_io_apb_PREADY),            // i SPI
+        .io_outputs_7_PWRITE   (apb3Router_1_io_outputs_7_PWRITE),        // o SPI
+        .io_outputs_7_PWDATA   (apb3Router_1_io_outputs_7_PWDATA[31:0]),  // o SPI
+        .io_outputs_7_PRDATA   (system_spiCtrl_io_apb_PRDATA[31:0]),      // i SPI
+        .io_outputs_7_PSLVERROR(system_spiCtrl_io_apb_PSLVERROR),         // i SPI
 
         .io_mainClk            (io_mainClk),                              // i
         .resetCtrl_systemReset (resetCtrl_systemReset)                    // i
@@ -609,6 +703,8 @@ module Murax (
     assign system_timer_io_apb_PADDR = apb3Router_1_io_outputs_2_PADDR[7:0];
     assign system_wdgCtrl_io_apb_PADDR = apb3Router_1_io_outputs_4_PADDR[15:0];  // WDG
     assign system_usartCtrl_io_apb_PADDR = apb3Router_1_io_outputs_5_PADDR[15:0];  // USART
+    assign system_i2cCtrl_io_apb_PADDR = apb3Router_1_io_outputs_5_PADDR[15:0];  // I2C
+    assign system_spiCtrl_io_apb_PADDR = apb3Router_1_io_outputs_5_PADDR[15:0];  // SPI
     assign system_mainBusDecoder_logic_masterPipelined_cmd_valid = system_mainBusArbiter_io_masterBus_cmd_valid;
     assign system_mainBusDecoder_logic_masterPipelined_cmd_payload_write = system_mainBusArbiter_io_masterBus_cmd_payload_write;
     assign system_mainBusDecoder_logic_masterPipelined_cmd_payload_address = system_mainBusArbiter_io_masterBus_cmd_payload_address;
