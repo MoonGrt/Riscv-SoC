@@ -54,19 +54,21 @@ module Apb3TIM (
     wire        CC4IE = DIER[4];  // 允许捕获/比较4中断
     wire        TIE = DIER[6];  // 触发中断使能
     // SR
-    reg         UIF = 1'b0;  // 更新中断标志
-    reg         CC1IF = 1'b0;  // 捕获/比较1中断标志
-    reg         CC2IF = 1'b0;  // 捕获/比较2中断标志
-    reg         CC3IF = 1'b0;  // 捕获/比较3中断标志
-    reg         CC4IF = 1'b0;  // 捕获/比较4中断标志
-    reg         TIF = 1'b0;  // 触发中断标志
-
-
+    wire        UIF = SR[0];  // 更新中断标志
+    wire        CC1IF = SR[1];  // 捕获/比较1中断标志
+    wire        CC2IF = SR[2];  // 捕获/比较2中断标志
+    wire        CC3IF = SR[3];  // 捕获/比较3中断标志
+    wire        CC4IF = SR[4];  // 捕获/比较4中断标志
+    wire        TIF = SR[6];  // 触发中断标志
 
     // TIM 中断输出
     assign interrupt = (UIE & UIF);  // 更新中断
 
-    // APB 写寄存器逻辑
+    // 定时器逻辑寄存器
+    reg [15:0] prescaler_counter;  // 用于实现预分频的计数器
+    reg [ 1:0] clk_div_counter;  // 用于实现时钟分频的计数器
+
+    // APB 写寄存器逻辑  && 定时器逻辑
     assign io_apb_PREADY = 1'b1;  // APB 准备信号始终为高，表示设备始终准备好
     always @(posedge io_apb_PCLK or posedge io_apb_PRESET) begin
         if (io_apb_PRESET) begin
@@ -79,7 +81,7 @@ module Apb3TIM (
             CCMR1 <= 16'h0000;
             CCMR2 <= 16'h0000;
             CCER <= 16'h0000;
-            // CNT <= 16'h0000;
+            CNT <= 16'h0000;
             PSC <= 16'h0000;
             ARR <= 16'hFFFF;
             RCR <= 16'h0000;
@@ -90,30 +92,56 @@ module Apb3TIM (
             BDTR <= 16'h0000;
             DCR <= 16'h0000;
             DMAR <= 16'h0000;
-        end else if (io_apb_PSEL && io_apb_PENABLE && io_apb_PWRITE) begin
-            case (io_apb_PADDR)
-                5'd00:   CR1 <= io_apb_PWDATA[15:0];  // 写 CR1
-                5'd01:   CR2 <= io_apb_PWDATA[15:0];  // 写 CR2
-                5'd02:   SMCR <= io_apb_PWDATA[15:0];  // 写 SMCR
-                5'd03:   DIER <= io_apb_PWDATA[15:0];  // 写 DIER
-                5'd04:   SR <= io_apb_PWDATA[15:0];  // 写 SR
-                5'd05:   EGR <= io_apb_PWDATA[15:0];  // 写 EGR
-                5'd06:   CCMR1 <= io_apb_PWDATA[15:0];  // 写 CCMR1
-                5'd07:   CCMR2 <= io_apb_PWDATA[15:0];  // 写 CCMR2
-                5'd08:   CCER <= io_apb_PWDATA[15:0];  // 写 CCER
-                // 5'd09:   CNT <= io_apb_PWDATA[15:0];  // 写 CNT  // 在计数器逻辑中实现
-                5'd10:   PSC <= io_apb_PWDATA[15:0];  // 写 PSC
-                5'd11:   ARR <= io_apb_PWDATA[15:0];  // 写 ARR
-                5'd12:   RCR <= io_apb_PWDATA[15:0];  // 写 CCR1
-                5'd13:   CCR1 <= io_apb_PWDATA[15:0];  // 写 CCR1
-                5'd14:   CCR2 <= io_apb_PWDATA[15:0];  // 写 CCR2
-                5'd15:   CCR3 <= io_apb_PWDATA[15:0];  // 写 CCR3
-                5'd16:   CCR4 <= io_apb_PWDATA[15:0];  // 写 CCR4
-                5'd17:   BDTR <= io_apb_PWDATA[15:0];  // 写 BDTR
-                5'd18:   DCR <= io_apb_PWDATA[15:0];  // 写 DCR
-                5'd19:   DMAR <= io_apb_PWDATA[15:0];  // 写 DMAR
-                default: ;  // 其他寄存器不处理
-            endcase
+            prescaler_counter <= 16'h0000;
+            clk_div_counter   <= 2'b00;
+        end else begin
+            // APB 写寄存器逻辑
+            if (io_apb_PSEL && io_apb_PENABLE && io_apb_PWRITE) 
+                case (io_apb_PADDR)
+                    5'd00:   CR1 <= io_apb_PWDATA[15:0];  // 写 CR1
+                    5'd01:   CR2 <= io_apb_PWDATA[15:0];  // 写 CR2
+                    5'd02:   SMCR <= io_apb_PWDATA[15:0];  // 写 SMCR
+                    5'd03:   DIER <= io_apb_PWDATA[15:0];  // 写 DIER
+                    5'd04:   SR <= io_apb_PWDATA[15:0];  // 写 SR
+                    5'd05:   EGR <= io_apb_PWDATA[15:0];  // 写 EGR
+                    5'd06:   CCMR1 <= io_apb_PWDATA[15:0];  // 写 CCMR1
+                    5'd07:   CCMR2 <= io_apb_PWDATA[15:0];  // 写 CCMR2
+                    5'd08:   CCER <= io_apb_PWDATA[15:0];  // 写 CCER
+                    5'd09:   CNT <= io_apb_PWDATA[15:0];  // 写 CNT
+                    5'd10:   PSC <= io_apb_PWDATA[15:0];  // 写 PSC
+                    5'd11:   ARR <= io_apb_PWDATA[15:0];  // 写 ARR
+                    5'd12:   RCR <= io_apb_PWDATA[15:0];  // 写 CCR1
+                    5'd13:   CCR1 <= io_apb_PWDATA[15:0];  // 写 CCR1
+                    5'd14:   CCR2 <= io_apb_PWDATA[15:0];  // 写 CCR2
+                    5'd15:   CCR3 <= io_apb_PWDATA[15:0];  // 写 CCR3
+                    5'd16:   CCR4 <= io_apb_PWDATA[15:0];  // 写 CCR4
+                    5'd17:   BDTR <= io_apb_PWDATA[15:0];  // 写 BDTR
+                    5'd18:   DCR <= io_apb_PWDATA[15:0];  // 写 DCR
+                    5'd19:   DMAR <= io_apb_PWDATA[15:0];  // 写 DMAR
+                    default: ;  // 其他寄存器不处理
+                endcase
+            // 计数器逻辑
+            if (CEN) begin
+                // 时钟分频逻辑 (CKD)
+                case (CKD)
+                    2'b00:  // 不进行时钟分频，直接使用时钟
+                        clk_div_counter <= 2'b00;
+                    2'b01:  // tDTS = 2 x tCK_INT
+                        clk_div_counter <= (clk_div_counter == 2'b01) ? 2'b00 : clk_div_counter + 1'b1;
+                    2'b10:  // tDTS = 4 x tCK_INT
+                        clk_div_counter <= (clk_div_counter == 2'b11) ? 2'b00 : clk_div_counter + 1'b1;
+                endcase
+                // 预分频逻辑 (PSC)
+                if (prescaler_counter == PSC) begin
+                    prescaler_counter <= 16'h0000;  // 当计数达到预分频器值时，重置计数器
+                    if (clk_div_counter == 2'b00 || CKD == 2'b00)
+                        if (CNT == ARR) begin
+                            CNT <= 16'h0000;    // 当计数器达到自动重装载值时，重置计数器
+                            SR[0] <= 1'b1;  // 设置更新中断标志位
+                        end else
+                            CNT <= CNT + 1'b1;
+                end else prescaler_counter <= prescaler_counter + 1'b1;
+            end
         end
     end
     // APB 读寄存器逻辑
@@ -144,40 +172,6 @@ module Apb3TIM (
                 5'd19:   io_apb_PRDATA = {16'b0, DMAR};  // 读 DMAR
                 default: io_apb_PRDATA = 32'h00000000;  // 默认返回0
             endcase
-        end
-    end
-
-    // 定时器计数逻辑
-    reg [15:0] prescaler_counter;  // 用于实现预分频的计数器
-    reg [ 1:0] clk_div_counter;  // 用于实现时钟分频的计数器
-    always @(posedge io_apb_PCLK or posedge io_apb_PRESET) begin
-        if (io_apb_PRESET) begin
-            CNT               <= 16'h0000;  // 复位计数器
-            prescaler_counter <= 16'h0000;
-            clk_div_counter   <= 2'b00;
-            UIF               <= 1'b0;  // 复位更新中断标志位
-        end else if (io_apb_PSEL && io_apb_PENABLE && io_apb_PWRITE && io_apb_PADDR == 5'd09)
-            CNT <= io_apb_PWDATA[15:0];  // 写 CNT
-        else if (CEN) begin  // 当 CEN 为1时，计数器开始计数
-            // 时钟分频逻辑 (CKD)
-            case (CKD)
-                2'b00:  // 不进行时钟分频，直接使用时钟
-                    clk_div_counter <= 2'b00;
-                2'b01:  // tDTS = 2 x tCK_INT
-                    clk_div_counter <= (clk_div_counter == 2'b01) ? 2'b00 : clk_div_counter + 1'b1;
-                2'b10:  // tDTS = 4 x tCK_INT
-                    clk_div_counter <= (clk_div_counter == 2'b11) ? 2'b00 : clk_div_counter + 1'b1;
-            endcase
-            // 预分频逻辑 (PSC)
-            if (prescaler_counter == PSC) begin
-                prescaler_counter <= 16'h0000;  // 当计数达到预分频器值时，重置计数器
-                if (clk_div_counter == 2'b00 || CKD == 2'b00)
-                    if (CNT == ARR) begin
-                        CNT <= 16'h0000;    // 当计数器达到自动重装载值时，重置计数器
-                        UIF <= 1'b1;  // 设置更新中断标志位
-                    end else
-                        CNT <= CNT + 1'b1;
-            end else prescaler_counter <= prescaler_counter + 1'b1;
         end
     end
 

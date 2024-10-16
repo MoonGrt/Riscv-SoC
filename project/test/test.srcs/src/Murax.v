@@ -45,6 +45,11 @@ module Murax (
     wire [15:0] AFIOA = {TIM3_CH, TIM2_CH, 8'bz};
     wire [15:0] AFIOB = {SPI2_CS, 1'bz, SPI2_MOSI, SPI2_SCK, SPI1_CS, 1'bz, SPI1_MOSI, SPI1_SCK, 
                          I2C2_SDA, I2C2_SCL, I2C1_SDA, I2C1_SCL, 1'bz, USART2_TX, 1'bz, USART1_TX};
+    // Interrupt
+    reg         system_externalInterrupt, system_timerInterrupt;
+    wire        timer_interrupt, uart_interrupt;
+    wire        USART1_interrupt, USART2_interrupt;
+    wire        TIM2_interrupt, TIM3_interrupt;
 
     wire [ 7:0] system_cpu_debug_bus_cmd_payload_address;
     wire        system_cpu_dBus_cmd_ready;
@@ -216,8 +221,6 @@ module Murax (
     wire        when_Murax_l192;
     reg         resetCtrl_mainClkReset;
     reg         resetCtrl_systemReset;
-    reg         system_timerInterrupt;
-    reg         system_externalInterrupt;
     wire        toplevel_system_cpu_dBus_cmd_halfPipe_valid;
     wire        toplevel_system_cpu_dBus_cmd_halfPipe_ready;
     wire        toplevel_system_cpu_dBus_cmd_halfPipe_payload_wr;
@@ -445,10 +448,10 @@ module Murax (
         .io_apb_PSLVERROR     (system_usartCtrl_io_apb_PSLVERROR),           // o
         .USART1_RX            (USART1_RX),                                   // i
         .USART1_TX            (USART1_TX),                                   // o
-        .USART1_interrupt     (system_uartCtrl_io_interrupt),                // o  // USART interrupt
+        .USART1_interrupt     (USART1_interrupt),                            // o  // USART interrupt
         .USART2_RX            (USART2_RX),                                   // i
         .USART2_TX            (USART2_TX),                                   // o
-        .USART2_interrupt     ()                             // o
+        .USART2_interrupt     (USART2_interrupt)                             // o
     );
     Apb3I2CRouter Apb3I2CRouter (
         .io_apb_PCLK          (io_mainClk),                                  // i
@@ -502,9 +505,9 @@ module Murax (
         .io_apb_PRDATA        (system_timCtrl_io_apb_PRDATA),                // o
         .io_apb_PSLVERROR     (system_timCtrl_io_apb_PSLVERROR),             // o
         .TIM2_CH              (TIM2_CH),                                     // o
-        .TIM2_interrupt       (),                            // o  // TIM interrupt
+        .TIM2_interrupt       (TIM2_interrupt),                              // o  // TIM interrupt
         .TIM3_CH              (TIM3_CH),                                     // o
-        .TIM3_interrupt       ()                             // o
+        .TIM3_interrupt       (TIM3_interrupt)                               // o
     );
     Apb3UART Apb3UART (
         .io_apb_PADDR         (system_uartCtrl_io_apb_PADDR[4:0]),       // i
@@ -516,7 +519,7 @@ module Murax (
         .io_apb_PRDATA        (system_uartCtrl_io_apb_PRDATA[31:0]),     // o
         .io_uart_txd          (system_uartCtrl_io_uart_txd),             // o
         .io_uart_rxd          (io_uart_rxd),                             // i
-        // .io_interrupt         (system_uartCtrl_io_interrupt),            // o  // old UART interrupt
+        .io_interrupt         (system_uartCtrl_io_interrupt),            // o
         .io_mainClk           (io_mainClk),                              // i
         .resetCtrl_systemReset(resetCtrl_systemReset)                    // i
     );
@@ -708,14 +711,14 @@ module Murax (
     assign when_Murax_l192 = io_asyncReset_buffercc_io_dataOut;
     always @(*) begin
         system_timerInterrupt = 1'b0;
-        if (system_timer_io_interrupt) begin
+        if (system_timer_io_interrupt | TIM2_interrupt | TIM3_interrupt) begin
             system_timerInterrupt = 1'b1;
         end
     end
 
     always @(*) begin
         system_externalInterrupt = 1'b0;
-        if (system_uartCtrl_io_interrupt) begin
+        if (system_uartCtrl_io_interrupt | USART1_interrupt | USART2_interrupt) begin
             system_externalInterrupt = 1'b1;
         end
     end
