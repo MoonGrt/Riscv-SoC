@@ -44,9 +44,6 @@ module Apb3USART (
     wire [4:0] io_availability_RX;
     wire [4:0] io_occupancy_RX;
 
-    // USART 中断输出
-    assign interrupt = (PEIE & PE) | (TCIE & TC) | (RXNEIE & RXNE) | (TXEIE & TXE) | (IDLEIE & IDLE);
-
     // USART Config 接口定义
     // SR
     wire        PE   = 1'b0;  // 校验错误
@@ -85,6 +82,9 @@ module Apb3USART (
     wire        io_readError;
     wire        io_writeBreak = 1'b0;
     wire        io_readBreak;
+
+    // USART 中断输出
+    assign interrupt = (PEIE & PE) | (TCIE & TC) | (RXNEIE & RXNE) | (TXEIE & TXE) | (IDLEIE & IDLE);
 
     // APB 写寄存器逻辑
     assign io_apb_PREADY = 1'b1;  // APB 准备信号始终为高，表示设备始终准备好

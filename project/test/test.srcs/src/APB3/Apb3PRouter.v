@@ -39,7 +39,7 @@ module Apb3PRouter (
     input  wire        io_outputs_2_PSLVERROR,
     // GPIO2
     output wire [19:0] io_outputs_3_PADDR,
-    output wire [15:0] io_outputs_3_PSEL,
+    output wire [ 0:0] io_outputs_3_PSEL,
     output wire        io_outputs_3_PENABLE,
     input  wire        io_outputs_3_PREADY,
     output wire        io_outputs_3_PWRITE,
@@ -82,6 +82,15 @@ module Apb3PRouter (
     output wire [31:0] io_outputs_7_PWDATA,
     input  wire [31:0] io_outputs_7_PRDATA,
     input  wire        io_outputs_7_PSLVERROR,
+    // TIM
+    output wire [19:0] io_outputs_8_PADDR,
+    output wire [ 0:0] io_outputs_8_PSEL,
+    output wire        io_outputs_8_PENABLE,
+    input  wire        io_outputs_8_PREADY,
+    output wire        io_outputs_8_PWRITE,
+    output wire [31:0] io_outputs_8_PWDATA,
+    input  wire [31:0] io_outputs_8_PRDATA,
+    input  wire        io_outputs_8_PSLVERROR,
 
     input  wire        io_mainClk,
     input  wire        resetCtrl_systemReset
@@ -106,6 +115,7 @@ module Apb3PRouter (
             Apb3PSEL[5] = ((io_input_PADDR[19:16] == 4'd5) && io_input_PSEL[0]);  // USART
             Apb3PSEL[6] = ((io_input_PADDR[19:16] == 4'd6) && io_input_PSEL[0]);  // I2C
             Apb3PSEL[7] = ((io_input_PADDR[19:16] == 4'd7) && io_input_PSEL[0]);  // SPI
+            Apb3PSEL[8] = ((io_input_PADDR[19:16] == 4'd8) && io_input_PSEL[0]);  // TIM
         end
     end
 
@@ -178,6 +188,11 @@ module Apb3PRouter (
                     _zz_io_input_PRDATA = io_outputs_7_PRDATA;
                     _zz_io_input_PSLVERROR = io_outputs_7_PSLVERROR;
                 end
+                16'h0100: begin
+                    _zz_io_input_PREADY = io_outputs_8_PREADY;
+                    _zz_io_input_PRDATA = io_outputs_8_PRDATA;
+                    _zz_io_input_PSLVERROR = io_outputs_8_PSLVERROR;
+                end
                 default: ;
             endcase
     end
@@ -230,5 +245,11 @@ module Apb3PRouter (
     assign io_outputs_7_PSEL = Apb3PSEL[7];
     assign io_outputs_7_PWRITE = io_input_PWRITE;
     assign io_outputs_7_PWDATA = io_input_PWDATA;
+    // TIM
+    assign io_outputs_8_PADDR = io_input_PADDR;
+    assign io_outputs_8_PENABLE = io_input_PENABLE;
+    assign io_outputs_8_PSEL = Apb3PSEL[8];
+    assign io_outputs_8_PWRITE = io_input_PWRITE;
+    assign io_outputs_8_PWDATA = io_input_PWDATA;
 
 endmodule

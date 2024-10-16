@@ -24,10 +24,6 @@ module Apb3GPIO2 (
     reg [15:0] BRR;  // 位复位寄存器 只有低16位有效
     reg [15:0] LCKR;  // 锁定寄存器 只有低16位有效
 
-    // GPIO寄存器的输入输出方向和数据
-    wire [15:0] gpio_dir;  // 用于控制每个引脚的输入/输出方向，1为输出，0为输入
-    wire [63:0] gpio_ctrl = {CRH, CRL};  // 控制寄存器的低字和高字合并
-
     // APB 写寄存器逻辑
     assign io_apb_PREADY = 1'b1;  // APB 准备信号始终为高，表示设备始终准备好
     always @(posedge io_apb_PCLK or posedge io_apb_PRESET) begin
@@ -70,8 +66,10 @@ module Apb3GPIO2 (
 
 
     // GPIO 的 inout 双向控制逻辑
-    genvar i;
+    wire [15:0] gpio_dir;  // 用于控制每个引脚的输入/输出方向，1为输出，0为输入
+    wire [63:0] gpio_ctrl = {CRH, CRL};  // 控制寄存器的低字和高字合并
     generate
+        genvar i;
         for (i = 0; i < 16; i = i + 1) begin
             assign GPIO[i] = ODR[i];
             assign gpio_dir[i] = (gpio_ctrl[i*4+:2] == 2'b00) ? 1'b0 : 1'b1;  // gpio_ctrl[i*4+:2]==MODE 输入模式时gpio_dir为0，输出模式时gpio_dir为1

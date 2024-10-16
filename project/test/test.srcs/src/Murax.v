@@ -38,8 +38,11 @@ module Murax (
     wire        SPI2_MOSI;
     wire        SPI2_MISO = GPIOB[14];
     wire        SPI2_CS;
+    // TIM
+    wire [ 3:0] TIM2_CH;
+    wire [ 3:0] TIM3_CH;
     // AFIO Contection
-    wire [15:0] AFIOA;
+    wire [15:0] AFIOA = {TIM3_CH, TIM2_CH, 8'bz};
     wire [15:0] AFIOB = {SPI2_CS, 1'bz, SPI2_MOSI, SPI2_SCK, SPI1_CS, 1'bz, SPI1_MOSI, SPI1_SCK, 
                          I2C2_SDA, I2C2_SCL, I2C1_SDA, I2C1_SCL, 1'bz, USART2_TX, 1'bz, USART1_TX};
 
@@ -55,6 +58,7 @@ module Murax (
     wire [15:0] system_usartCtrl_io_apb_PADDR;  // USART PADDR
     wire [15:0] system_i2cCtrl_io_apb_PADDR;  // I2C PADDR
     wire [15:0] system_spiCtrl_io_apb_PADDR;  // SPI PADDR
+    wire [15:0] system_timCtrl_io_apb_PADDR;  // TIM PADDR
     wire        io_asyncReset_buffercc_io_dataOut;
     wire        system_mainBusArbiter_io_iBus_cmd_ready;
     wire        system_mainBusArbiter_io_iBus_rsp_valid;
@@ -135,6 +139,11 @@ module Murax (
     wire        system_spiCtrl_io_apb_PSLVERROR;      // SPI
     wire [31:0] system_spiCtrl_io_gpio_write;         // SPI
     wire [31:0] system_spiCtrl_io_gpio_writeEnable;   // SPI
+    wire        system_timCtrl_io_apb_PREADY;         // TIM
+    wire [31:0] system_timCtrl_io_apb_PRDATA;         // TIM
+    wire        system_timCtrl_io_apb_PSLVERROR;      // TIM
+    wire [31:0] system_timCtrl_io_gpio_write;         // TIM
+    wire [31:0] system_timCtrl_io_gpio_writeEnable;   // TIM
     wire        system_uartCtrl_io_apb_PREADY;
     wire [31:0] system_uartCtrl_io_apb_PRDATA;
     wire        system_uartCtrl_io_uart_txd;
@@ -194,6 +203,11 @@ module Murax (
     wire        apb3Router_1_io_outputs_7_PENABLE;  // SPI
     wire        apb3Router_1_io_outputs_7_PWRITE;  // SPI
     wire [31:0] apb3Router_1_io_outputs_7_PWDATA;  // SPI
+    wire [19:0] apb3Router_1_io_outputs_8_PADDR;  // TIM
+    wire [ 0:0] apb3Router_1_io_outputs_8_PSEL;  // TIM
+    wire        apb3Router_1_io_outputs_8_PENABLE;  // TIM
+    wire        apb3Router_1_io_outputs_8_PWRITE;  // TIM
+    wire [31:0] apb3Router_1_io_outputs_8_PWDATA;  // TIM
     reg  [31:0] _zz_system_mainBusDecoder_logic_masterPipelined_rsp_payload_data;
     reg         resetCtrl_mainClkResetUnbuffered;
     reg  [ 5:0] resetCtrl_systemClkResetCounter;
@@ -476,6 +490,22 @@ module Murax (
         .SPI2_CS              (SPI2_CS),                                     // o
         .SPI2_interrupt       ()                             // o
     );
+    Apb3TIMRouter Apb3TIMRouter (
+        .io_apb_PCLK          (io_mainClk),                                  // i
+        .io_apb_PRESET        (resetCtrl_systemReset),                       // i
+        .io_apb_PADDR         (system_timCtrl_io_apb_PADDR),                 // i
+        .io_apb_PSEL          (apb3Router_1_io_outputs_8_PSEL),              // i
+        .io_apb_PENABLE       (apb3Router_1_io_outputs_8_PENABLE),           // i
+        .io_apb_PREADY        (system_timCtrl_io_apb_PREADY),                // o
+        .io_apb_PWRITE        (apb3Router_1_io_outputs_8_PWRITE),            // i
+        .io_apb_PWDATA        (apb3Router_1_io_outputs_8_PWDATA),            // i
+        .io_apb_PRDATA        (system_timCtrl_io_apb_PRDATA),                // o
+        .io_apb_PSLVERROR     (system_timCtrl_io_apb_PSLVERROR),             // o
+        .TIM2_CH              (TIM2_CH),                                     // o
+        .TIM2_interrupt       (),                            // o  // TIM interrupt
+        .TIM3_CH              (TIM3_CH),                                     // o
+        .TIM3_interrupt       ()                             // o
+    );
     Apb3UART Apb3UART (
         .io_apb_PADDR         (system_uartCtrl_io_apb_PADDR[4:0]),       // i
         .io_apb_PSEL          (apb3Router_1_io_outputs_1_PSEL),          // i
@@ -641,6 +671,14 @@ module Murax (
         .io_outputs_7_PWDATA   (apb3Router_1_io_outputs_7_PWDATA[31:0]),  // o SPI
         .io_outputs_7_PRDATA   (system_spiCtrl_io_apb_PRDATA[31:0]),      // i SPI
         .io_outputs_7_PSLVERROR(system_spiCtrl_io_apb_PSLVERROR),         // i SPI
+        .io_outputs_8_PADDR    (apb3Router_1_io_outputs_8_PADDR[19:0]),   // o TIM
+        .io_outputs_8_PSEL     (apb3Router_1_io_outputs_8_PSEL),          // o TIM
+        .io_outputs_8_PENABLE  (apb3Router_1_io_outputs_8_PENABLE),       // o TIM
+        .io_outputs_8_PREADY   (system_timCtrl_io_apb_PREADY),            // i TIM
+        .io_outputs_8_PWRITE   (apb3Router_1_io_outputs_8_PWRITE),        // o TIM
+        .io_outputs_8_PWDATA   (apb3Router_1_io_outputs_8_PWDATA[31:0]),  // o TIM
+        .io_outputs_8_PRDATA   (system_timCtrl_io_apb_PRDATA[31:0]),      // i TIM
+        .io_outputs_8_PSLVERROR(system_timCtrl_io_apb_PSLVERROR),         // i TIM
 
         .io_mainClk            (io_mainClk),                              // i
         .resetCtrl_systemReset (resetCtrl_systemReset)                    // i
@@ -705,6 +743,7 @@ module Murax (
     assign system_usartCtrl_io_apb_PADDR = apb3Router_1_io_outputs_5_PADDR[15:0];  // USART
     assign system_i2cCtrl_io_apb_PADDR = apb3Router_1_io_outputs_6_PADDR[15:0];  // I2C
     assign system_spiCtrl_io_apb_PADDR = apb3Router_1_io_outputs_7_PADDR[15:0];  // SPI
+    assign system_timCtrl_io_apb_PADDR = apb3Router_1_io_outputs_8_PADDR[15:0];  // TIM
     assign system_mainBusDecoder_logic_masterPipelined_cmd_valid = system_mainBusArbiter_io_masterBus_cmd_valid;
     assign system_mainBusDecoder_logic_masterPipelined_cmd_payload_write = system_mainBusArbiter_io_masterBus_cmd_payload_write;
     assign system_mainBusDecoder_logic_masterPipelined_cmd_payload_address = system_mainBusArbiter_io_masterBus_cmd_payload_address;

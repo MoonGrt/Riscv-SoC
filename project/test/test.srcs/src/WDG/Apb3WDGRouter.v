@@ -27,7 +27,7 @@ module Apb3WDGRouter (
     wire [31:0] io_apb_PRDATA_IWDG;
     wire        io_apb_PSLVERROR_IWDG = 1'b0;
     //WWDG
-    wire [ 2:0] io_apb_PADDR_WWDG = io_apb_PADDR[4:2];
+    wire [ 1:0] io_apb_PADDR_WWDG = io_apb_PADDR[4:2];
     wire        io_apb_PSEL_WWDG = Apb3PSEL[1];
     wire        io_apb_PENABLE_WWDG = io_apb_PENABLE;
     wire        io_apb_PREADY_WWDG;

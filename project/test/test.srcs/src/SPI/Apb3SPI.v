@@ -20,49 +20,50 @@ module Apb3SPI (
 );
 
     // SPI 寄存器定义
-    reg  [15:0] CR1;       // 控制寄存器1
-    reg  [15:0] CR2;       // 控制寄存器2
-    wire [15:0] SR;        // 状态寄存器
-    reg  [15:0] DR;        // 数据寄存器
-    reg  [15:0] CRCPR;     // CRC 寄存器
-    reg  [15:0] RXCRCR;    // 接收 CRC 寄存器
-    reg  [15:0] TXCRCR;    // 发送 CRC 寄存器
-    reg  [15:0] I2SCFGR;   // I2S 配置寄存器
-    reg  [15:0] I2SPR;     // I2S 预分频寄存器
+    reg  [15:0] CR1;                  // 控制寄存器1
+    reg  [15:0] CR2;                  // 控制寄存器2
+    wire [15:0] SR;                   // 状态寄存器
+    reg  [15:0] DR;                   // 数据寄存器
+    reg  [15:0] CRCPR;                // CRC 寄存器
+    wire [15:0] RXCRCR = 16'h0000;    // 接收 CRC 寄存器
+    wire [15:0] TXCRCR = 16'h0000;    // 发送 CRC 寄存器
+    reg  [15:0] I2SCFGR;              // I2S 配置寄存器
+    reg  [15:0] I2SPR;                // I2S 预分频寄存器
 
     // SPI Config 接口定义
     // CR1
-    wire       CPHA = CR1[0];  // 时钟相位
-    wire       CPOL = CR1[1];  // 时钟极性
-    wire       MSTR = CR1[2];  // 主设备选择
-    wire [2:0] BR = CR1[5:3];  // 波特率控制
-    wire       SPE = CR1[6];   // SPI使能
-    wire       LSBFIRST = CR1[7];  // 帧格式
-    wire       SSI = CR1[8];   // 内部从设备选择
-    wire       SSM = CR1[9];   // 软件从设备管理
-    wire       RXONLY = CR1[10];  // 只接收
-    wire       DFF = CR1[11];  // 数据帧格式
-    wire       CRCNEXT = CR1[12];  // 下一个发送CRC
-    wire       CRCEN = CR1[13];  // 硬件CRC校验使能
-    wire       BIDIOE = CR1[14];  // 双向模式下的输出使能
-    wire       BIDIMODE = CR1[14];  // 双向数据模式使能
+    wire        CPHA = CR1[0];  // 时钟相位
+    wire        CPOL = CR1[1];  // 时钟极性
+    wire        MSTR = CR1[2];  // 主设备选择
+    wire [ 2:0] BR = CR1[5:3];  // 波特率控制
+    wire        SPE = CR1[6];   // SPI使能
+    wire        LSBFIRST = CR1[7];  // 帧格式  0：先发送MSB；1：先发送LSB。
+    wire        SSI = CR1[8];   // 内部从设备选择
+    wire        SSM = CR1[9];   // 软件从设备管理
+    wire        RXONLY = CR1[10];  // 只接收
+    wire        DFF = CR1[11];  // 数据帧格式  0：8位数据帧格式； 1：16位数据帧格式。
+    wire        CRCNEXT = CR1[12];  // 下一个发送CRC
+    wire        CRCEN = CR1[13];  // 硬件CRC校验使能
+    wire        BIDIOE = CR1[14];  // 双向模式下的输出使能
+    wire        BIDIMODE = CR1[14];  // 双向数据模式使能
     // CR2
-    wire       RXDMAEN = CR2[0];  // 接收缓冲区DMA使能
-    wire       TXDMAEN = CR2[1];  // 发送缓冲区DMA使能
-    wire       SSOE = CR2[2];   // SS输出使能
-    wire       ERRIE = CR2[5];  // 错误中断使能
-    wire       RXNEIE = CR2[6];  // 接收缓冲区非空中断使能
-    wire       TXEIE = CR2[7];   // 发送缓冲区空中断使能
+    wire        RXDMAEN = CR2[0];  // 接收缓冲区DMA使能
+    wire        TXDMAEN = CR2[1];  // 发送缓冲区DMA使能
+    wire        SSOE = CR2[2];   // SS输出使能
+    wire        ERRIE = CR2[5];  // 错误中断使能
+    wire        RXNEIE = CR2[6];  // 接收缓冲区非空中断使能
+    wire        TXEIE = CR2[7];   // 发送缓冲区空中断使能
     // SR
-    wire       RXNE = 1'b0;    // 接收缓冲非空
-    wire       TXE = 1'b1;     // 发送缓冲为空
-    wire       CHSIDE = 1'b0;  // 声道
-    wire       UDR = 1'b0;     // 下溢标志位
-    wire       CRCERR = 1'b0;  // CRC错误标志
-    wire       MODF = 1'b0;    // 模式错误
-    wire       OVR = 1'b0;     // 溢出标志
-    wire       BSY = 1'b0;     // 忙标志
-    assign     SR = {8'b0, BSY, OVR, MODF, CRCERR, UDR, CHSIDE, TXE, RXNE};  // 状态寄存器
+    wire        RXNE = 1'b0;    // 接收缓冲非空
+    wire        TXE = 1'b1;     // 发送缓冲为空
+    // wire        TXE;     // 发送缓冲为空
+    wire        CHSIDE = 1'b0;  // 声道
+    wire        UDR = 1'b0;     // 下溢标志位
+    wire        CRCERR = 1'b0;  // CRC错误标志
+    wire        MODF = 1'b0;    // 模式错误
+    wire        OVR = 1'b0;     // 溢出标志
+    wire        BSY = 1'b0;     // 忙标志
+    assign      SR = {8'b0, BSY, OVR, MODF, CRCERR, UDR, CHSIDE, TXE, RXNE};  // 状态寄存器
 
     // APB 写寄存器逻辑
     assign io_apb_PREADY = 1'b1;  // APB 总线始终准备好
@@ -111,27 +112,31 @@ module Apb3SPI (
         end
     end
 
-    // SPI 时钟生成逻辑
-    reg [15:0] clk_div_counter;
-    reg spi_clk;
-    always @(posedge io_apb_PCLK or posedge io_apb_PRESET) begin
-        if (io_apb_PRESET) begin
-            clk_div_counter <= 16'h0000;
-            spi_clk <= 1'b0;
-        end else if (CR1[8]) begin  // 如果SPI使能
-            if (clk_div_counter == I2SPR) begin
-                clk_div_counter <= 16'h0000;
-                spi_clk <= ~spi_clk;  // 时钟翻转
-            end else begin
-                clk_div_counter <= clk_div_counter + 1;
-            end
-        end else begin
-            spi_clk <= 1'b0;  // 禁止时钟
-        end
-    end
+    // 发送 SPI 接口定义
+    reg TX_Vaild = 1'b0;
+    always @(posedge io_apb_PCLK)
+        TX_Vaild <= io_apb_PSEL && io_apb_PENABLE && io_apb_PWRITE && io_apb_PADDR == 4'h3;
 
+    // SPI 逻辑
+    SPICtrl SPICtrl (
+        .clk       (io_apb_PCLK),
+        .rst       (io_apb_PRESET),
+        .CPOL      (CPOL),
+        .CPHA      (CPHA),
+        .BR        (BR),
+        .DFF       (DFF),
+        .LSBFIRST  (LSBFIRST),
 
-    // SPI 传输逻辑
+        .i_TX_Byte (DR),
+        .i_TX_Vaild(TX_Vaild),
+        .o_TX_Ready(),
+        .o_RX_Vaild(),
+        .o_RX_Byte (),
 
+        .o_SPI_SCK (SPI_SCK),
+        .i_SPI_MISO(SPI_MISO),
+        .o_SPI_MOSI(SPI_MOSI),
+        .o_SPI_CS  (SPI_CS)
+    );
 
 endmodule

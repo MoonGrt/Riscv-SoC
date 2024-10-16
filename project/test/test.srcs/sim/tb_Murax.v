@@ -17,13 +17,13 @@ module tb_Murax;
     reg         io_uart_rxd = 0;
     wire        io_uart_txd;
 
-    wire [15:0] GPIOA, GPIOB;
-    assign GPIOB = {12'bz, USART2_RX, 1'bz, USART1_RX, 1'bz};
-
     wire        USART1_TX = GPIOB[0];
     reg         USART1_RX = 1'b1;
     wire        USART2_TX = GPIOB[2];
     reg         USART2_RX = 1'b1;
+
+    wire [15:0] GPIOA, GPIOB;
+    assign GPIOB = {12'bz, USART2_RX, 1'bz, USART1_RX, 1'bz};
 
     initial begin
         forever #(T / 2) clk = ~clk;
