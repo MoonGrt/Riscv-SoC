@@ -21,24 +21,24 @@ module Apb3I2CRouter (
 );
 
     reg  [15:0] Apb3PSEL = 16'h0000;
-    // GPIOA
-    wire [ 3:0] io_apb_PADDR_GPIOA = io_apb_PADDR[5:2];
-    wire        io_apb_PSEL_GPIOA = Apb3PSEL[0];
-    wire        io_apb_PENABLE_GPIOA = io_apb_PENABLE;
-    wire        io_apb_PREADY_GPIOA;
-    wire        io_apb_PWRITE_GPIOA = io_apb_PWRITE;
-    wire [31:0] io_apb_PWDATA_GPIOA = io_apb_PWDATA;
-    wire [31:0] io_apb_PRDATA_GPIOA;
-    wire        io_apb_PSLVERROR_GPIOA = 1'b0;
-    // GPIOB
-    wire [ 3:0] io_apb_PADDR_GPIOB = io_apb_PADDR[5:2];
-    wire        io_apb_PSEL_GPIOB = Apb3PSEL[1];
-    wire        io_apb_PENABLE_GPIOB = io_apb_PENABLE;
-    wire        io_apb_PREADY_GPIOB;
-    wire        io_apb_PWRITE_GPIOB = io_apb_PWRITE;
-    wire [31:0] io_apb_PWDATA_GPIOB = io_apb_PWDATA;
-    wire [31:0] io_apb_PRDATA_GPIOB;
-    wire        io_apb_PSLVERROR_GPIOB = 1'b0;
+    // I2C1
+    wire [ 3:0] io_apb_PADDR_I2C1 = io_apb_PADDR[5:2];
+    wire        io_apb_PSEL_I2C1 = Apb3PSEL[0];
+    wire        io_apb_PENABLE_I2C1 = io_apb_PENABLE;
+    wire        io_apb_PREADY_I2C1;
+    wire        io_apb_PWRITE_I2C1 = io_apb_PWRITE;
+    wire [31:0] io_apb_PWDATA_I2C1 = io_apb_PWDATA;
+    wire [31:0] io_apb_PRDATA_I2C1;
+    wire        io_apb_PSLVERROR_I2C1 = 1'b0;
+    // I2C2
+    wire [ 3:0] io_apb_PADDR_I2C2 = io_apb_PADDR[5:2];
+    wire        io_apb_PSEL_I2C2 = Apb3PSEL[1];
+    wire        io_apb_PENABLE_I2C2 = io_apb_PENABLE;
+    wire        io_apb_PREADY_I2C2;
+    wire        io_apb_PWRITE_I2C2 = io_apb_PWRITE;
+    wire [31:0] io_apb_PWDATA_I2C2 = io_apb_PWDATA;
+    wire [31:0] io_apb_PRDATA_I2C2;
+    wire        io_apb_PSLVERROR_I2C2 = 1'b0;
 
     reg [15:0] selIndex;
     reg        _zz_io_apb_PREADY;
@@ -57,14 +57,14 @@ module Apb3I2CRouter (
         else
             case (selIndex)
                 16'h0001: begin
-                    _zz_io_apb_PREADY = io_apb_PREADY_GPIOA;
-                    _zz_io_apb_PRDATA = io_apb_PRDATA_GPIOA;
-                    _zz_io_apb_PSLVERROR = io_apb_PSLVERROR_GPIOA;
+                    _zz_io_apb_PREADY = io_apb_PREADY_I2C1;
+                    _zz_io_apb_PRDATA = io_apb_PRDATA_I2C1;
+                    _zz_io_apb_PSLVERROR = io_apb_PSLVERROR_I2C1;
                 end
                 16'h0002: begin
-                    _zz_io_apb_PREADY = io_apb_PREADY_GPIOB;
-                    _zz_io_apb_PRDATA = io_apb_PRDATA_GPIOB;
-                    _zz_io_apb_PSLVERROR = io_apb_PSLVERROR_GPIOB;
+                    _zz_io_apb_PREADY = io_apb_PREADY_I2C2;
+                    _zz_io_apb_PRDATA = io_apb_PRDATA_I2C2;
+                    _zz_io_apb_PSLVERROR = io_apb_PSLVERROR_I2C2;
                 end
                 default: ;
             endcase
@@ -74,39 +74,39 @@ module Apb3I2CRouter (
         if (io_apb_PRESET) begin
             Apb3PSEL = 16'h0000;
         end else begin
-            Apb3PSEL[0] = ((io_apb_PADDR[15:12] == 4'd0) && io_apb_PSEL[0]);  // GPIOA
-            Apb3PSEL[1] = ((io_apb_PADDR[15:12] == 4'd1) && io_apb_PSEL[0]);  // GPIOB
+            Apb3PSEL[0] = ((io_apb_PADDR[15:12] == 4'd0) && io_apb_PSEL[0]);  // I2C1
+            Apb3PSEL[1] = ((io_apb_PADDR[15:12] == 4'd1) && io_apb_PSEL[0]);  // I2C2
         end
     end
 
     Apb3I2C Apb3I2C1 (
-        .io_apb_PCLK   (io_apb_PCLK),           // i
-        .io_apb_PRESET (io_apb_PRESET),         // i
-        .io_apb_PADDR  (io_apb_PADDR_GPIOA),    // i
-        .io_apb_PSEL   (io_apb_PSEL_GPIOA),     // i
-        .io_apb_PENABLE(io_apb_PENABLE_GPIOA),  // i
-        .io_apb_PREADY (io_apb_PREADY_GPIOA),   // o
-        .io_apb_PWRITE (io_apb_PWRITE_GPIOA),   // i
-        .io_apb_PWDATA (io_apb_PWDATA_GPIOA),   // i
-        .io_apb_PRDATA (io_apb_PRDATA_GPIOA),   // o
-        .I2C_SDA       (I2C1_SDA),              // i
-        .I2C_SCL       (I2C1_SCL),              // o
-        .interrupt     (I2C1_interrupt)         // o
+        .io_apb_PCLK   (io_apb_PCLK),          // i
+        .io_apb_PRESET (io_apb_PRESET),        // i
+        .io_apb_PADDR  (io_apb_PADDR_I2C1),    // i
+        .io_apb_PSEL   (io_apb_PSEL_I2C1),     // i
+        .io_apb_PENABLE(io_apb_PENABLE_I2C1),  // i
+        .io_apb_PREADY (io_apb_PREADY_I2C1),   // o
+        .io_apb_PWRITE (io_apb_PWRITE_I2C1),   // i
+        .io_apb_PWDATA (io_apb_PWDATA_I2C1),   // i
+        .io_apb_PRDATA (io_apb_PRDATA_I2C1),   // o
+        .I2C_SDA       (I2C1_SDA),             // i
+        .I2C_SCL       (I2C1_SCL),             // o
+        .interrupt     (I2C1_interrupt)        // o
     );
 
     Apb3I2C Apb3I2C2 (
-        .io_apb_PCLK   (io_apb_PCLK),           // i
-        .io_apb_PRESET (io_apb_PRESET),         // i
-        .io_apb_PADDR  (io_apb_PADDR_GPIOB),    // i
-        .io_apb_PSEL   (io_apb_PSEL_GPIOB),     // i
-        .io_apb_PENABLE(io_apb_PENABLE_GPIOB),  // i
-        .io_apb_PREADY (io_apb_PREADY_GPIOB),   // o
-        .io_apb_PWRITE (io_apb_PWRITE_GPIOB),   // i
-        .io_apb_PWDATA (io_apb_PWDATA_GPIOB),   // i
-        .io_apb_PRDATA (io_apb_PRDATA_GPIOB),   // o
-        .I2C_SDA       (I2C2_SDA),              // i
-        .I2C_SCL       (I2C2_SCL),              // o
-        .interrupt     (I2C1_interrupt)         // o
+        .io_apb_PCLK   (io_apb_PCLK),          // i
+        .io_apb_PRESET (io_apb_PRESET),        // i
+        .io_apb_PADDR  (io_apb_PADDR_I2C2),    // i
+        .io_apb_PSEL   (io_apb_PSEL_I2C2),     // i
+        .io_apb_PENABLE(io_apb_PENABLE_I2C2),  // i
+        .io_apb_PREADY (io_apb_PREADY_I2C2),   // o
+        .io_apb_PWRITE (io_apb_PWRITE_I2C2),   // i
+        .io_apb_PWDATA (io_apb_PWDATA_I2C2),   // i
+        .io_apb_PRDATA (io_apb_PRDATA_I2C2),   // o
+        .I2C_SDA       (I2C2_SDA),             // i
+        .I2C_SCL       (I2C2_SCL),             // o
+        .interrupt     (I2C1_interrupt)        // o
     );
 
 endmodule

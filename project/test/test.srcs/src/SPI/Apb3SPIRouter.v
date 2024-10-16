@@ -25,24 +25,24 @@ module Apb3SPIRouter (
 );
 
     reg  [15:0] Apb3PSEL = 16'h0000;
-    // GPIOA
-    wire [ 2:0] io_apb_PADDR_GPIOA = io_apb_PADDR[4:2];
-    wire        io_apb_PSEL_GPIOA = Apb3PSEL[0];
-    wire        io_apb_PENABLE_GPIOA = io_apb_PENABLE;
-    wire        io_apb_PREADY_GPIOA;
-    wire        io_apb_PWRITE_GPIOA = io_apb_PWRITE;
-    wire [31:0] io_apb_PWDATA_GPIOA = io_apb_PWDATA;
-    wire [31:0] io_apb_PRDATA_GPIOA;
-    wire        io_apb_PSLVERROR_GPIOA = 1'b0;
-    // GPIOB
-    wire [ 2:0] io_apb_PADDR_GPIOB = io_apb_PADDR[4:2];
-    wire        io_apb_PSEL_GPIOB = Apb3PSEL[1];
-    wire        io_apb_PENABLE_GPIOB = io_apb_PENABLE;
-    wire        io_apb_PREADY_GPIOB;
-    wire        io_apb_PWRITE_GPIOB = io_apb_PWRITE;
-    wire [31:0] io_apb_PWDATA_GPIOB = io_apb_PWDATA;
-    wire [31:0] io_apb_PRDATA_GPIOB;
-    wire        io_apb_PSLVERROR_GPIOB = 1'b0;
+    // SPI1
+    wire [ 3:0] io_apb_PADDR_SPI1 = io_apb_PADDR[5:2];
+    wire        io_apb_PSEL_SPI1 = Apb3PSEL[0];
+    wire        io_apb_PENABLE_SPI1 = io_apb_PENABLE;
+    wire        io_apb_PREADY_SPI1;
+    wire        io_apb_PWRITE_SPI1 = io_apb_PWRITE;
+    wire [31:0] io_apb_PWDATA_SPI1 = io_apb_PWDATA;
+    wire [31:0] io_apb_PRDATA_SPI1;
+    wire        io_apb_PSLVERROR_SPI1 = 1'b0;
+    // SPI2
+    wire [ 3:0] io_apb_PADDR_SPI2 = io_apb_PADDR[5:2];
+    wire        io_apb_PSEL_SPI2 = Apb3PSEL[1];
+    wire        io_apb_PENABLE_SPI2 = io_apb_PENABLE;
+    wire        io_apb_PREADY_SPI2;
+    wire        io_apb_PWRITE_SPI2 = io_apb_PWRITE;
+    wire [31:0] io_apb_PWDATA_SPI2 = io_apb_PWDATA;
+    wire [31:0] io_apb_PRDATA_SPI2;
+    wire        io_apb_PSLVERROR_SPI2 = 1'b0;
 
     reg [15:0] selIndex;
     reg        _zz_io_apb_PREADY;
@@ -61,14 +61,14 @@ module Apb3SPIRouter (
         else
             case (selIndex)
                 16'h0001: begin
-                    _zz_io_apb_PREADY = io_apb_PREADY_GPIOA;
-                    _zz_io_apb_PRDATA = io_apb_PRDATA_GPIOA;
-                    _zz_io_apb_PSLVERROR = io_apb_PSLVERROR_GPIOA;
+                    _zz_io_apb_PREADY = io_apb_PREADY_SPI1;
+                    _zz_io_apb_PRDATA = io_apb_PRDATA_SPI1;
+                    _zz_io_apb_PSLVERROR = io_apb_PSLVERROR_SPI1;
                 end
                 16'h0002: begin
-                    _zz_io_apb_PREADY = io_apb_PREADY_GPIOB;
-                    _zz_io_apb_PRDATA = io_apb_PRDATA_GPIOB;
-                    _zz_io_apb_PSLVERROR = io_apb_PSLVERROR_GPIOB;
+                    _zz_io_apb_PREADY = io_apb_PREADY_SPI2;
+                    _zz_io_apb_PRDATA = io_apb_PRDATA_SPI2;
+                    _zz_io_apb_PSLVERROR = io_apb_PSLVERROR_SPI2;
                 end
                 default: ;
             endcase
@@ -78,43 +78,43 @@ module Apb3SPIRouter (
         if (io_apb_PRESET) begin
             Apb3PSEL = 16'h0000;
         end else begin
-            Apb3PSEL[0] = ((io_apb_PADDR[15:12] == 4'd0) && io_apb_PSEL[0]);  // GPIOA
-            Apb3PSEL[1] = ((io_apb_PADDR[15:12] == 4'd1) && io_apb_PSEL[0]);  // GPIOB
+            Apb3PSEL[0] = ((io_apb_PADDR[15:12] == 4'd0) && io_apb_PSEL[0]);  // SPI1
+            Apb3PSEL[1] = ((io_apb_PADDR[15:12] == 4'd1) && io_apb_PSEL[0]);  // SPI2
         end
     end
 
     Apb3SPI Apb3SPI1 (
-        .io_apb_PCLK   (io_apb_PCLK),           // i
-        .io_apb_PRESET (io_apb_PRESET),         // i
-        .io_apb_PADDR  (io_apb_PADDR_GPIOA),    // i
-        .io_apb_PSEL   (io_apb_PSEL_GPIOA),     // i
-        .io_apb_PENABLE(io_apb_PENABLE_GPIOA),  // i
-        .io_apb_PREADY (io_apb_PREADY_GPIOA),   // o
-        .io_apb_PWRITE (io_apb_PWRITE_GPIOA),   // i
-        .io_apb_PWDATA (io_apb_PWDATA_GPIOA),   // i
-        .io_apb_PRDATA (io_apb_PRDATA_GPIOA),   // o
-        .SPI_SCK       (SPI1_SCK),              // o
-        .SPI_MOSI      (SPI1_MOSI),             // o
-        .SPI_MISO      (SPI1_MISO),             // i
-        .SPI_CS        (SPI1_CS),               // o
-        .interrupt     (SPI1_interrupt)         // o
+        .io_apb_PCLK   (io_apb_PCLK),          // i
+        .io_apb_PRESET (io_apb_PRESET),        // i
+        .io_apb_PADDR  (io_apb_PADDR_SPI1),    // i
+        .io_apb_PSEL   (io_apb_PSEL_SPI1),     // i
+        .io_apb_PENABLE(io_apb_PENABLE_SPI1),  // i
+        .io_apb_PREADY (io_apb_PREADY_SPI1),   // o
+        .io_apb_PWRITE (io_apb_PWRITE_SPI1),   // i
+        .io_apb_PWDATA (io_apb_PWDATA_SPI1),   // i
+        .io_apb_PRDATA (io_apb_PRDATA_SPI1),   // o
+        .SPI_SCK       (SPI1_SCK),             // o
+        .SPI_MOSI      (SPI1_MOSI),            // o
+        .SPI_MISO      (SPI1_MISO),            // i
+        .SPI_CS        (SPI1_CS),              // o
+        .interrupt     (SPI1_interrupt)        // o
     );
 
     Apb3SPI Apb3SPI2 (
-        .io_apb_PCLK   (io_apb_PCLK),           // i
-        .io_apb_PRESET (io_apb_PRESET),         // i
-        .io_apb_PADDR  (io_apb_PADDR_GPIOA),    // i
-        .io_apb_PSEL   (io_apb_PSEL_GPIOA),     // i
-        .io_apb_PENABLE(io_apb_PENABLE_GPIOA),  // i
-        .io_apb_PREADY (io_apb_PREADY_GPIOA),   // o
-        .io_apb_PWRITE (io_apb_PWRITE_GPIOA),   // i
-        .io_apb_PWDATA (io_apb_PWDATA_GPIOA),   // i
-        .io_apb_PRDATA (io_apb_PRDATA_GPIOA),   // o
-        .SPI_SCK       (SPI2_SCK),              // o
-        .SPI_MOSI      (SPI2_MOSI),             // o
-        .SPI_MISO      (SPI2_MISO),             // i
-        .SPI_CS        (SPI2_CS),               // o
-        .interrupt     (SPI2_interrupt)         // o
+        .io_apb_PCLK   (io_apb_PCLK),          // i
+        .io_apb_PRESET (io_apb_PRESET),        // i
+        .io_apb_PADDR  (io_apb_PADDR_SPI2),    // i
+        .io_apb_PSEL   (io_apb_PSEL_SPI2),     // i
+        .io_apb_PENABLE(io_apb_PENABLE_SPI2),  // i
+        .io_apb_PREADY (io_apb_PREADY_SPI2),   // o
+        .io_apb_PWRITE (io_apb_PWRITE_SPI2),   // i
+        .io_apb_PWDATA (io_apb_PWDATA_SPI2),   // i
+        .io_apb_PRDATA (io_apb_PRDATA_SPI2),   // o
+        .SPI_SCK       (SPI2_SCK),             // o
+        .SPI_MOSI      (SPI2_MOSI),            // o
+        .SPI_MISO      (SPI2_MISO),            // i
+        .SPI_CS        (SPI2_CS),              // o
+        .interrupt     (SPI2_interrupt)        // o
     );
 
 endmodule

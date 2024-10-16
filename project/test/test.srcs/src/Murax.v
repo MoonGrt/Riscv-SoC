@@ -463,8 +463,8 @@ module Murax (
         .io_apb_PREADY        (system_spiCtrl_io_apb_PREADY),                // o
         .io_apb_PWRITE        (apb3Router_1_io_outputs_7_PWRITE),            // i
         .io_apb_PWDATA        (apb3Router_1_io_outputs_7_PWDATA),            // i
-        .io_apb_PRDATA        (system_spitCtrl_io_apb_PRDATA),               // o
-        .io_apb_PSLVERROR     (system_spitCtrl_io_apb_PSLVERROR),            // o
+        .io_apb_PRDATA        (system_spiCtrl_io_apb_PRDATA),               // o
+        .io_apb_PSLVERROR     (system_spiCtrl_io_apb_PSLVERROR),            // o
         .SPI1_SCK             (SPI1_SCK),                                    // o
         .SPI1_MOSI            (SPI1_MOSI),                                   // o
         .SPI1_MISO            (SPI1_MISO),                                   // i
@@ -703,8 +703,8 @@ module Murax (
     assign system_timer_io_apb_PADDR = apb3Router_1_io_outputs_2_PADDR[7:0];
     assign system_wdgCtrl_io_apb_PADDR = apb3Router_1_io_outputs_4_PADDR[15:0];  // WDG
     assign system_usartCtrl_io_apb_PADDR = apb3Router_1_io_outputs_5_PADDR[15:0];  // USART
-    assign system_i2cCtrl_io_apb_PADDR = apb3Router_1_io_outputs_5_PADDR[15:0];  // I2C
-    assign system_spiCtrl_io_apb_PADDR = apb3Router_1_io_outputs_5_PADDR[15:0];  // SPI
+    assign system_i2cCtrl_io_apb_PADDR = apb3Router_1_io_outputs_6_PADDR[15:0];  // I2C
+    assign system_spiCtrl_io_apb_PADDR = apb3Router_1_io_outputs_7_PADDR[15:0];  // SPI
     assign system_mainBusDecoder_logic_masterPipelined_cmd_valid = system_mainBusArbiter_io_masterBus_cmd_valid;
     assign system_mainBusDecoder_logic_masterPipelined_cmd_payload_write = system_mainBusArbiter_io_masterBus_cmd_payload_write;
     assign system_mainBusDecoder_logic_masterPipelined_cmd_payload_address = system_mainBusArbiter_io_masterBus_cmd_payload_address;

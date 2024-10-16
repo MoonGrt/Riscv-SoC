@@ -43,8 +43,8 @@ module Apb3I2C (
     wire       ITBUFEN = CR2[10];  // 缓冲区中断使能
     wire       DMAEN = CR2[11];  // DMA 使能
     // OAR1
-    wire [6:0] ADD7 = OAR1[7:1];  // 7位 从机地址
-    wire [9:0] ADD10 = OAR1[9:0];  // 10位 从机地址
+    wire [6:0] ADD_7 = OAR1[7:1];  // 7位 从机地址
+    wire [9:0] ADD_10 = OAR1[9:0];  // 10位 从机地址
     wire       ADDMODE = OAR1[15];  // 地址模式
     // SR1
     reg        SB = 1'b0;  // 起始位(主模式)
@@ -61,7 +61,7 @@ module Apb3I2C (
     wire       PECERR = 1'b0;  // 在接收时发生PEC错误
     wire       TMOUT = 1'b0;  // 超时或Tlow错误
     wire       SMBALERT = 1'b0;  // SMBus 提醒
-    assign     SR1 = {SMBALERT, TMOUT, 1'b0, PECERR, OVR, AF, ARLO, BERR, TXE, RXNE, 1'b0, STOPF, ADD10, BTF, ADDR, SB};
+    assign     SR1 = {SMBALERT, TMOUT, 1'b0, PECERR, OVR, AF, ARLO, BERR, TXE, RXNE, 1'b0, STOPF, ADD10, BTF, ADDR, SB};  // 状态寄存器1
     // SR2
     wire       MSL = 1'b0;  // 主从模式
     wire       BUSY = 1'b0;  // 总线忙
@@ -71,7 +71,7 @@ module Apb3I2C (
     wire       SMBHOST = 1'b0;  // SMB 主机
     wire       DUALF = 1'b0;  // 双工模式
     wire [7:0] PEC = 1'b0;  // 错误校验位
-    assign     SR2 = {PEC, DUALF, SMBHOST, SMBDEFAULT, GENCALL, 1'b0, TRA, BUSY, MSL};
+    assign     SR2 = {PEC, DUALF, SMBHOST, SMBDEFAULT, GENCALL, 1'b0, TRA, BUSY, MSL};  // 状态寄存器2
 
     // APB 写寄存器逻辑
     assign io_apb_PREADY = 1'b1;  // APB 准备信号始终为高，表示设备始终准备好
