@@ -49,12 +49,17 @@ module Apb3USART (
 
     // USART Config 接口定义
     // SR
-    wire        PE   = 1'bz;
-    wire        IDLE = 1'bz;
-    wire        RXNE = io_occupancy_RX ? 1'b1 : 1'b0;
-    wire        TC   = 1'bz;
-    wire        TXE  = 1'bz;
-    assign      SR   = {8'b0, TXE, TC, RXNE, IDLE, 3'b0, PE};
+    wire        PE   = 1'b0;  // 校验错误
+    wire        FE   = 1'b0;  // 帧错误
+    wire        NF   = 1'b0;  // 噪声错误标志
+    wire        ORE  = 1'b0;  // 过载错误
+    wire        IDLE = 1'b0;  // 监测到总线空闲
+    wire        RXNE = io_occupancy_RX ? 1'b1 : 1'b0;  // 读数据寄存器非空
+    wire        TC   = 1'b0;  // 发送完成
+    wire        TXE  = 1'b0;  // 发送数据寄存器空
+    wire        LBD  = 1'b0;  // LIN断开检测标志
+    wire        CTS   = 1'b0;  // CTS 标志
+    assign      SR   = {6'b0, CTS, LBD, TXE, TC, RXNE, IDLE, ORE, NF, FE, PE};
     // CR1
     wire        RE     = CR1[2];
     wire        TE     = CR1[3];
