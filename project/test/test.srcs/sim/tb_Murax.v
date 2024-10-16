@@ -31,7 +31,7 @@ module tb_Murax;
 
     initial begin
         #(T * 2) rst_n = 1;
-        #17000 sim_uart_tx(8'b10101010);  // 调用task 模拟 UART 发送数据
+        // #17000 sim_uart_tx(8'b10101010);  // 调用task 模拟 UART 发送数据
     end
 
     Murax Murax (

@@ -52,10 +52,10 @@ module Apb3USART (
     wire        ORE  = 1'b0;  // 过载错误
     wire        IDLE = 1'b0;  // 监测到总线空闲
     wire        RXNE = io_occupancy_RX ? 1'b1 : 1'b0;  // 读数据寄存器非空
-    wire        TC   = 1'b0;  // 发送完成
+    wire        TC   = io_availability_TX ? 1'b1 : 1'b0;  // (发送完成) 改为写数据寄存器有空闲
     wire        TXE  = 1'b0;  // 发送数据寄存器空
     wire        LBD  = 1'b0;  // LIN断开检测标志
-    wire        CTS   = 1'b0;  // CTS 标志
+    wire        CTS  = 1'b0;  // CTS 标志
     assign      SR   = {6'b0, CTS, LBD, TXE, TC, RXNE, IDLE, ORE, NF, FE, PE};
     // CR1
     wire        RE     = CR1[2];
