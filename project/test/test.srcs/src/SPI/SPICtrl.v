@@ -25,7 +25,7 @@ module SPICtrl (
     output reg o_SPI_SCK,
     input      i_SPI_MISO,
     output reg o_SPI_MOSI,
-    output reg o_SPI_CS
+    output reg o_SPI_CS = 1'b0
 );
 
     // CPOL: Clock Polarity
