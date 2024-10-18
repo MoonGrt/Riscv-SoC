@@ -1,3 +1,6 @@
+# 每个文件的最大字节数
+max_bytes = 8192
+
 # Python程序从Intel HEX文件中读取RISC-V指令并列出a
 def parse_hex_line(line):
     """
@@ -43,9 +46,6 @@ def save_bytes_to_files(instructions, output_dir):
     将每条指令的每个字节保存到四个不同的文件中，确保每个文件写入4096字节数据。
     """
     file_names = [f'{output_dir}.bin', f'{output_dir}0.bin', f'{output_dir}1.bin', f'{output_dir}2.bin', f'{output_dir}3.bin']
-
-    # 每个文件的最大字节数
-    max_bytes = 4096
 
     # 记录每个文件的字节内容
     bytes_content = [[] for _ in range(5)]

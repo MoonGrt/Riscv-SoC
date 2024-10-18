@@ -362,7 +362,7 @@ module Murax (
         .io_bus_cmd_valid(system_ram_io_bus_cmd_valid),                                                       // i
         .io_bus_cmd_ready(system_ram_io_bus_cmd_ready),                                                       // o
         .io_bus_cmd_payload_write(_zz_io_bus_cmd_payload_write),                                              // i
-        .io_bus_cmd_payload_address (system_mainBusDecoder_logic_masterPipelined_cmd_payload_address[31:0]),  // i
+        .io_bus_cmd_payload_address(system_mainBusDecoder_logic_masterPipelined_cmd_payload_address[31:0]),  // i
         .io_bus_cmd_payload_data(system_mainBusDecoder_logic_masterPipelined_cmd_payload_data[31:0]),         // i
         .io_bus_cmd_payload_mask(system_mainBusDecoder_logic_masterPipelined_cmd_payload_mask[3:0]),          // i
         .io_bus_rsp_valid(system_ram_io_bus_rsp_valid),                                                       // o
@@ -752,7 +752,8 @@ module Murax (
     assign system_mainBusDecoder_logic_masterPipelined_cmd_payload_address = system_mainBusArbiter_io_masterBus_cmd_payload_address;
     assign system_mainBusDecoder_logic_masterPipelined_cmd_payload_data = system_mainBusArbiter_io_masterBus_cmd_payload_data;
     assign system_mainBusDecoder_logic_masterPipelined_cmd_payload_mask = system_mainBusArbiter_io_masterBus_cmd_payload_mask;
-    assign system_mainBusDecoder_logic_hits_0 = ((system_mainBusDecoder_logic_masterPipelined_cmd_payload_address & (~ 32'h00000fff)) == 32'h80000000);
+    // assign system_mainBusDecoder_logic_hits_0 = ((system_mainBusDecoder_logic_masterPipelined_cmd_payload_address & (~ 32'h00000fff)) == 32'h80000000);
+    assign system_mainBusDecoder_logic_hits_0 = ((system_mainBusDecoder_logic_masterPipelined_cmd_payload_address & (~ 32'h0000ffff)) == 32'h80000000);
     always @(*) begin
         system_ram_io_bus_cmd_valid = (system_mainBusDecoder_logic_masterPipelined_cmd_valid && system_mainBusDecoder_logic_hits_0);
         if (when_MuraxUtiles_l133) begin

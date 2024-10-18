@@ -1,8 +1,8 @@
 `timescale 1ns / 1ps
 
 module RAMPPL #(
-    parameter ADDR_DEPTH = 16384
-    // parameter ADDR_DEPTH = 8192
+    // parameter ADDR_DEPTH = 16384
+    parameter ADDR_DEPTH = 8192
 )(
     input  wire        io_bus_cmd_valid,
     output wire        io_bus_cmd_ready,
