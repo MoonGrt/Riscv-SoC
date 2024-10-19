@@ -40,10 +40,6 @@ module RAMPPL #(
         $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram1.bin", ram_symbol1);
         $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram2.bin", ram_symbol2);
         $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram3.bin", ram_symbol3);
-        // $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/test/test.srcs/src/ram/ram0.bin", ram_symbol0);
-        // $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/test/test.srcs/src/ram/ram1.bin", ram_symbol1);
-        // $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/test/test.srcs/src/ram/ram2.bin", ram_symbol2);
-        // $readmemb("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/test/test.srcs/src/ram/ram3.bin", ram_symbol3);
     end
     always @(*) begin
         ram_spinal_port0 = {
