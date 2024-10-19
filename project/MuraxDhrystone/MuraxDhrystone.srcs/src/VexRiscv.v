@@ -3867,7 +3867,4 @@ module StreamFifo_VexRisv (
         end
     end
 
-
 endmodule
-
-

@@ -472,8 +472,6 @@ module StreamFifo_UART (
 endmodule
 
 
-`timescale 1ns / 1ps
-
 module UartCtrl (
     input  wire [ 2:0] io_config_frame_dataLength,
     input  wire [ 0:0] io_config_frame_stop,

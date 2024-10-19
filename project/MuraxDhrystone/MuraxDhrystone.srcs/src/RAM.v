@@ -77,5 +77,4 @@ module RAM (
         end
     end
 
-
 endmodule

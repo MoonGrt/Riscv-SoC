@@ -1,5 +1,3 @@
-`timescale 1ns / 1ps
-
 module Apb3RCC (
     input  wire        io_apb_PCLK,     // APB 时钟
     input  wire        io_apb_PRESET,   // APB 复位信号，高电平复位
@@ -137,6 +135,5 @@ module Apb3RCC (
     end
 
     // 时钟、复位逻辑
-
 
 endmodule
