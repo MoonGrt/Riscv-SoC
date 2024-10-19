@@ -18,16 +18,22 @@ module RAM (
     reg         _zz_io_bus_rsp_valid;
     wire [29:0] _zz_io_bus_rsp_payload_data;
     wire [31:0] _zz_io_bus_rsp_payload_data_1;
-    reg  [ 7:0] ram_symbol0                   [0:65535];
-    reg  [ 7:0] ram_symbol1                   [0:65535];
-    reg  [ 7:0] ram_symbol2                   [0:65535];
-    reg  [ 7:0] ram_symbol3                   [0:65535];
+    reg  [ 7:0] ram_symbol0 [0:65535];
+    reg  [ 7:0] ram_symbol1 [0:65535];
+    reg  [ 7:0] ram_symbol2 [0:65535];
+    reg  [ 7:0] ram_symbol3 [0:65535];
     reg  [ 7:0] _zz_ramsymbol_read;
     reg  [ 7:0] _zz_ramsymbol_read_1;
     reg  [ 7:0] _zz_ramsymbol_read_2;
     reg  [ 7:0] _zz_ramsymbol_read_3;
 
     assign _zz_io_bus_rsp_payload_data_2 = _zz_io_bus_rsp_payload_data[15:0];
+    initial begin
+        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram0.bin", ram_symbol0);
+        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram1.bin", ram_symbol1);
+        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram2.bin", ram_symbol2);
+        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram3.bin", ram_symbol3);
+    end
     always @(*) begin
         ram_spinal_port0 = {
             _zz_ramsymbol_read_3, _zz_ramsymbol_read_2, _zz_ramsymbol_read_1, _zz_ramsymbol_read

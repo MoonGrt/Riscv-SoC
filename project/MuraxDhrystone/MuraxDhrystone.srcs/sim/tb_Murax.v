@@ -5,25 +5,20 @@ module tb_Murax;
     // Murax Parameters
     parameter T = 10;
 
-    reg         rst_n = 0;
-    reg         clk = 0;
-    reg         io_jtag_tms = 0;
-    reg         io_jtag_tdi = 0;
-    reg         io_jtag_tck = 0;
-    wire        io_jtag_tdo;
-    reg  [31:0] io_gpioA_read = 0;
-    wire [31:0] io_gpioA_write;
-    wire [31:0] io_gpioA_writeEnable;
-    reg         io_uart_rxd = 0;
-    wire        io_uart_txd;
+    reg  rst_n = 0;
+    reg  clk = 0;
+    reg  io_jtag_tms = 0;
+    reg  io_jtag_tdi = 0;
+    reg  io_jtag_tck = 0;
+    wire io_jtag_tdo;
 
     wire [15:0] GPIOA, GPIOB;
     assign GPIOB = {12'bz, USART2_RX, 1'bz, USART1_RX, 1'bz};
 
-    wire        USART1_TX = GPIOB[0];
-    reg         USART1_RX = 1'b1;
-    wire        USART2_TX = GPIOB[2];
-    reg         USART2_RX = 1'b1;
+    wire USART1_TX = GPIOB[0];
+    reg  USART1_RX = 1'b1;
+    wire USART2_TX = GPIOB[2];
+    reg  USART2_RX = 1'b1;
 
     initial begin
         forever #(T / 2) clk = ~clk;
@@ -43,14 +38,8 @@ module tb_Murax;
         .io_jtag_tck(io_jtag_tck),
         .io_jtag_tdo(io_jtag_tdo),
 
-        // .GPIOA(GPIOA),
-        // .GPIOB(GPIOB),
-
-        .io_gpioA_read       (io_gpioA_read),
-        .io_gpioA_write      (io_gpioA_write),
-        .io_gpioA_writeEnable(io_gpioA_writeEnable),
-        .io_uart_txd         (io_uart_txd),
-        .io_uart_rxd         (io_uart_rxd)
+        .GPIOA(GPIOA),
+        .GPIOB(GPIOB)
     );
 
     // 模拟 UART 发送波形
