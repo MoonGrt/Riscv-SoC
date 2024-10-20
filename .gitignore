@@ -1,4 +1,5 @@
 project/cam2dvi/impl/
+project/SoC/impl/
 project/Murax/Murax.cache/
 project/Murax/Murax.hw/
 project/Murax/Murax.ip_user_files/
@@ -7,3 +8,5 @@ project/MuraxDhrystone/MuraxDhrystone.cache/
 project/MuraxDhrystone/MuraxDhrystone.hw/
 project/MuraxDhrystone/MuraxDhrystone.ip_user_files/
 project/MuraxDhrystone/MuraxDhrystone.sim/
+*bin
+*hex
