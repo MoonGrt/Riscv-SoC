@@ -45,10 +45,10 @@ def save_bytes_to_files(instructions, output_dir):
     """
     将每条指令的每个字节保存到四个不同的文件中，确保每个文件写入4096字节数据。
     """
-    file_names = [f'{output_dir}.bin', f'{output_dir}0.bin', f'{output_dir}1.bin', f'{output_dir}2.bin', f'{output_dir}3.bin']
+    file_names = [f'{output_dir}.bin', f'{output_dir}0.bin', f'{output_dir}1.bin', f'{output_dir}2.bin', f'{output_dir}3.bin', f'{output_dir}_.bin']
 
     # 记录每个文件的字节内容
-    bytes_content = [[] for _ in range(5)]
+    bytes_content = [[] for _ in range(6)]
 
     # 收集每个字节的内容
     for address, instruction in instructions:
@@ -57,9 +57,10 @@ def save_bytes_to_files(instructions, output_dir):
         bytes_content[2].append(instruction[2:4])  # 第二个字节
         bytes_content[3].append(instruction[4:6])  # 第三个字节
         bytes_content[4].append(instruction[6:8])  # 第四个字节
+        bytes_content[5].append(instruction[6:8]+instruction[4:6]+instruction[2:4]+instruction[0:2])  # 反向全部字节
 
     # 将字节内容写入文件，并确保文件大小为4096字节
-    for i in range(5):
+    for i in range(6):
         with open(file_names[i], 'w') as file:
             # 写入实际字节
             for byte in bytes_content[i]:

@@ -1,4 +1,5 @@
 module RAM #(
+    parameter INIT_FILE = "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram_.bin",
     parameter ADDR_DEPTH = 65536
     // parameter ADDR_DEPTH = 8192
 )(
@@ -23,10 +24,10 @@ module RAM #(
     reg         _zz_io_bus_rsp_valid;
     wire [29:0] _zz_io_bus_rsp_payload_data;
     wire [31:0] _zz_io_bus_rsp_payload_data_1;
-    reg  [ 7:0] ram_symbol0 [0:ADDR_DEPTH];
-    reg  [ 7:0] ram_symbol1 [0:ADDR_DEPTH];
-    reg  [ 7:0] ram_symbol2 [0:ADDR_DEPTH];
-    reg  [ 7:0] ram_symbol3 [0:ADDR_DEPTH];
+    reg  [ 7:0] ram_symbol0 [0:ADDR_DEPTH-1];
+    reg  [ 7:0] ram_symbol1 [0:ADDR_DEPTH-1];
+    reg  [ 7:0] ram_symbol2 [0:ADDR_DEPTH-1];
+    reg  [ 7:0] ram_symbol3 [0:ADDR_DEPTH-1];
     reg  [ 7:0] _zz_ramsymbol_read;
     reg  [ 7:0] _zz_ramsymbol_read_1;
     reg  [ 7:0] _zz_ramsymbol_read_2;
@@ -47,7 +48,7 @@ module RAM #(
         };
     end
     always @(posedge io_mainClk) begin
-        if (io_bus_cmd_valid) begin
+        if (io_bus_cmd_valid && ~io_bus_cmd_payload_write) begin
             _zz_ramsymbol_read   <= ram_symbol0[_zz_io_bus_rsp_payload_data_2];
             _zz_ramsymbol_read_1 <= ram_symbol1[_zz_io_bus_rsp_payload_data_2];
             _zz_ramsymbol_read_2 <= ram_symbol2[_zz_io_bus_rsp_payload_data_2];
