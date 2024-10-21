@@ -238,6 +238,42 @@ module Murax (
         .io_dataOut (io_asyncReset_buffercc_io_dataOut), //o
         .io_mainClk (io_mainClk                       )  //i
     );
+    JtagBridge JtagBridge (
+        .io_jtag_tms                    (io_jtag_tms                                      ), // i
+        .io_jtag_tdi                    (io_jtag_tdi                                      ), // i
+        .io_jtag_tdo                    (jtagBridge_1_io_jtag_tdo                         ), // o
+        .io_jtag_tck                    (io_jtag_tck                                      ), // i
+        .io_remote_cmd_valid            (jtagBridge_1_io_remote_cmd_valid                 ), // o
+        .io_remote_cmd_ready            (systemDebugger_1_io_remote_cmd_ready             ), // i
+        .io_remote_cmd_payload_last     (jtagBridge_1_io_remote_cmd_payload_last          ), // o
+        .io_remote_cmd_payload_fragment (jtagBridge_1_io_remote_cmd_payload_fragment      ), // o
+        .io_remote_rsp_valid            (systemDebugger_1_io_remote_rsp_valid             ), // i
+        .io_remote_rsp_ready            (jtagBridge_1_io_remote_rsp_ready                 ), // o
+        .io_remote_rsp_payload_error    (systemDebugger_1_io_remote_rsp_payload_error     ), // i
+        .io_remote_rsp_payload_data     (systemDebugger_1_io_remote_rsp_payload_data[31:0]), // i
+        .io_mainClk                     (io_mainClk                                       ), // i
+        .resetCtrl_mainClkReset         (resetCtrl_mainClkReset                           )  // i
+    );
+    Debugger Debugger (
+        .io_remote_cmd_valid            (jtagBridge_1_io_remote_cmd_valid                 ), // i
+        .io_remote_cmd_ready            (systemDebugger_1_io_remote_cmd_ready             ), // o
+        .io_remote_cmd_payload_last     (jtagBridge_1_io_remote_cmd_payload_last          ), // i
+        .io_remote_cmd_payload_fragment (jtagBridge_1_io_remote_cmd_payload_fragment      ), // i
+        .io_remote_rsp_valid            (systemDebugger_1_io_remote_rsp_valid             ), // o
+        .io_remote_rsp_ready            (jtagBridge_1_io_remote_rsp_ready                 ), // i
+        .io_remote_rsp_payload_error    (systemDebugger_1_io_remote_rsp_payload_error     ), // o
+        .io_remote_rsp_payload_data     (systemDebugger_1_io_remote_rsp_payload_data[31:0]), // o
+        .io_mem_cmd_valid               (systemDebugger_1_io_mem_cmd_valid                ), // o
+        .io_mem_cmd_ready               (system_cpu_debug_bus_cmd_ready                   ), // i
+        .io_mem_cmd_payload_address     (systemDebugger_1_io_mem_cmd_payload_address[31:0]), // o
+        .io_mem_cmd_payload_data        (systemDebugger_1_io_mem_cmd_payload_data[31:0]   ), // o
+        .io_mem_cmd_payload_wr          (systemDebugger_1_io_mem_cmd_payload_wr           ), // o
+        .io_mem_cmd_payload_size        (systemDebugger_1_io_mem_cmd_payload_size[1:0]    ), // o
+        .io_mem_rsp_valid               (toplevel_system_cpu_debug_bus_cmd_fire_regNext   ), // i
+        .io_mem_rsp_payload             (system_cpu_debug_bus_rsp_data[31:0]              ), // i
+        .io_mainClk                     (io_mainClk                                       ), // i
+        .resetCtrl_mainClkReset         (resetCtrl_mainClkReset                           )  // i
+    );
     VexRiscv VexRiscv (
         .iBus_cmd_valid                (system_cpu_iBus_cmd_valid                           ), //o
         .iBus_cmd_ready                (system_mainBusArbiter_io_iBus_cmd_ready             ), //i
@@ -296,6 +332,18 @@ module Murax (
         .io_masterBus_rsp_payload_data    (system_mainBusDecoder_logic_masterPipelined_rsp_payload_data[31:0]), //i
         .io_mainClk                       (io_mainClk                                                        ), //i
         .resetCtrl_systemReset            (resetCtrl_systemReset                                             )  //i
+    );
+    RAM RAM (
+        .io_bus_cmd_valid           (system_ram_io_bus_cmd_valid                                          ), // i
+        .io_bus_cmd_ready           (system_ram_io_bus_cmd_ready                                          ), // o
+        .io_bus_cmd_payload_write   (_zz_io_bus_cmd_payload_write                                         ), // i
+        .io_bus_cmd_payload_address (system_mainBusDecoder_logic_masterPipelined_cmd_payload_address[31:0]), // i
+        .io_bus_cmd_payload_data    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_data[31:0]   ), // i
+        .io_bus_cmd_payload_mask    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_mask[3:0]    ), // i
+        .io_bus_rsp_valid           (system_ram_io_bus_rsp_valid                                          ), // o
+        .io_bus_rsp_payload_data    (system_ram_io_bus_rsp_payload_data[31:0]                             ), // o
+        .io_mainClk                 (io_mainClk                                                           ), // i
+        .resetCtrl_systemReset      (resetCtrl_systemReset                                                )  // i
     );
     Apb3PRouter Apb3PRouter (
         .io_input_PADDR     (system_apbBridge_io_apb_PADDR[19:0]),    // i
@@ -358,54 +406,6 @@ module Murax (
 
         .io_mainClk            (io_mainClk),                              // i
         .resetCtrl_systemReset (resetCtrl_systemReset)                    // i
-    );
-    JtagBridge JtagBridge (
-        .io_jtag_tms                    (io_jtag_tms                                      ), // i
-        .io_jtag_tdi                    (io_jtag_tdi                                      ), // i
-        .io_jtag_tdo                    (jtagBridge_1_io_jtag_tdo                         ), // o
-        .io_jtag_tck                    (io_jtag_tck                                      ), // i
-        .io_remote_cmd_valid            (jtagBridge_1_io_remote_cmd_valid                 ), // o
-        .io_remote_cmd_ready            (systemDebugger_1_io_remote_cmd_ready             ), // i
-        .io_remote_cmd_payload_last     (jtagBridge_1_io_remote_cmd_payload_last          ), // o
-        .io_remote_cmd_payload_fragment (jtagBridge_1_io_remote_cmd_payload_fragment      ), // o
-        .io_remote_rsp_valid            (systemDebugger_1_io_remote_rsp_valid             ), // i
-        .io_remote_rsp_ready            (jtagBridge_1_io_remote_rsp_ready                 ), // o
-        .io_remote_rsp_payload_error    (systemDebugger_1_io_remote_rsp_payload_error     ), // i
-        .io_remote_rsp_payload_data     (systemDebugger_1_io_remote_rsp_payload_data[31:0]), // i
-        .io_mainClk                     (io_mainClk                                       ), // i
-        .resetCtrl_mainClkReset         (resetCtrl_mainClkReset                           )  // i
-    );
-    Debugger Debugger (
-        .io_remote_cmd_valid            (jtagBridge_1_io_remote_cmd_valid                 ), // i
-        .io_remote_cmd_ready            (systemDebugger_1_io_remote_cmd_ready             ), // o
-        .io_remote_cmd_payload_last     (jtagBridge_1_io_remote_cmd_payload_last          ), // i
-        .io_remote_cmd_payload_fragment (jtagBridge_1_io_remote_cmd_payload_fragment      ), // i
-        .io_remote_rsp_valid            (systemDebugger_1_io_remote_rsp_valid             ), // o
-        .io_remote_rsp_ready            (jtagBridge_1_io_remote_rsp_ready                 ), // i
-        .io_remote_rsp_payload_error    (systemDebugger_1_io_remote_rsp_payload_error     ), // o
-        .io_remote_rsp_payload_data     (systemDebugger_1_io_remote_rsp_payload_data[31:0]), // o
-        .io_mem_cmd_valid               (systemDebugger_1_io_mem_cmd_valid                ), // o
-        .io_mem_cmd_ready               (system_cpu_debug_bus_cmd_ready                   ), // i
-        .io_mem_cmd_payload_address     (systemDebugger_1_io_mem_cmd_payload_address[31:0]), // o
-        .io_mem_cmd_payload_data        (systemDebugger_1_io_mem_cmd_payload_data[31:0]   ), // o
-        .io_mem_cmd_payload_wr          (systemDebugger_1_io_mem_cmd_payload_wr           ), // o
-        .io_mem_cmd_payload_size        (systemDebugger_1_io_mem_cmd_payload_size[1:0]    ), // o
-        .io_mem_rsp_valid               (toplevel_system_cpu_debug_bus_cmd_fire_regNext   ), // i
-        .io_mem_rsp_payload             (system_cpu_debug_bus_rsp_data[31:0]              ), // i
-        .io_mainClk                     (io_mainClk                                       ), // i
-        .resetCtrl_mainClkReset         (resetCtrl_mainClkReset                           )  // i
-    );
-    RAM RAM (
-        .io_bus_cmd_valid           (system_ram_io_bus_cmd_valid                                          ), // i
-        .io_bus_cmd_ready           (system_ram_io_bus_cmd_ready                                          ), // o
-        .io_bus_cmd_payload_write   (_zz_io_bus_cmd_payload_write                                         ), // i
-        .io_bus_cmd_payload_address (system_mainBusDecoder_logic_masterPipelined_cmd_payload_address[31:0]), // i
-        .io_bus_cmd_payload_data    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_data[31:0]   ), // i
-        .io_bus_cmd_payload_mask    (system_mainBusDecoder_logic_masterPipelined_cmd_payload_mask[3:0]    ), // i
-        .io_bus_rsp_valid           (system_ram_io_bus_rsp_valid                                          ), // o
-        .io_bus_rsp_payload_data    (system_ram_io_bus_rsp_payload_data[31:0]                             ), // o
-        .io_mainClk                 (io_mainClk                                                           ), // i
-        .resetCtrl_systemReset      (resetCtrl_systemReset                                                )  // i
     );
     Apb3Bridge Apb3Bridge (
         .io_pipelinedMemoryBus_cmd_valid           (system_apbBridge_io_pipelinedMemoryBus_cmd_valid                     ), // i
