@@ -1,24 +1,20 @@
 `timescale 1ns / 1ps
 
-module tb_Murax;
+module tb_Cyber;
 
     // Murax Parameters
     parameter T = 10;
 
-    reg  rst_n = 0;
-    reg  clk = 0;
-    reg  io_jtag_tms = 0;
-    reg  io_jtag_tdi = 0;
-    reg  io_jtag_tck = 0;
-    wire io_jtag_tdo;
-
-    wire [15:0] GPIOA, GPIOB;
-    assign GPIOB = {12'bz, USART2_RX, 1'bz, USART1_RX, 1'bz};
+    reg         rst_n = 0;
+    reg         clk = 0;
 
     wire USART1_TX = GPIOB[0];
     reg  USART1_RX = 1'b1;
     wire USART2_TX = GPIOB[2];
     reg  USART2_RX = 1'b1;
+
+    wire [15:0] GPIOA, GPIOB;
+    assign GPIOB = {12'bz, USART2_RX, 1'bz, USART1_RX, 1'bz};
 
     initial begin
         forever #(T / 2) clk = ~clk;
@@ -26,20 +22,18 @@ module tb_Murax;
 
     initial begin
         #(T * 2) rst_n = 1;
-        #17000 sim_uart_tx(8'b10101010);  // 调用task 模拟 UART 发送数据
+        // #17000 sim_uart_tx(8'b10101010);  // 调用task 模拟 UART 发送数据
     end
 
-    Murax Murax (
-        .io_asyncReset(~rst_n),
-        .io_mainClk   (clk),
-
-        .io_jtag_tms(io_jtag_tms),
-        .io_jtag_tdi(io_jtag_tdi),
-        .io_jtag_tck(io_jtag_tck),
-        .io_jtag_tdo(io_jtag_tdo),
-
-        .GPIOA(GPIOA),
-        .GPIOB(GPIOB)
+    Cyber Cyber (
+        .io_asyncReset (~rst_n),
+        .io_axiClk     (clk),
+        .io_jtag_tms   (0),
+        .io_jtag_tdi   (0),
+        .io_jtag_tck   (0),
+        .io_jtag_tdo   (),
+        .GPIOA         (GPIOA),
+        .GPIOB         (GPIOB)
     );
 
     // 模拟 UART 发送波形

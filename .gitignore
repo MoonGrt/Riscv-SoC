@@ -1,5 +1,9 @@
 project/cam2dvi/impl/
 project/SoC/impl/
+project/Briey/Briey.cache/
+project/Briey/Briey.hw/
+project/Briey/Briey.ip_user_files/
+project/Briey/Briey.sim/
 project/Murax/Murax.cache/
 project/Murax/Murax.hw/
 project/Murax/Murax.ip_user_files/
@@ -8,5 +12,9 @@ project/MuraxDhrystone/MuraxDhrystone.cache/
 project/MuraxDhrystone/MuraxDhrystone.hw/
 project/MuraxDhrystone/MuraxDhrystone.ip_user_files/
 project/MuraxDhrystone/MuraxDhrystone.sim/
+project/Pinsec/Pinsec.cache/
+project/Pinsec/Pinsec.hw/
+project/Pinsec/Pinsec.ip_user_files/
+project/Pinsec/Pinsec.sim/
 *bin
 *hex
