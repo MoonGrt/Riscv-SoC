@@ -1,3 +1,228 @@
+module Axi4SharedToApb3Bridge (
+    input  wire        io_axi_arw_valid,
+    output reg         io_axi_arw_ready,
+    input  wire [19:0] io_axi_arw_payload_addr,
+    input  wire [ 3:0] io_axi_arw_payload_id,
+    input  wire [ 7:0] io_axi_arw_payload_len,
+    input  wire [ 2:0] io_axi_arw_payload_size,
+    input  wire [ 1:0] io_axi_arw_payload_burst,
+    input  wire        io_axi_arw_payload_write,
+    input  wire        io_axi_w_valid,
+    output reg         io_axi_w_ready,
+    input  wire [31:0] io_axi_w_payload_data,
+    input  wire [ 3:0] io_axi_w_payload_strb,
+    input  wire        io_axi_w_payload_last,
+    output reg         io_axi_b_valid,
+    input  wire        io_axi_b_ready,
+    output wire [ 3:0] io_axi_b_payload_id,
+    output wire [ 1:0] io_axi_b_payload_resp,
+    output reg         io_axi_r_valid,
+    input  wire        io_axi_r_ready,
+    output wire [31:0] io_axi_r_payload_data,
+    output wire [ 3:0] io_axi_r_payload_id,
+    output wire [ 1:0] io_axi_r_payload_resp,
+    output wire        io_axi_r_payload_last,
+    output wire [19:0] io_apb_PADDR,
+    output reg  [ 0:0] io_apb_PSEL,
+    output reg         io_apb_PENABLE,
+    input  wire        io_apb_PREADY,
+    output wire        io_apb_PWRITE,
+    output wire [31:0] io_apb_PWDATA,
+    input  wire [31:0] io_apb_PRDATA,
+    input  wire        io_apb_PSLVERROR,
+    input  wire        io_axiClk,
+    input  wire        resetCtrl_axiReset
+);
+    localparam Axi4ToApb3BridgePhase_SETUP = 2'd0;
+    localparam Axi4ToApb3BridgePhase_ACCESS_1 = 2'd1;
+    localparam Axi4ToApb3BridgePhase_RESPONSE = 2'd2;
+
+    reg  [ 1:0] phase;
+    reg         write;
+    reg  [31:0] readedData;
+    reg  [ 3:0] id;
+    wire        when_Axi4SharedToApb3Bridge_l91;
+    wire        when_Axi4SharedToApb3Bridge_l97;
+`ifndef SYNTHESIS
+    reg [63:0] phase_string;
+`endif
+
+
+`ifndef SYNTHESIS
+    always @(*) begin
+        case (phase)
+            Axi4ToApb3BridgePhase_SETUP: phase_string = "SETUP   ";
+            Axi4ToApb3BridgePhase_ACCESS_1: phase_string = "ACCESS_1";
+            Axi4ToApb3BridgePhase_RESPONSE: phase_string = "RESPONSE";
+            default: phase_string = "????????";
+        endcase
+    end
+`endif
+
+    always @(*) begin
+        io_axi_arw_ready = 1'b0;
+        case (phase)
+            Axi4ToApb3BridgePhase_SETUP: begin
+                if (when_Axi4SharedToApb3Bridge_l91) begin
+                    if (when_Axi4SharedToApb3Bridge_l97) begin
+                        io_axi_arw_ready = 1'b1;
+                    end
+                end
+            end
+            Axi4ToApb3BridgePhase_ACCESS_1: begin
+                if (io_apb_PREADY) begin
+                    io_axi_arw_ready = 1'b1;
+                end
+            end
+            default: begin
+            end
+        endcase
+    end
+
+    always @(*) begin
+        io_axi_w_ready = 1'b0;
+        case (phase)
+            Axi4ToApb3BridgePhase_SETUP: begin
+                if (when_Axi4SharedToApb3Bridge_l91) begin
+                    if (when_Axi4SharedToApb3Bridge_l97) begin
+                        io_axi_w_ready = 1'b1;
+                    end
+                end
+            end
+            Axi4ToApb3BridgePhase_ACCESS_1: begin
+                if (io_apb_PREADY) begin
+                    io_axi_w_ready = write;
+                end
+            end
+            default: begin
+            end
+        endcase
+    end
+
+    always @(*) begin
+        io_axi_b_valid = 1'b0;
+        case (phase)
+            Axi4ToApb3BridgePhase_SETUP: begin
+            end
+            Axi4ToApb3BridgePhase_ACCESS_1: begin
+            end
+            default: begin
+                if (write) begin
+                    io_axi_b_valid = 1'b1;
+                end
+            end
+        endcase
+    end
+
+    always @(*) begin
+        io_axi_r_valid = 1'b0;
+        case (phase)
+            Axi4ToApb3BridgePhase_SETUP: begin
+            end
+            Axi4ToApb3BridgePhase_ACCESS_1: begin
+            end
+            default: begin
+                if (!write) begin
+                    io_axi_r_valid = 1'b1;
+                end
+            end
+        endcase
+    end
+
+    always @(*) begin
+        io_apb_PSEL[0] = 1'b0;
+        case (phase)
+            Axi4ToApb3BridgePhase_SETUP: begin
+                if (when_Axi4SharedToApb3Bridge_l91) begin
+                    io_apb_PSEL[0] = 1'b1;
+                    if (when_Axi4SharedToApb3Bridge_l97) begin
+                        io_apb_PSEL[0] = 1'b0;
+                    end
+                end
+            end
+            Axi4ToApb3BridgePhase_ACCESS_1: begin
+                io_apb_PSEL[0] = 1'b1;
+            end
+            default: begin
+            end
+        endcase
+    end
+
+    always @(*) begin
+        io_apb_PENABLE = 1'b0;
+        case (phase)
+            Axi4ToApb3BridgePhase_SETUP: begin
+            end
+            Axi4ToApb3BridgePhase_ACCESS_1: begin
+                io_apb_PENABLE = 1'b1;
+            end
+            default: begin
+            end
+        endcase
+    end
+
+    assign when_Axi4SharedToApb3Bridge_l91 = (io_axi_arw_valid && ((! io_axi_arw_payload_write) || io_axi_w_valid));
+    assign when_Axi4SharedToApb3Bridge_l97 = (io_axi_arw_payload_write && (io_axi_w_payload_strb == 4'b0000));
+    assign io_apb_PADDR = io_axi_arw_payload_addr;
+    assign io_apb_PWDATA = io_axi_w_payload_data;
+    assign io_apb_PWRITE = io_axi_arw_payload_write;
+    assign io_axi_r_payload_resp = {io_apb_PSLVERROR, 1'b0};
+    assign io_axi_b_payload_resp = {io_apb_PSLVERROR, 1'b0};
+    assign io_axi_r_payload_id = id;
+    assign io_axi_b_payload_id = id;
+    assign io_axi_r_payload_data = readedData;
+    assign io_axi_r_payload_last = 1'b1;
+    always @(posedge io_axiClk or posedge resetCtrl_axiReset) begin
+        if (resetCtrl_axiReset) begin
+            phase <= Axi4ToApb3BridgePhase_SETUP;
+        end else begin
+            case (phase)
+                Axi4ToApb3BridgePhase_SETUP: begin
+                    if (when_Axi4SharedToApb3Bridge_l91) begin
+                        phase <= Axi4ToApb3BridgePhase_ACCESS_1;
+                        if (when_Axi4SharedToApb3Bridge_l97) begin
+                            phase <= Axi4ToApb3BridgePhase_RESPONSE;
+                        end
+                    end
+                end
+                Axi4ToApb3BridgePhase_ACCESS_1: begin
+                    if (io_apb_PREADY) begin
+                        phase <= Axi4ToApb3BridgePhase_RESPONSE;
+                    end
+                end
+                default: begin
+                    if (write) begin
+                        if (io_axi_b_ready) begin
+                            phase <= Axi4ToApb3BridgePhase_SETUP;
+                        end
+                    end else begin
+                        if (io_axi_r_ready) begin
+                            phase <= Axi4ToApb3BridgePhase_SETUP;
+                        end
+                    end
+                end
+            endcase
+        end
+    end
+
+    always @(posedge io_axiClk) begin
+        case (phase)
+            Axi4ToApb3BridgePhase_SETUP: begin
+                write <= io_axi_arw_payload_write;
+                id <= io_axi_arw_payload_id;
+            end
+            Axi4ToApb3BridgePhase_ACCESS_1: begin
+                if (io_apb_PREADY) begin
+                    readedData <= io_apb_PRDATA;
+                end
+            end
+            default: begin
+            end
+        endcase
+    end
+
+endmodule
+
 
 module Apb3PRouter (
     input  wire [19:0] io_input_PADDR,
