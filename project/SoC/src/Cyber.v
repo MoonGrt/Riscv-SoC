@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-// `define SYNTHESIS
+ `define SYNTHESIS
 
 module Cyber (
     input  wire        io_asyncReset,
@@ -12,6 +12,12 @@ module Cyber (
     inout  wire [15:0] GPIOA,
     inout  wire [15:0] GPIOB
 );
+
+//    wire io_axiClk;
+//    sys_pll sys_pll(
+//        .clkout0(io_axiClk), //output clkout0
+//        .clkin(clk) //input clkin
+//    );
 
     /* GPIO AFIO */
     // USART

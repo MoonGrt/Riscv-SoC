@@ -3,7 +3,7 @@
 module tb_Cyber;
 
     // Murax Parameters
-    parameter T = 10;
+    parameter T = 20;
 
     reg         rst_n = 0;
     reg         clk = 0;
