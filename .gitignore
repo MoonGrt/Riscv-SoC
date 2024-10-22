@@ -8,5 +8,6 @@ project/Cyber/Cyber.cache/
 project/Cyber/Cyber.hw/
 project/Cyber/Cyber.ip_user_files/
 project/Cyber/Cyber.sim/
-*bin
-*hex
+*.bin
+*.hex
+*.zip
