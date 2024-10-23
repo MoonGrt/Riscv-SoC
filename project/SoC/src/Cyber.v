@@ -2,7 +2,7 @@
 `define SYNTHESIS
 
 module Cyber (
-    input wire rst_n,
+    input wire rst,
     input wire clk,
 
     input  wire io_jtag_tms,
@@ -15,7 +15,7 @@ module Cyber (
 );
 
     wire io_axiClk = clk;
-    wire io_asyncReset = rst_n;
+    wire io_asyncReset = ~rst;
 
     /* GPIO AFIO */
     // USART
