@@ -22,8 +22,6 @@ module AXI4RAM (
     output wire [ 3:0] io_axi_r_payload_id,
     output wire [ 1:0] io_axi_r_payload_resp,
     output wire        io_axi_r_payload_last,
-    input  wire [ 7:0] io_axi_data,
-    input  wire        io_axi_data_vaild,
     input  wire        io_axiClk,
     input  wire        resetCtrl_axiReset
 );

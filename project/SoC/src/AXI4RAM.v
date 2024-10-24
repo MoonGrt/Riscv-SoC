@@ -125,12 +125,12 @@ module AXI4RAM (
     assign _zz_Axi4Incr_result_10  = Axi4Incr_baseIncr[4:0];
     assign _zz_Axi4Incr_result_11  = Axi4Incr_base[11:6];
     assign _zz_Axi4Incr_result_12  = Axi4Incr_baseIncr[5:0];
-    initial begin
-        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram0.bin", ram_symbol0);
-        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram1.bin", ram_symbol1);
-        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram2.bin", ram_symbol2);
-        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram3.bin", ram_symbol3);
-    end
+//    initial begin
+//        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram0.bin", ram_symbol0);
+//        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram1.bin", ram_symbol1);
+//        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram2.bin", ram_symbol2);
+//        $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram3.bin", ram_symbol3);
+//    end
     always @(*) begin
         ram_spinal_port0 = {
             _zz_ramsymbol_read_3, _zz_ramsymbol_read_2, _zz_ramsymbol_read_1, _zz_ramsymbol_read

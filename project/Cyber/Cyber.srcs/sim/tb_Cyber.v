@@ -8,13 +8,15 @@ module tb_Cyber;
     reg         rst_n = 0;
     reg         clk = 0;
 
-    wire USART1_TX = GPIOB[0];
+    wire USART1_TX;
     reg  USART1_RX = 1'b1;
-    wire USART2_TX = GPIOB[2];
+    wire USART2_TX;
     reg  USART2_RX = 1'b1;
 
     wire [15:0] GPIOA, GPIOB;
     assign GPIOB = {12'bz, USART2_RX, 1'bz, USART1_RX, 1'bz};
+    assign USART1_TX = GPIOB[0];
+    assign USART2_TX = GPIOB[2];
 
     initial begin
         forever #(T / 2) clk = ~clk;
@@ -26,8 +28,8 @@ module tb_Cyber;
     end
 
     Cyber Cyber (
-        .io_asyncReset (~rst_n),
-        .io_axiClk     (clk),
+        .rst           (rst_n),
+        .clk           (clk),
         .io_jtag_tms   (0),
         .io_jtag_tdi   (0),
         .io_jtag_tck   (0),

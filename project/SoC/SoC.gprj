@@ -17,7 +17,6 @@
         <File path="src/APB3WDG.v" type="file.verilog" enable="1"/>
         <File path="src/AXI4RAM.v" type="file.verilog" enable="1"/>
         <File path="src/Cyber.v" type="file.verilog" enable="1"/>
-        <File path="src/gowin_pll/sys_pll.v" type="file.verilog" enable="1"/>
         <File path="src/SoC.cst" type="file.cst" enable="1"/>
         <File path="src/SoC.sdc" type="file.sdc" enable="1"/>
         <File path="src/SoC.rao" type="file.gao" enable="0"/>
