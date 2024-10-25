@@ -9775,6 +9775,7 @@ module Apb3Gpio (
     input  wire [31:0] io_apb_PWDATA,
     output reg  [31:0] io_apb_PRDATA,
     output wire        io_apb_PSLVERROR,
+    
     input  wire [31:0] io_gpio_read,
     output wire [31:0] io_gpio_write,
     output wire [31:0] io_gpio_writeEnable,

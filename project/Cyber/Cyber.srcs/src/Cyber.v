@@ -571,41 +571,6 @@ module Cyber (
         .io_axiClk(io_axiClk),  //i
         .resetCtrl_axiReset(resetCtrl_axiReset)  //i
     );
-    Axi4SharedToApb3Bridge axi_apbBridge (
-        .io_axi_arw_valid(toplevel_axi_apbBridge_io_axi_arbiter_io_output_arw_halfPipe_valid),  //i
-        .io_axi_arw_ready(axi_apbBridge_io_axi_arw_ready),  //o
-        .io_axi_arw_payload_addr  (toplevel_axi_apbBridge_io_axi_arbiter_io_output_arw_halfPipe_payload_addr[19:0]), //i
-        .io_axi_arw_payload_id    (toplevel_axi_apbBridge_io_axi_arbiter_io_output_arw_halfPipe_payload_id[3:0]   ), //i
-        .io_axi_arw_payload_len   (toplevel_axi_apbBridge_io_axi_arbiter_io_output_arw_halfPipe_payload_len[7:0]  ), //i
-        .io_axi_arw_payload_size  (toplevel_axi_apbBridge_io_axi_arbiter_io_output_arw_halfPipe_payload_size[2:0] ), //i
-        .io_axi_arw_payload_burst (toplevel_axi_apbBridge_io_axi_arbiter_io_output_arw_halfPipe_payload_burst[1:0]), //i
-        .io_axi_arw_payload_write (toplevel_axi_apbBridge_io_axi_arbiter_io_output_arw_halfPipe_payload_write     ), //i
-        .io_axi_w_valid(toplevel_axi_apbBridge_io_axi_arbiter_io_output_w_halfPipe_valid),  //i
-        .io_axi_w_ready(axi_apbBridge_io_axi_w_ready),  //o
-        .io_axi_w_payload_data    (toplevel_axi_apbBridge_io_axi_arbiter_io_output_w_halfPipe_payload_data[31:0]  ), //i
-        .io_axi_w_payload_strb    (toplevel_axi_apbBridge_io_axi_arbiter_io_output_w_halfPipe_payload_strb[3:0]   ), //i
-        .io_axi_w_payload_last    (toplevel_axi_apbBridge_io_axi_arbiter_io_output_w_halfPipe_payload_last        ), //i
-        .io_axi_b_valid(axi_apbBridge_io_axi_b_valid),  //o
-        .io_axi_b_ready(axi_apbBridge_io_axi_arbiter_io_output_b_ready),  //i
-        .io_axi_b_payload_id(axi_apbBridge_io_axi_b_payload_id[3:0]),  //o
-        .io_axi_b_payload_resp(axi_apbBridge_io_axi_b_payload_resp[1:0]),  //o
-        .io_axi_r_valid(axi_apbBridge_io_axi_r_valid),  //o
-        .io_axi_r_ready(axi_apbBridge_io_axi_arbiter_io_output_r_ready),  //i
-        .io_axi_r_payload_data(axi_apbBridge_io_axi_r_payload_data[31:0]),  //o
-        .io_axi_r_payload_id(axi_apbBridge_io_axi_r_payload_id[3:0]),  //o
-        .io_axi_r_payload_resp(axi_apbBridge_io_axi_r_payload_resp[1:0]),  //o
-        .io_axi_r_payload_last(axi_apbBridge_io_axi_r_payload_last),  //o
-        .io_apb_PADDR(axi_apbBridge_io_apb_PADDR[19:0]),  //o
-        .io_apb_PSEL(axi_apbBridge_io_apb_PSEL),  //o
-        .io_apb_PENABLE(axi_apbBridge_io_apb_PENABLE),  //o
-        .io_apb_PREADY(io_apb_decoder_io_input_PREADY),  //i
-        .io_apb_PWRITE(axi_apbBridge_io_apb_PWRITE),  //o
-        .io_apb_PWDATA(axi_apbBridge_io_apb_PWDATA[31:0]),  //o
-        .io_apb_PRDATA(io_apb_decoder_io_input_PRDATA[31:0]),  //i
-        .io_apb_PSLVERROR(io_apb_decoder_io_input_PSLVERROR),  //i
-        .io_axiClk(io_axiClk),  //i
-        .resetCtrl_axiReset(resetCtrl_axiReset)  //i
-    );
     VexRiscv VexRiscv (
         .dBus_cmd_valid               (axi_core_cpu_dBus_cmd_valid),                          //o
         .dBus_cmd_ready               (axi_core_cpu_dBus_cmd_ready),                          //i
@@ -888,6 +853,41 @@ module Cyber (
         .io_output_r_payload_id(axi_apbBridge_io_axi_r_payload_id[3:0]),  //i
         .io_output_r_payload_resp(axi_apbBridge_io_axi_r_payload_resp[1:0]),  //i
         .io_output_r_payload_last(axi_apbBridge_io_axi_r_payload_last),  //i
+        .io_axiClk(io_axiClk),  //i
+        .resetCtrl_axiReset(resetCtrl_axiReset)  //i
+    );
+    Axi4SharedToApb3Bridge axi_apbBridge (
+        .io_axi_arw_valid(toplevel_axi_apbBridge_io_axi_arbiter_io_output_arw_halfPipe_valid),  //i
+        .io_axi_arw_ready(axi_apbBridge_io_axi_arw_ready),  //o
+        .io_axi_arw_payload_addr  (toplevel_axi_apbBridge_io_axi_arbiter_io_output_arw_halfPipe_payload_addr[19:0]), //i
+        .io_axi_arw_payload_id    (toplevel_axi_apbBridge_io_axi_arbiter_io_output_arw_halfPipe_payload_id[3:0]   ), //i
+        .io_axi_arw_payload_len   (toplevel_axi_apbBridge_io_axi_arbiter_io_output_arw_halfPipe_payload_len[7:0]  ), //i
+        .io_axi_arw_payload_size  (toplevel_axi_apbBridge_io_axi_arbiter_io_output_arw_halfPipe_payload_size[2:0] ), //i
+        .io_axi_arw_payload_burst (toplevel_axi_apbBridge_io_axi_arbiter_io_output_arw_halfPipe_payload_burst[1:0]), //i
+        .io_axi_arw_payload_write (toplevel_axi_apbBridge_io_axi_arbiter_io_output_arw_halfPipe_payload_write     ), //i
+        .io_axi_w_valid(toplevel_axi_apbBridge_io_axi_arbiter_io_output_w_halfPipe_valid),  //i
+        .io_axi_w_ready(axi_apbBridge_io_axi_w_ready),  //o
+        .io_axi_w_payload_data    (toplevel_axi_apbBridge_io_axi_arbiter_io_output_w_halfPipe_payload_data[31:0]  ), //i
+        .io_axi_w_payload_strb    (toplevel_axi_apbBridge_io_axi_arbiter_io_output_w_halfPipe_payload_strb[3:0]   ), //i
+        .io_axi_w_payload_last    (toplevel_axi_apbBridge_io_axi_arbiter_io_output_w_halfPipe_payload_last        ), //i
+        .io_axi_b_valid(axi_apbBridge_io_axi_b_valid),  //o
+        .io_axi_b_ready(axi_apbBridge_io_axi_arbiter_io_output_b_ready),  //i
+        .io_axi_b_payload_id(axi_apbBridge_io_axi_b_payload_id[3:0]),  //o
+        .io_axi_b_payload_resp(axi_apbBridge_io_axi_b_payload_resp[1:0]),  //o
+        .io_axi_r_valid(axi_apbBridge_io_axi_r_valid),  //o
+        .io_axi_r_ready(axi_apbBridge_io_axi_arbiter_io_output_r_ready),  //i
+        .io_axi_r_payload_data(axi_apbBridge_io_axi_r_payload_data[31:0]),  //o
+        .io_axi_r_payload_id(axi_apbBridge_io_axi_r_payload_id[3:0]),  //o
+        .io_axi_r_payload_resp(axi_apbBridge_io_axi_r_payload_resp[1:0]),  //o
+        .io_axi_r_payload_last(axi_apbBridge_io_axi_r_payload_last),  //o
+        .io_apb_PADDR(axi_apbBridge_io_apb_PADDR[19:0]),  //o
+        .io_apb_PSEL(axi_apbBridge_io_apb_PSEL),  //o
+        .io_apb_PENABLE(axi_apbBridge_io_apb_PENABLE),  //o
+        .io_apb_PREADY(io_apb_decoder_io_input_PREADY),  //i
+        .io_apb_PWRITE(axi_apbBridge_io_apb_PWRITE),  //o
+        .io_apb_PWDATA(axi_apbBridge_io_apb_PWDATA[31:0]),  //o
+        .io_apb_PRDATA(io_apb_decoder_io_input_PRDATA[31:0]),  //i
+        .io_apb_PSLVERROR(io_apb_decoder_io_input_PSLVERROR),  //i
         .io_axiClk(io_axiClk),  //i
         .resetCtrl_axiReset(resetCtrl_axiReset)  //i
     );

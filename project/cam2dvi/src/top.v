@@ -1,6 +1,14 @@
 module top #(
+    //Note: USE DDR3 with 400MHz: enable file [DDR3MI_400M.v] & [gowin_pll_400M.v], 
+    //                            disable [DDR3MI_300M.v] & [gowin_pll_300M.v] (USE 300M Reverse operation)
+
+    //Note: HDMI Output use 1280x720: Set USE_1280 = "true", Enable [TMDS_PLL_xx.v], [TMDS_xxHZ.sdc],
+    //                                Disable Other [TMDS_PLL_*.v], xx is frame rate
+
+    //Note: HDMI Output use 800x600: Set USE_1280 = "false", Enable [TMDS_PLL_800_600_60.v], [TMDS_800_600_60.sdc],
+    //                               Disable Other [TMDS_PLL_*.v] 
     parameter USE_TPG = "false",
-    parameter DDR_BYPASS = "false"
+    parameter USE_1280 = "true"
 )(
 	input                  clk,
 	input                  rst_n,
@@ -16,8 +24,10 @@ module top #(
 	
 	output [4:0]           state_led,
 
-	output [15:0]          ddr_addr,       //ROW_WIDTH=16
-	output [2:0]           ddr_bank,       //BANK_WIDTH=3
+    output [2:0]	       i2c_sel,
+
+	output [16-1:0]        ddr_addr,       //ROW_WIDTH=16
+	output [3-1:0]         ddr_bank,       //BANK_WIDTH=3
 	output                 ddr_cs,
 	output                 ddr_ras,
 	output                 ddr_cas,
@@ -27,16 +37,23 @@ module top #(
 	output                 ddr_cke,
 	output                 ddr_odt,
 	output                 ddr_reset_n,
-	output [31:0]          ddr_dm,         //DM_WIDTH=4
-	inout  [31:0]          ddr_dq,         //DQ_WIDTH=32
-	inout  [3:0]           ddr_dqs,        //DQS_WIDTH=4
-	inout  [3:0]           ddr_dqs_n,      //DQS_WIDTH=4
+	output [4-1:0]         ddr_dm,         //DM_WIDTH=4
+	inout  [32-1:0]        ddr_dq,         //DQ_WIDTH=32
+	inout  [4-1:0]         ddr_dqs,        //DQS_WIDTH=4
+	inout  [4-1:0]         ddr_dqs_n,      //DQS_WIDTH=4
   
     output                 tmds_clk_n_0,
     output                 tmds_clk_p_0,
     output [2:0]           tmds_d_n_0, //{r,g,b}
-    output [2:0]           tmds_d_p_0
+    output [2:0]           tmds_d_p_0,
+
+    output                 tmds_clk_n_1,
+    output                 tmds_clk_p_1,
+    output [2:0]           tmds_d_n_1, //{r,g,b}
+    output [2:0]           tmds_d_p_1
 );
+    
+    assign i2c_sel = 'b101;
 
 //memory interface
     wire                   memory_clk         ;
@@ -48,8 +65,8 @@ module top #(
     //wire[5:0]              app_burst_number   ;
     wire[ADDR_WIDTH-1:0]   addr               ;
     wire                   wr_data_rdy        ;
-    wire                   wr_data_en         ;
-    wire                   wr_data_end        ;
+    wire                   wr_data_en         ;//
+    wire                   wr_data_end        ;//
     wire[DATA_WIDTH-1:0]   wr_data            ;   
     wire[DATA_WIDTH/8-1:0] wr_data_mask       ;   
     wire                   rd_data_valid      ;  
@@ -57,7 +74,7 @@ module top #(
     wire[DATA_WIDTH-1:0]   rd_data            ;   
     wire                   init_calib_complete;
     wire                   err;
-    wire                   TMDS_DDR_pll_lock  ;
+    wire TMDS_DDR_pll_lock;
 
     //According to IP parameters to choose
     `define	    WR_VIDEO_WIDTH_32
@@ -103,6 +120,7 @@ module top #(
     assign cmos_rst_n = cmos_reset;
     assign write_data = cmos_16bit_data;
     //assign write_data = {cmos_16bit_data[4:0],cmos_16bit_data[10:5],cmos_16bit_data[15:11]};
+    //assign hdmi_hpd = 1;
 
     reg [4:0] cmos_vs_cnt;
     always@(posedge cmos_vsync) 
@@ -115,6 +133,32 @@ module top #(
     assign state_led[2] = ~TMDS_DDR_pll_lock;
     assign state_led[1] = ~DDR_pll_lock; 
     assign state_led[0] = ~init_calib_complete; //DDR3初始化指示灯
+
+
+    wire [15:0] HActive;
+    wire HA_valid;
+    wire [15:0] VActive;
+    wire VA_valid;
+    wire [7:0] fps;
+    wire fps_valid;
+
+    timing_check#(
+        .REFCLK_FREQ_MHZ(50),
+        .IS_2Pclk_1Pixel("true")
+    ) timing_check_5640(
+        .Refclk(clk),
+        .pxl_clk(cmos_pclk),
+        .rst_n(rst_n),
+        .video_de(cmos_href),
+        .video_vsync(cmos_vsync),
+        .H_Active(HActive),
+        .Ha_updated(HA_valid),
+        .V_Active(VActive),
+        .va_updated(VA_valid),
+        .fps(fps),
+        .fps_valid(fps_valid)
+    ); 
+
 
     //generate the CMOS sensor clock and the SDRAM controller, I2C controller clock
     Gowin_PLL Gowin_PLL_m0(
@@ -129,7 +173,6 @@ module top #(
         .enclk2                    (pll_stop                    ) //input enclk2
 	);
 
-    // Reset for camera sensor
     reg [31:0] cmos_reset_delay_cnt;
     reg cmos_reset;
     reg cmos_start_config;
@@ -161,6 +204,7 @@ module top #(
     end
 
     //configure look-up table
+generate if(USE_1280 == "true")
     lut_ov5640_rgb565 #(
     	.HActive(12'd1280),
     	.VActive(12'd720),
@@ -171,13 +215,24 @@ module top #(
     	.lut_index(lut_index),
     	.lut_data(lut_data)
     );
-
+else
+    lut_ov5640_rgb565 #(
+    	.HActive(12'd800),
+    	.VActive(12'd600),
+    	.HTotal(13'd1892),
+    	.VTotal(13'd740),
+        .USE_4vs3_frame("false")
+    )lut_ov5640_rgb565_m0(
+    	.lut_index(lut_index),
+    	.lut_data(lut_data)
+    );
+endgenerate
 
     //I2C master controller
     i2c_config i2c_config_m0(
     	.rst                        (~cmos_start_config       ),
     	.clk                        (clk                      ),
-    	.clk_div_cnt                (16'd1000                  ),
+    	.clk_div_cnt                (16'd500                  ),
     	.i2c_addr_2byte             (1'b1                     ),
     	.lut_index                  (lut_index                ),
     	.lut_dev_addr               (lut_data[31:24]          ),
@@ -206,6 +261,7 @@ module top #(
     wire out_de;
     wire [9:0] lcd_x,lcd_y;
 
+generate if(USE_1280 == "true")
     vga_timing #(
         .H_ACTIVE(16'd1280), 
         .H_FP(16'd110),
@@ -220,15 +276,41 @@ module top #(
     ) vga_timing_m0(
         .clk (video_clk),
         .rst (~rst_n),
+
         .active_x(lcd_x),
         .active_y(lcd_y),
+
         .hs(syn_off0_hs),
         .vs(syn_off0_vs),
         .de(out_de)
     );
+else    //800x600
+    vga_timing #(
+        .H_ACTIVE(16'd800), 
+        .H_FP(16'd40),
+        .H_SYNC(16'd128),
+        .H_BP(16'd88),
+        .V_ACTIVE(16'd600),
+        .V_FP(16'd1),
+        .V_SYNC(16'd4),
+        .V_BP(16'd23), 	
+        .HS_POL(1'b1),   	
+        .VS_POL(1'b1)
+    ) vga_timing_m0(
+        .clk (video_clk),
+        .rst (~rst_n),
+
+        .active_x(lcd_x),
+        .active_y(lcd_y),
+
+        .hs(syn_off0_hs),
+        .vs(syn_off0_vs),
+        .de(out_de)
+    );
+endgenerate
     
 
-    //Test pattern generate
+    //输入测试图
     ///--------------------------
     wire        tp0_vs_in  ;
     wire        tp0_hs_in  ;
@@ -237,13 +319,15 @@ module top #(
     wire [ 7:0] tp0_data_g;
     wire [ 7:0] tp0_data_b;
 
-    generate if(USE_TPG == "true")         
+generate if(USE_TPG == "true")         
+begin
+    if(USE_1280 == "true")
     begin
         testpattern testpattern_inst_1280
         (
             .I_pxl_clk   (video_clk    ),//pixel clock
             .I_rst_n     (rst_n        ),//low active 
-            .I_mode      (3'b000       ),//data select
+            .I_mode      (3'b010       ),//data select
             .I_single_r  (8'd255       ),
             .I_single_g  (8'd255       ),
             .I_single_b  (8'd255       ),                  //800x600    //1024x768   //1280x720   //1920x1080 
@@ -264,28 +348,55 @@ module top #(
             .O_data_g    (tp0_data_g   ),
             .O_data_b    (tp0_data_b   )
         );
+    end else begin
+        testpattern testpattern_inst_800
+        (
+            .I_pxl_clk   (video_clk    ),//pixel clock
+            .I_rst_n     (rst_n        ),//low active 
+            .I_mode      (3'b000       ),//data select
+            .I_single_r  (8'd100       ),
+            .I_single_g  (8'd255       ),
+            .I_single_b  (8'd100       ),                  //800x600    //1024x768   //1280x720   //1920x1080 
+            .I_h_total   (12'd1056     ),//hor total time  // 12'd1056  // 12'd1344  // 12'd1650  // 12'd2200
+            .I_h_sync    (12'd128      ),//hor sync time   // 12'd128   // 12'd136   // 12'd40    // 12'd44  
+            .I_h_bporch  (12'd88       ),//hor back porch  // 12'd88    // 12'd160   // 12'd220   // 12'd148 
+            .I_h_res     (12'd800      ),//hor resolution  // 12'd800   // 12'd1024  // 12'd1280  // 12'd1920
+            .I_v_total   (12'd628      ),//ver total time  // 12'd628   // 12'd806   // 12'd750   // 12'd1125 
+            .I_v_sync    (12'd4        ),//ver sync time   // 12'd4     // 12'd6     // 12'd5     // 12'd5   
+            .I_v_bporch  (12'd23       ),//ver back porch  // 12'd23    // 12'd29    // 12'd20    // 12'd36  
+            .I_v_res     (12'd600      ),//ver resolution  // 12'd600   // 12'd768   // 12'd720   // 12'd1080 
+            .I_hs_pol    (1'b1         ),//0,负极性;1,正极性
+            .I_vs_pol    (1'b1         ),//0,负极性;1,正极性
+            .O_de        (tp0_de_in    ),   
+            .O_hs        (tp0_hs_in    ),
+            .O_vs        (tp0_vs_in    ),
+            .O_data_r    (tp0_data_r   ),   
+            .O_data_g    (tp0_data_g   ),
+            .O_data_b    (tp0_data_b   )
+        );
     end
-    endgenerate
+end
+endgenerate
     
-    // Input data for DDR Buffer
+    
     wire fb_vin_clk;
     wire fb_vin_vsync;
     wire [15:0] fb_vin_data;
     wire fb_vin_de;
 
-    generate if(USE_TPG == "true")
-    begin
-        assign fb_vin_clk      = video_clk;
-        assign fb_vin_vsync    = tp0_vs_in;
-        assign fb_vin_data     = {tp0_data_r[7:3],tp0_data_g[7:2],tp0_data_b[7:3]};
-        assign fb_vin_de       = tp0_de_in;
-    end else begin //CMOS DATA
-        assign fb_vin_clk      = cmos_16bit_clk;
-        assign fb_vin_vsync    = cmos_vsync;
-        assign fb_vin_data     = write_data;
-        assign fb_vin_de       = cmos_16bit_wr;
-    end
-    endgenerate
+generate if(USE_TPG == "true")
+begin
+    assign fb_vin_clk      = video_clk;
+    assign fb_vin_vsync    = tp0_vs_in;
+    assign fb_vin_data     = {tp0_data_r[7:3],tp0_data_g[7:2],tp0_data_b[7:3]};
+    assign fb_vin_de       = tp0_de_in;
+end else begin //CMOS DATA
+    assign fb_vin_clk      = cmos_16bit_clk;
+    assign fb_vin_vsync    = cmos_vsync;
+    assign fb_vin_data     = write_data;
+    assign fb_vin_de       = cmos_16bit_wr;
+end
+endgenerate
     
     Video_Frame_Buffer_Top Video_Frame_Buffer_Top_inst
     ( 
@@ -372,9 +483,9 @@ module top #(
         .IO_ddr_dqs         (ddr_dqs          ),
         .IO_ddr_dqs_n       (ddr_dqs_n        )
     );
+    //==============================================================================
+    //TMDS TX(HDMI4)
 
-
-    // DDR Output video Timing Align
     //---------------------------------------------
     wire [4:0] lcd_r,lcd_b;
     wire [5:0] lcd_g;
@@ -406,8 +517,7 @@ module top #(
             end
     end
 
-    //==============================================================================
-    //TMDS TX(HDMI4)
+
     wire serial_clk;
     wire hdmi4_rst_n;
 
@@ -419,6 +529,9 @@ module top #(
         );
 
     assign hdmi4_rst_n = rst_n & TMDS_DDR_pll_lock;
+
+
+
 
     wire dvi0_rgb_clk;
     wire dvi0_rgb_vs ;
@@ -436,16 +549,24 @@ module top #(
     wire [7:0] dvi1_rgb_g  ;
     wire [7:0] dvi1_rgb_b  ;
 
-generate if(DDR_BYPASS == "true")
+generate if(USE_TPG == "true")
 begin
-    //DVI directly use TPG video
-    assign dvi0_rgb_clk = video_clk ;
-    assign dvi0_rgb_vs  = tp0_vs_in ;
-    assign dvi0_rgb_hs  = tp0_hs_in ;
-    assign dvi0_rgb_de  = tp0_de_in ;
-    assign dvi0_rgb_r   = tp0_data_r;
-    assign dvi0_rgb_g   = tp0_data_g;
-    assign dvi0_rgb_b   = tp0_data_b;
+    //DVI 1 use DDR & Framebuffer
+    assign dvi0_rgb_clk = lcd_dclk;
+    assign dvi0_rgb_vs  = lcd_vs;
+    assign dvi0_rgb_hs  = lcd_hs;
+    assign dvi0_rgb_de  = lcd_de;
+    assign dvi0_rgb_r   = {lcd_r,3'd0};
+    assign dvi0_rgb_g   = {lcd_g,2'd0};
+    assign dvi0_rgb_b   = {lcd_b,3'd0};
+    //DVI2 directly use TPG video
+    assign dvi1_rgb_clk = video_clk ;
+    assign dvi1_rgb_vs  = tp0_vs_in ;
+    assign dvi1_rgb_hs  = tp0_hs_in ;
+    assign dvi1_rgb_de  = tp0_de_in ;
+    assign dvi1_rgb_r   = tp0_data_r;
+    assign dvi1_rgb_g   = tp0_data_g;
+    assign dvi1_rgb_b   = tp0_data_b;
 end else begin
     assign dvi0_rgb_clk = lcd_dclk;
     assign dvi0_rgb_vs  = lcd_vs;
@@ -454,8 +575,96 @@ end else begin
     assign dvi0_rgb_r   = {lcd_r,3'd0};
     assign dvi0_rgb_g   = {lcd_g,2'd0};
     assign dvi0_rgb_b   = {lcd_b,3'd0};
+
+    assign dvi1_rgb_clk = lcd_dclk;
+    assign dvi1_rgb_vs  = lcd_vs;
+    assign dvi1_rgb_hs  = lcd_hs;
+    assign dvi1_rgb_de  = lcd_de;
+    assign dvi1_rgb_r   = {lcd_r,3'd0};
+    assign dvi1_rgb_g   = {lcd_g,2'd0};
+    assign dvi1_rgb_b   = {lcd_b,3'd0};
 end
 endgenerate
+
+    //*********************************add algorithm developed by ourselves********************************
+    //processing clock using PLL generate video_clk_x2 with double frequency
+    //--------Copy here to design video_clk_x2--------
+    wire dvi0_rgb_clk_2x;
+    Gowin_PLL_Scaler Gowin_PLL_Scaler_inst(
+        .clkout0(dvi0_rgb_clk_2x), //output clkout0
+        .clkin(dvi0_rgb_clk), //input clkin
+        .reset(~rst_n) //input reset
+    );
+    //--------Copy end to design video_clk_x2-------------------
+
+    // algorithm Parameters
+    parameter VIO_DATA_WIDTH = 8;
+    parameter CHANNELS = 3;
+    parameter BUFFER_SIZE = 3;
+    parameter INPUT_X_RES_WIDTH = 11;
+    parameter INPUT_Y_RES_WIDTH = 11;
+    parameter OUTPUT_X_RES_WIDTH = 11;
+    parameter OUTPUT_Y_RES_WIDTH = 11;
+
+    // algorithm Inputs
+//    parameter START_X = 12'd1280 / 4;
+//    parameter START_Y = 12'd720 / 4;
+//    parameter END_X = 12'd1280 * 3 / 4;
+//    parameter END_Y = 12'd720 * 3 / 4;
+//    parameter OUTPUT_X_RES = 12'd1280 - 1;  //Resolution of output data minus 1
+//    parameter OUTPUT_Y_RES = 12'd720 - 1;  //Resolution of output data minus 1
+
+    // parameter START_X = 0;
+    // parameter START_Y = 0;
+    // parameter END_X = 12'd1280;
+    // parameter END_Y = 12'd720;
+    // parameter OUTPUT_X_RES = 12'd1280 - 1;  //Resolution of output data minus 1
+    // parameter OUTPUT_Y_RES = 12'd720 - 1;  //Resolution of output data minus 1
+
+     parameter START_X = 0;
+     parameter START_Y = 0;
+     parameter END_X = 12'd1280;
+     parameter END_Y = 12'd720;
+     parameter OUTPUT_X_RES = 12'd1280 / 2 - 1;  //Resolution of output data minus 1
+     parameter OUTPUT_Y_RES = 12'd720 / 2 - 1;  //Resolution of output data minus 1
+
+    reg                                algorithm_sel = 1;
+    wire [VIO_DATA_WIDTH*CHANNELS-1:0] algorithm_data;
+    wire                               algorithm_dataValid;
+
+    algorithm #(
+        .H_DISP(12'd1280),
+        .V_DISP(12'd720),
+
+        .DATA_WIDTH (VIO_DATA_WIDTH),
+        .CHANNELS   (CHANNELS),
+        .BUFFER_SIZE(BUFFER_SIZE),
+
+        .INPUT_X_RES_WIDTH (INPUT_X_RES_WIDTH),
+        .INPUT_Y_RES_WIDTH (INPUT_Y_RES_WIDTH),
+        .OUTPUT_X_RES_WIDTH(OUTPUT_X_RES_WIDTH),
+        .OUTPUT_Y_RES_WIDTH(OUTPUT_Y_RES_WIDTH)
+    ) algorithm (
+        .clk   (dvi0_rgb_clk),
+        .clk_2x(dvi0_rgb_clk_2x),
+
+        .START_X   (START_X),
+        .START_Y   (START_Y),
+        .END_X     (END_X),
+        .END_Y     (END_Y),
+        .outputXRes(OUTPUT_X_RES),
+        .outputYRes(OUTPUT_Y_RES),
+
+        .algorithm_sel(algorithm_sel),
+        .hs_i         (dvi0_rgb_hs),
+        .vs_i         (dvi0_rgb_vs),
+        .de_i         (dvi0_rgb_de),
+        .rgb_i        ({dvi0_rgb_r,dvi0_rgb_g,dvi0_rgb_b}), //input data to 'algorithm'
+
+        .algorithm_data     (algorithm_data),   //output data of 'algorithm'
+        .algorithm_dataValid(algorithm_dataValid) 
+    );
+    //*********************************end of adding algorithm developed by ourselves********************************
 
     DVI_TX_Top DVI_TX_Top_inst0
     (
@@ -476,4 +685,27 @@ endgenerate
         .O_tmds_data_p (tmds_d_p_0    ),  //{r,g,b}
         .O_tmds_data_n (tmds_d_n_0    )
     );
+
+
+    DVI_TX_Top DVI_TX_Top_inst1
+    (
+        .I_rst_n       (hdmi4_rst_n   ),  //asynchronous reset, low active
+        .I_serial_clk  (serial_clk    ),
+
+        //CMOS
+        .I_rgb_clk     (dvi1_rgb_clk),  //pixel clock
+        .I_rgb_vs      (dvi1_rgb_vs ), 
+        .I_rgb_hs      (dvi1_rgb_hs ),    
+        .I_rgb_de      (dvi1_rgb_de ), 
+        .I_rgb_r       (dvi1_rgb_r  ),  //tp0_data_r
+        .I_rgb_g       (dvi1_rgb_g  ),  
+        .I_rgb_b       (dvi1_rgb_b  ),  
+
+        .O_tmds_clk_p  (tmds_clk_p_1  ),
+        .O_tmds_clk_n  (tmds_clk_n_1  ),
+        .O_tmds_data_p (tmds_d_p_1    ),  //{r,g,b}
+        .O_tmds_data_n (tmds_d_n_1    )
+    );
+
+
 endmodule

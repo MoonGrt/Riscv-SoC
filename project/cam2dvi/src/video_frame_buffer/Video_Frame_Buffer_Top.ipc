@@ -7,7 +7,7 @@ type=video_frame_buffer
 version=1.0
 
 [Config]
-Addr_Width=28
+Addr_Width=29
 Data_Width=256
 Image_Size=00800000
 LANG=0

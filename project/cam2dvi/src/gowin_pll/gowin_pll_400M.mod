@@ -1,5 +1,5 @@
 -series GW5AST
--device GW5AST-138
+-device GW5AST-138B
 -device_version B
 -package FCPBGA676A
 -part_number GW5AST-LV138FPG676AES
@@ -7,7 +7,7 @@
 
 -mod_name Gowin_PLL
 -file_name gowin_pll_400M
--path C:/Users/12161/OneDrive/Desktop/HOSHI_TIMING/Cam2HDMI_ALT/src/gowin_pll/
+-path C:/Users/Think/Documents/FPGA_Project/Gowin/Cam2HDMI_Fan_NEO/Cam2HDMI/src/gowin_pll/
 -type PLL_ADV
 -file_type vlg
 -ssc false

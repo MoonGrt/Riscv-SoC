@@ -247,7 +247,8 @@ module Apb3TIM (
                             SR[0] <= 1'b1;  // 设置更新中断标志位
                         end else
                             CNT <= CNT + 1'b1;
-                end else prescaler_counter <= prescaler_counter + 1'b1;
+                end else if (~UIF)
+                    prescaler_counter <= prescaler_counter + 1'b1;
             end
         end
     end
