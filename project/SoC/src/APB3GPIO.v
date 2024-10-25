@@ -196,6 +196,39 @@ module Apb3GPIO (
                     ODR[i] <= 1'bz;  // 输入模式时GPIO为高阻态
                 end
             end
+
+            // assign GPIO[i] = (gpio_dir[i]) ? ODR[i] : 1'bz; // 输出时为gpio_out，否则为高阻态
+            // always @(posedge io_apb_PCLK or posedge io_apb_PRESET) begin
+            //     if (io_apb_PRESET) IDR[i] <= 1'bz;  // 默认所有引脚为高阻态
+            //     else if (~gpio_dir[i]) IDR[i] <= GPIO[i];  // 输入模式时读取GPIO值
+            // end
+            // assign gpio_dir[i] = (gpio_ctrl[i*4+:2] == 2'b00) ? 1'b0 : 1'b1;  // gpio_ctrl[i*4+:2]==MODE 输入模式时gpio_dir为0，输出模式时gpio_dir为1
+            // always @(posedge io_apb_PCLK or posedge io_apb_PRESET) begin
+            //     if (io_apb_PRESET) begin
+            //         ODR[i] <= 1'bz;  // 默认所有引脚为高阻态
+            //     // end else if ((BSR[i] | BRR[i]) & gpio_dir[i]) begin
+            //     //     case (gpio_ctrl[i*4+3])  // gpio_ctrl[i*4+3]==MODE[1]
+            //     //         1'b0: begin
+            //     //             if (BSR[i]) ODR[i] <= 1'b1;
+            //     //             else if (BRR[i])
+            //     //                 ODR[i] <= gpio_ctrl[i*4+2] ? 1'bz : 1'b0;  // 输出类型为推挽时，输出为0，否则为高阻态
+            //     //         end
+            //     //         default: begin
+            //     //             if (AFIO[i]) ODR[i] <= 1'b1;
+            //     //             else
+            //     //                 ODR[i] <= gpio_ctrl[i*4+2] ? 1'bz : 1'b0;  // 输出类型为推挽时，输出为0，否则为高阻态
+            //     //         end
+            //     //     endcase
+            //     // end
+            //     end else begin
+            //         if (gpio_ctrl[i*4+3]) begin  // 复用 IO 引脚
+            //             ODR[i] <= AFIO[i] ? 1'b1 : (gpio_ctrl[i*4+2] ? 1'bz : 1'b0);  // 输出类型为推挽时，输出为0，否则为高阻态
+            //         end else begin  // 普通 IO 引脚
+            //             if (BSR[i]) ODR[i] <= 1'b1;
+            //             if (BRR[i]) ODR[i] <= gpio_ctrl[i*4+2] ? 1'bz : 1'b0;  // 输出类型为推挽时，输出为0，否则为高阻态
+            //         end
+            //     end
+            // end
         end
     endgenerate
 

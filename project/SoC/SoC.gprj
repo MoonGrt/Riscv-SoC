@@ -6,17 +6,18 @@
     <Device name="GW5AST-138B" pn="GW5AST-LV138FPG676AES">gw5ast138b-002</Device>
     <FileList>
         <File path="src/AHBBUS.v" type="file.verilog" enable="1"/>
-        <File path="src/AHBDMA.v" type="file.verilog" enable="1"/>
         <File path="src/AHBDVP.v" type="file.verilog" enable="1"/>
+        <File path="src/AHBRCC.v" type="file.verilog" enable="1"/>
         <File path="src/APB3BUS.v" type="file.verilog" enable="1"/>
         <File path="src/APB3GPIO.v" type="file.verilog" enable="1"/>
         <File path="src/APB3I2C.v" type="file.verilog" enable="1"/>
+        <File path="src/APB3RAM.v" type="file.verilog" enable="1"/>
         <File path="src/APB3SPI.v" type="file.verilog" enable="1"/>
         <File path="src/APB3TIM.v" type="file.verilog" enable="1"/>
         <File path="src/APB3USART.v" type="file.verilog" enable="1"/>
         <File path="src/APB3WDG.v" type="file.verilog" enable="1"/>
-        <File path="src/AXI4RAM.v" type="file.verilog" enable="1"/>
-        <File path="src/Cyber.v" type="file.verilog" enable="1"/>
+        <File path="src/Murax.v" type="file.verilog" enable="1"/>
+        <File path="src/VexRiscv.v" type="file.verilog" enable="1"/>
         <File path="src/SoC.cst" type="file.cst" enable="1"/>
         <File path="src/SoC.sdc" type="file.sdc" enable="1"/>
         <File path="src/SoC.rao" type="file.gao" enable="0"/>
