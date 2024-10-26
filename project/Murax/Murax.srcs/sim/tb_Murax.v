@@ -29,9 +29,9 @@ module tb_Murax;
         // #17000 sim_uart_tx(8'b10101010);  // 调用task 模拟 UART 发送数据
     end
 
-    Murax Murax (
-        .io_asyncReset(~rst_n),
-        .io_mainClk   (clk),
+    Cyber Cyber (
+        .rst_n(rst_n),
+        .clk  (clk),
 
         .io_jtag_tms(io_jtag_tms),
         .io_jtag_tdi(io_jtag_tdi),

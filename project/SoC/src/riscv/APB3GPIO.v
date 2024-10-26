@@ -174,6 +174,10 @@ module Apb3GPIO (
     // GPIO 的 inout 双向控制逻辑
     wire [15:0] gpio_dir;  // 用于控制每个引脚的输入/输出方向，1为输出，0为输入
     wire [63:0] gpio_ctrl = {CRH, CRL};  // 控制寄存器的低字和高字合并
+    // ODR 写入
+    reg ODR_Vaild = 1'b0;
+    always @(posedge io_apb_PCLK)
+        ODR_Vaild <= io_apb_PSEL && io_apb_PENABLE && io_apb_PWRITE && io_apb_PADDR == 3'h3;
     generate
         genvar i;
         for (i = 0; i < 16; i = i + 1) begin
@@ -187,6 +191,7 @@ module Apb3GPIO (
                     if (gpio_ctrl[i*4+3]) begin  // 复用 IO 引脚
                         ODR[i] <= AFIO[i] ? 1'b1 : (gpio_ctrl[i*4+2] ? 1'bz : 1'b0);  // 输出类型为推挽时，输出为0，否则为高阻态
                     end else begin  // 普通 IO 引脚
+                        if (ODR_Vaild) ODR[i] <= io_apb_PWDATA[i];
                         if (BSR[i]) ODR[i] <= 1'b1;
                         if (BRR[i])
                             ODR[i] <= gpio_ctrl[i*4+2] ? 1'bz : 1'b0;  // 输出类型为推挽时，输出为0，否则为高阻态

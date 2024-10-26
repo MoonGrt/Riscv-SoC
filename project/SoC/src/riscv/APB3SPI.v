@@ -138,15 +138,15 @@ module Apb3SPI (
 );
 
     // SPI 寄存器定义
-    reg  [15:0] CR1;                  // 控制寄存器1
-    reg  [15:0] CR2;                  // 控制寄存器2
-    wire [15:0] SR;                   // 状态寄存器
-    reg  [15:0] DR;                   // 数据寄存器
-    reg  [15:0] CRCPR;                // CRC 寄存器
-    wire [15:0] RXCRCR = 16'h0000;    // 接收 CRC 寄存器
-    wire [15:0] TXCRCR = 16'h0000;    // 发送 CRC 寄存器
-    reg  [15:0] I2SCFGR;              // I2S 配置寄存器
-    reg  [15:0] I2SPR;                // I2S 预分频寄存器
+    reg  [15:0] CR1;                // 控制寄存器1
+    reg  [15:0] CR2;                // 控制寄存器2
+    wire [15:0] SR;                 // 状态寄存器
+    reg  [15:0] DR;                 // 数据寄存器
+    reg  [15:0] CRCPR;              // CRC 寄存器
+    wire [15:0] RXCRCR = 16'h0000;  // 接收 CRC 寄存器
+    wire [15:0] TXCRCR = 16'h0000;  // 发送 CRC 寄存器
+    reg  [15:0] I2SCFGR;            // I2S 配置寄存器
+    reg  [15:0] I2SPR;              // I2S 预分频寄存器
 
     // SPI Config 接口定义
     // CR1

@@ -1,7 +1,7 @@
 `timescale 1ns / 1ps
-`define SYNTHESIS
+ `define SYNTHESIS
 
-module Murax (
+module Cyber (
     input  wire clk,
     input  wire rst_n,
     input  wire io_jtag_tms,
@@ -241,17 +241,6 @@ module Murax (
     wire        system_ram_io_bus_cmd_ready;
     wire        system_ram_io_bus_rsp_valid;
     wire [31:0] system_ram_io_bus_rsp_payload_data;
-    wire        io_apb_decoder_io_input_PREADY;
-    wire [31:0] io_apb_decoder_io_input_PRDATA;
-    wire        io_apb_decoder_io_input_PSLVERROR;
-    wire [19:0] io_apb_decoder_io_output_PADDR;
-    wire [ 2:0] io_apb_decoder_io_output_PSEL;
-    wire        io_apb_decoder_io_output_PENABLE;
-    wire        io_apb_decoder_io_output_PWRITE;
-    wire [31:0] io_apb_decoder_io_output_PWDATA;
-    wire        apb3Router_1_io_input_PREADY;
-    wire [31:0] apb3Router_1_io_input_PRDATA;
-    wire        apb3Router_1_io_input_PSLVERROR;
     reg  [31:0] _zz_system_mainBusDecoder_logic_masterPipelined_rsp_payload_data;
     reg         resetCtrl_mainClkResetUnbuffered;
     reg  [ 5:0] resetCtrl_systemClkResetCounter;
@@ -529,53 +518,53 @@ module Murax (
         .io_outputs_0_PWDATA   (apb3Router_1_io_outputs_0_PWDATA[31:0]),  // o GPIO
         .io_outputs_0_PRDATA   (system_gpioCtrl_io_apb_PRDATA[31:0]),     // i GPIO
         .io_outputs_0_PSLVERROR(system_gpioCtrl_io_apb_PSLVERROR),        // i GPIO
-        .io_outputs_1_PADDR    (apb3Router_1_io_outputs_1_PADDR[19:0]),   // o WDG
-        .io_outputs_1_PSEL     (apb3Router_1_io_outputs_1_PSEL),          // o WDG
-        .io_outputs_1_PENABLE  (apb3Router_1_io_outputs_1_PENABLE),       // o WDG
-        .io_outputs_1_PREADY   (system_wdgCtrl_io_apb_PREADY),            // i WDG
-        .io_outputs_1_PWRITE   (apb3Router_1_io_outputs_1_PWRITE),        // o WDG
-        .io_outputs_1_PWDATA   (apb3Router_1_io_outputs_1_PWDATA[31:0]),  // o WDG
-        .io_outputs_1_PRDATA   (system_wdgCtrl_io_apb_PRDATA[31:0]),      // i WDG
-        .io_outputs_1_PSLVERROR(system_wdgCtrl_io_apb_PSLVERROR),         // i WDG
-        .io_outputs_2_PADDR    (apb3Router_1_io_outputs_2_PADDR[19:0]),   // o USART
-        .io_outputs_2_PSEL     (apb3Router_1_io_outputs_2_PSEL),          // o USART
-        .io_outputs_2_PENABLE  (apb3Router_1_io_outputs_2_PENABLE),       // o USART
-        .io_outputs_2_PREADY   (system_usartCtrl_io_apb_PREADY),          // i USART
-        .io_outputs_2_PWRITE   (apb3Router_1_io_outputs_2_PWRITE),        // o USART
-        .io_outputs_2_PWDATA   (apb3Router_1_io_outputs_2_PWDATA[31:0]),  // o USART
-        .io_outputs_2_PRDATA   (system_usartCtrl_io_apb_PRDATA[31:0]),    // i USART
-        .io_outputs_2_PSLVERROR(system_usartCtrl_io_apb_PSLVERROR),       // i USART
-        .io_outputs_3_PADDR    (apb3Router_1_io_outputs_3_PADDR[19:0]),   // o I2C
-        .io_outputs_3_PSEL     (apb3Router_1_io_outputs_3_PSEL),          // o I2C
-        .io_outputs_3_PENABLE  (apb3Router_1_io_outputs_3_PENABLE),       // o I2C
-        .io_outputs_3_PREADY   (system_i2cCtrl_io_apb_PREADY),            // i I2C
-        .io_outputs_3_PWRITE   (apb3Router_1_io_outputs_3_PWRITE),        // o I2C
-        .io_outputs_3_PWDATA   (apb3Router_1_io_outputs_3_PWDATA[31:0]),  // o I2C
-        .io_outputs_3_PRDATA   (system_i2cCtrl_io_apb_PRDATA[31:0]),      // i I2C
-        .io_outputs_3_PSLVERROR(system_i2cCtrl_io_apb_PSLVERROR),         // i I2C
-        .io_outputs_4_PADDR    (apb3Router_1_io_outputs_4_PADDR[19:0]),   // o SPI
-        .io_outputs_4_PSEL     (apb3Router_1_io_outputs_4_PSEL),          // o SPI
-        .io_outputs_4_PENABLE  (apb3Router_1_io_outputs_4_PENABLE),       // o SPI
-        .io_outputs_4_PREADY   (system_spiCtrl_io_apb_PREADY),            // i SPI
-        .io_outputs_4_PWRITE   (apb3Router_1_io_outputs_4_PWRITE),        // o SPI
-        .io_outputs_4_PWDATA   (apb3Router_1_io_outputs_4_PWDATA[31:0]),  // o SPI
-        .io_outputs_4_PRDATA   (system_spiCtrl_io_apb_PRDATA[31:0]),      // i SPI
-        .io_outputs_4_PSLVERROR(system_spiCtrl_io_apb_PSLVERROR),         // i SPI
-        .io_outputs_5_PADDR    (apb3Router_1_io_outputs_5_PADDR[19:0]),   // o TIM
-        .io_outputs_5_PSEL     (apb3Router_1_io_outputs_5_PSEL),          // o TIM
-        .io_outputs_5_PENABLE  (apb3Router_1_io_outputs_5_PENABLE),       // o TIM
-        .io_outputs_5_PREADY   (system_timCtrl_io_apb_PREADY),            // i TIM
-        .io_outputs_5_PWRITE   (apb3Router_1_io_outputs_5_PWRITE),        // o TIM
-        .io_outputs_5_PWDATA   (apb3Router_1_io_outputs_5_PWDATA[31:0]),  // o TIM
-        .io_outputs_5_PRDATA   (system_timCtrl_io_apb_PRDATA[31:0]),      // i TIM
-        .io_outputs_5_PSLVERROR(system_timCtrl_io_apb_PSLVERROR),         // i TIM
+        .io_outputs_1_PADDR    (apb3Router_1_io_outputs_1_PADDR[19:0]),   // o USART
+        .io_outputs_1_PSEL     (apb3Router_1_io_outputs_1_PSEL),          // o USART
+        .io_outputs_1_PENABLE  (apb3Router_1_io_outputs_1_PENABLE),       // o USART
+        .io_outputs_1_PREADY   (system_usartCtrl_io_apb_PREADY),          // i USART
+        .io_outputs_1_PWRITE   (apb3Router_1_io_outputs_1_PWRITE),        // o USART
+        .io_outputs_1_PWDATA   (apb3Router_1_io_outputs_1_PWDATA[31:0]),  // o USART
+        .io_outputs_1_PRDATA   (system_usartCtrl_io_apb_PRDATA[31:0]),    // i USART
+        .io_outputs_1_PSLVERROR(system_usartCtrl_io_apb_PSLVERROR),       // i USART
+        .io_outputs_2_PADDR    (apb3Router_1_io_outputs_2_PADDR[19:0]),   // o I2C
+        .io_outputs_2_PSEL     (apb3Router_1_io_outputs_2_PSEL),          // o I2C
+        .io_outputs_2_PENABLE  (apb3Router_1_io_outputs_2_PENABLE),       // o I2C
+        .io_outputs_2_PREADY   (system_i2cCtrl_io_apb_PREADY),            // i I2C
+        .io_outputs_2_PWRITE   (apb3Router_1_io_outputs_2_PWRITE),        // o I2C
+        .io_outputs_2_PWDATA   (apb3Router_1_io_outputs_2_PWDATA[31:0]),  // o I2C
+        .io_outputs_2_PRDATA   (system_i2cCtrl_io_apb_PRDATA[31:0]),      // i I2C
+        .io_outputs_2_PSLVERROR(system_i2cCtrl_io_apb_PSLVERROR),         // i I2C
+        .io_outputs_3_PADDR    (apb3Router_1_io_outputs_3_PADDR[19:0]),   // o SPI
+        .io_outputs_3_PSEL     (apb3Router_1_io_outputs_3_PSEL),          // o SPI
+        .io_outputs_3_PENABLE  (apb3Router_1_io_outputs_3_PENABLE),       // o SPI
+        .io_outputs_3_PREADY   (system_spiCtrl_io_apb_PREADY),            // i SPI
+        .io_outputs_3_PWRITE   (apb3Router_1_io_outputs_3_PWRITE),        // o SPI
+        .io_outputs_3_PWDATA   (apb3Router_1_io_outputs_3_PWDATA[31:0]),  // o SPI
+        .io_outputs_3_PRDATA   (system_spiCtrl_io_apb_PRDATA[31:0]),      // i SPI
+        .io_outputs_3_PSLVERROR(system_spiCtrl_io_apb_PSLVERROR),         // i SPI
+        .io_outputs_4_PADDR    (apb3Router_1_io_outputs_4_PADDR[19:0]),   // o TIM
+        .io_outputs_4_PSEL     (apb3Router_1_io_outputs_4_PSEL),          // o TIM
+        .io_outputs_4_PENABLE  (apb3Router_1_io_outputs_4_PENABLE),       // o TIM
+        .io_outputs_4_PREADY   (system_timCtrl_io_apb_PREADY),            // i TIM
+        .io_outputs_4_PWRITE   (apb3Router_1_io_outputs_4_PWRITE),        // o TIM
+        .io_outputs_4_PWDATA   (apb3Router_1_io_outputs_4_PWDATA[31:0]),  // o TIM
+        .io_outputs_4_PRDATA   (system_timCtrl_io_apb_PRDATA[31:0]),      // i TIM
+        .io_outputs_4_PSLVERROR(system_timCtrl_io_apb_PSLVERROR),         // i TIM
+        .io_outputs_5_PADDR    (apb3Router_1_io_outputs_5_PADDR[19:0]),   // o WDG
+        .io_outputs_5_PSEL     (apb3Router_1_io_outputs_5_PSEL),          // o WDG
+        .io_outputs_5_PENABLE  (apb3Router_1_io_outputs_5_PENABLE),       // o WDG
+        .io_outputs_5_PREADY   (system_wdgCtrl_io_apb_PREADY),            // i WDG
+        .io_outputs_5_PWRITE   (apb3Router_1_io_outputs_5_PWRITE),        // o WDG
+        .io_outputs_5_PWDATA   (apb3Router_1_io_outputs_5_PWDATA[31:0]),  // o WDG
+        .io_outputs_5_PRDATA   (system_wdgCtrl_io_apb_PRDATA[31:0]),      // i WDG
+        .io_outputs_5_PSLVERROR(system_wdgCtrl_io_apb_PSLVERROR),         // i WDG
 
         .io_mainClk            (io_mainClk),                              // i
         .resetCtrl_systemReset (resetCtrl_systemReset)                    // i
     );
     Apb3GPIORouter Apb3GPIORouter (
-        .io_apb_PCLK          (io_mainClk),                                  // i
-        .io_apb_PRESET        (resetCtrl_systemReset),                       // i
+        .io_apb_PCLK          (GPIO_clk),                                    // i
+        .io_apb_PRESET        (GPIO_rst),                                    // i
         .io_apb_PADDR         (system_gpioCtrl_io_apb_PADDR),                // i
         .io_apb_PSEL          (apb3Router_1_io_outputs_0_PSEL),              // i
         .io_apb_PENABLE       (apb3Router_1_io_outputs_0_PENABLE),           // i
@@ -589,29 +578,15 @@ module Murax (
         .AFIOB                (AFIOB),                                       // i
         .GPIOB                (GPIOB)                                        // io
     );
-    Apb3WDGRouter Apb3WDGRouter (
-        .io_apb_PCLK          (io_mainClk),                                  // i
-        .io_apb_PRESET        (resetCtrl_systemReset),                       // i
-        .io_apb_PADDR         (system_wdgCtrl_io_apb_PADDR),                 // i
+    Apb3USARTRouter Apb3USARTRouter (
+        .io_apb_PCLK          (USART_clk),                                   // i
+        .io_apb_PRESET        (USART_rst),                                   // i
+        .io_apb_PADDR         (system_usartCtrl_io_apb_PADDR),               // i
         .io_apb_PSEL          (apb3Router_1_io_outputs_1_PSEL),              // i
         .io_apb_PENABLE       (apb3Router_1_io_outputs_1_PENABLE),           // i
-        .io_apb_PREADY        (system_wdgCtrl_io_apb_PREADY),                // o
+        .io_apb_PREADY        (system_usartCtrl_io_apb_PREADY),              // o
         .io_apb_PWRITE        (apb3Router_1_io_outputs_1_PWRITE),            // i
         .io_apb_PWDATA        (apb3Router_1_io_outputs_1_PWDATA),            // i
-        .io_apb_PRDATA        (system_wdgCtrl_io_apb_PRDATA),                // o
-        .io_apb_PSLVERROR     (system_wdgCtrl_io_apb_PSLVERROR),             // o
-        .IWDG_rst             (),                                            // o
-        .WWDG_rst             ()                                             // o
-    );
-    Apb3USARTRouter Apb3USARTRouter (
-        .io_apb_PCLK          (io_mainClk),                                  // i
-        .io_apb_PRESET        (resetCtrl_systemReset),                       // i
-        .io_apb_PADDR         (system_usartCtrl_io_apb_PADDR),               // i
-        .io_apb_PSEL          (apb3Router_1_io_outputs_2_PSEL),              // i
-        .io_apb_PENABLE       (apb3Router_1_io_outputs_2_PENABLE),           // i
-        .io_apb_PREADY        (system_usartCtrl_io_apb_PREADY),              // o
-        .io_apb_PWRITE        (apb3Router_1_io_outputs_2_PWRITE),            // i
-        .io_apb_PWDATA        (apb3Router_1_io_outputs_2_PWDATA),            // i
         .io_apb_PRDATA        (system_usartCtrl_io_apb_PRDATA),              // o
         .io_apb_PSLVERROR     (system_usartCtrl_io_apb_PSLVERROR),           // o
         .USART1_RX            (USART1_RX),                                   // i
@@ -622,14 +597,14 @@ module Murax (
         .USART2_interrupt     (USART2_interrupt)                             // o
     );
     Apb3I2CRouter Apb3I2CRouter (
-        .io_apb_PCLK          (io_mainClk),                                  // i
-        .io_apb_PRESET        (resetCtrl_systemReset),                       // i
+        .io_apb_PCLK          (I2C_clk),                                     // i
+        .io_apb_PRESET        (I2C_rst),                                     // i
         .io_apb_PADDR         (system_i2cCtrl_io_apb_PADDR),                 // i
-        .io_apb_PSEL          (apb3Router_1_io_outputs_3_PSEL),              // i
-        .io_apb_PENABLE       (apb3Router_1_io_outputs_3_PENABLE),           // i
+        .io_apb_PSEL          (apb3Router_1_io_outputs_2_PSEL),              // i
+        .io_apb_PENABLE       (apb3Router_1_io_outputs_2_PENABLE),           // i
         .io_apb_PREADY        (system_i2cCtrl_io_apb_PREADY),                // o
-        .io_apb_PWRITE        (apb3Router_1_io_outputs_3_PWRITE),            // i
-        .io_apb_PWDATA        (apb3Router_1_io_outputs_3_PWDATA),            // i
+        .io_apb_PWRITE        (apb3Router_1_io_outputs_2_PWRITE),            // i
+        .io_apb_PWDATA        (apb3Router_1_io_outputs_2_PWDATA),            // i
         .io_apb_PRDATA        (system_i2cCtrl_io_apb_PRDATA),                // o
         .io_apb_PSLVERROR     (system_i2cCtrl_io_apb_PSLVERROR),             // o
         .I2C1_SDA             (I2C1_SDA),                                    // i
@@ -640,14 +615,14 @@ module Murax (
         .I2C2_interrupt       ()                                             // o
     );
     Apb3SPIRouter Apb3SPIRouter (
-        .io_apb_PCLK          (io_mainClk),                                  // i
-        .io_apb_PRESET        (resetCtrl_systemReset),                       // i
+        .io_apb_PCLK          (SPI_clk),                                     // i
+        .io_apb_PRESET        (SPI_rst),                                     // i
         .io_apb_PADDR         (system_spiCtrl_io_apb_PADDR),                 // i
-        .io_apb_PSEL          (apb3Router_1_io_outputs_4_PSEL),              // i
-        .io_apb_PENABLE       (apb3Router_1_io_outputs_4_PENABLE),           // i
+        .io_apb_PSEL          (apb3Router_1_io_outputs_3_PSEL),              // i
+        .io_apb_PENABLE       (apb3Router_1_io_outputs_3_PENABLE),           // i
         .io_apb_PREADY        (system_spiCtrl_io_apb_PREADY),                // o
-        .io_apb_PWRITE        (apb3Router_1_io_outputs_4_PWRITE),            // i
-        .io_apb_PWDATA        (apb3Router_1_io_outputs_4_PWDATA),            // i
+        .io_apb_PWRITE        (apb3Router_1_io_outputs_3_PWRITE),            // i
+        .io_apb_PWDATA        (apb3Router_1_io_outputs_3_PWDATA),            // i
         .io_apb_PRDATA        (system_spiCtrl_io_apb_PRDATA),                // o
         .io_apb_PSLVERROR     (system_spiCtrl_io_apb_PSLVERROR),             // o
         .SPI1_SCK             (SPI1_SCK),                                    // o
@@ -662,20 +637,34 @@ module Murax (
         .SPI2_interrupt       ()                                             // o
     );
     Apb3TIMRouter Apb3TIMRouter (
-        .io_apb_PCLK          (io_mainClk),                                  // i
-        .io_apb_PRESET        (resetCtrl_systemReset),                       // i
+        .io_apb_PCLK          (TIM_clk),                                     // i
+        .io_apb_PRESET        (TIM_rst),                                     // i
         .io_apb_PADDR         (system_timCtrl_io_apb_PADDR),                 // i
-        .io_apb_PSEL          (apb3Router_1_io_outputs_5_PSEL),              // i
-        .io_apb_PENABLE       (apb3Router_1_io_outputs_5_PENABLE),           // i
+        .io_apb_PSEL          (apb3Router_1_io_outputs_4_PSEL),              // i
+        .io_apb_PENABLE       (apb3Router_1_io_outputs_4_PENABLE),           // i
         .io_apb_PREADY        (system_timCtrl_io_apb_PREADY),                // o
-        .io_apb_PWRITE        (apb3Router_1_io_outputs_5_PWRITE),            // i
-        .io_apb_PWDATA        (apb3Router_1_io_outputs_5_PWDATA),            // i
+        .io_apb_PWRITE        (apb3Router_1_io_outputs_4_PWRITE),            // i
+        .io_apb_PWDATA        (apb3Router_1_io_outputs_4_PWDATA),            // i
         .io_apb_PRDATA        (system_timCtrl_io_apb_PRDATA),                // o
         .io_apb_PSLVERROR     (system_timCtrl_io_apb_PSLVERROR),             // o
         .TIM2_CH              (TIM2_CH),                                     // o
         .TIM2_interrupt       (TIM2_interrupt),                              // o  // TIM interrupt
         .TIM3_CH              (TIM3_CH),                                     // o
         .TIM3_interrupt       (TIM3_interrupt)                               // o
+    );
+    Apb3WDGRouter Apb3WDGRouter (
+        .io_apb_PCLK          (WDG_clk),                                     // i
+        .io_apb_PRESET        (WDG_rst),                                     // i
+        .io_apb_PADDR         (system_wdgCtrl_io_apb_PADDR),                 // i
+        .io_apb_PSEL          (apb3Router_1_io_outputs_5_PSEL),              // i
+        .io_apb_PENABLE       (apb3Router_1_io_outputs_5_PENABLE),           // i
+        .io_apb_PREADY        (system_wdgCtrl_io_apb_PREADY),                // o
+        .io_apb_PWRITE        (apb3Router_1_io_outputs_5_PWRITE),            // i
+        .io_apb_PWDATA        (apb3Router_1_io_outputs_5_PWDATA),            // i
+        .io_apb_PRDATA        (system_wdgCtrl_io_apb_PRDATA),                // o
+        .io_apb_PSLVERROR     (system_wdgCtrl_io_apb_PSLVERROR),             // o
+        .IWDG_rst             (),                                            // o
+        .WWDG_rst             ()                                             // o
     );
 
     initial begin
