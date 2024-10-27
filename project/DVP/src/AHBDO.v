@@ -87,7 +87,7 @@ module AHBDO (
         .de (out_de)
     );
 
-    DVI_TX_Top DVI_TX_Top_inst0 (
+    DVI_TX DVI_TX_Top_inst0 (
         .I_rst_n     (hdmi4_rst_n),  //asynchronous reset, low active
         .I_serial_clk(serial_clk),
 

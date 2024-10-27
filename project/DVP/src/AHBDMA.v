@@ -62,7 +62,7 @@ module AHBDMA (
     wire [  DATA_WIDTH-1:0] rd_data;
     wire                    init_calib_complete;
 
-    Video_Frame_Buffer_Top Video_Frame_Buffer_Top_inst (
+    Frame_Buffer Frame_Buffer (
         .I_rst_n         (init_calib_complete),
         .I_dma_clk       (dma_clk),
 `ifdef USE_THREE_FRAME_BUFFER
@@ -100,7 +100,7 @@ module AHBDMA (
         .I_init_calib_complete(init_calib_complete)
     );
 
-    DDR3MI u_ddr3 (
+    DDR3MI DDR3MI (
         .clk                (clk),
         .memory_clk         (memory_clk),
         .pll_stop           (pll_stop),

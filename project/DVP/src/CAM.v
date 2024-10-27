@@ -18,10 +18,6 @@ module CAM (
     output        cmos_16bit_clk
 );
 
-    wire [15:0] cmos_16bit_data;
-    // wire        cmos_16bit_clk;
-    // wire [15:0] write_data;
-
     wire [ 9:0] lut_index;
     wire [31:0] lut_data;
     wire        i2c_done;
@@ -34,12 +30,12 @@ module CAM (
     wire [ 7:0] fps;
     wire        fps_valid;
 
+    wire [15:0] cmos_16bit_data;
+    reg  [31:0] cmos_reset_delay_cnt;
+    reg         cmos_reset;
+    reg         cmos_start_config;
     reg  [ 4:0] cmos_vs_cnt;
     always @(posedge cmos_vsync) cmos_vs_cnt <= cmos_vs_cnt + 1;
-
-    reg [31:0] cmos_reset_delay_cnt;
-    reg        cmos_reset;
-    reg        cmos_start_config;
 
     assign i2c_sel    = 'b101;
     assign cmos_xclk  = cmos_clk;

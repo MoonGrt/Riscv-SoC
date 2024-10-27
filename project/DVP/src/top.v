@@ -57,14 +57,14 @@ module top #(
     wire memory_clk;
     wire DDR_pll_lock;
     wire TMDS_DDR_pll_lock;
-    TMDS_PLL u_tmds_pll (
+    HDMI_PLL HDMI_PLL (
         .clkin  (clk),               //input clk
         .clkout0(serial_clk),        //output clk x5ni
         .clkout1(video_clk),         //output clk x1
         .lock   (TMDS_DDR_pll_lock)  //output lock
     );
     //generate the CMOS sensor clock and the SDRAM controller, I2C controller clock
-    Gowin_PLL Gowin_PLL_m0 (
+    SYS_PLL SYS_PLL (
         .clkin  (clk),
         .clkout0(cmos_clk),
         .clkout1(aux_clk),

@@ -22,7 +22,7 @@ module AHBDI #(
     output        fb_vin_de
 );
 
-    wire cmos_16bit_clk, cmos_16bit_wr;
+    wire cmos_16bit_clk/* synthesis keep */, cmos_16bit_wr;
     wire [15:0] write_data;
     CAM CAM (
         .clk     (clk),
