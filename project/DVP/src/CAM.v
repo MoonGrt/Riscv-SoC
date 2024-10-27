@@ -1,17 +1,17 @@
 module CAM (
-    input         clk,         //system clock
-    input         cmos_clk,    //cmos pixel clock
-    input         rst_n,       //system reset
+    input         clk,         // system clock
+    input         cmos_clk,    // cmos pixel clock
+    input         rst_n,       // system reset
 
-    inout         cmos_scl,    //cmos i2c clock
-    inout         cmos_sda,    //cmos i2c data
-    input         cmos_vsync,  //cmos vsync
-    input         cmos_href,   //cmos hsync refrence,data valid
-    input         cmos_pclk,   //cmos pxiel clock
-    output        cmos_xclk,   //cmos externl clock
-    input  [ 7:0] cmos_db,     //cmos data
-    output        cmos_rst_n,  //cmos reset
-    output        cmos_pwdn,   //cmos power down
+    inout         cmos_scl,    // cmos i2c clock
+    inout         cmos_sda,    // cmos i2c data
+    input         cmos_vsync,  // cmos vsync
+    input         cmos_href,   // cmos hsync refrence,data valid
+    input         cmos_pclk,   // cmos pxiel clock
+    output        cmos_xclk,   // cmos externl clock
+    input  [ 7:0] cmos_db,     // cmos data
+    output        cmos_rst_n,  // cmos reset
+    output        cmos_pwdn,   // cmos power down
 
     output [15:0] write_data,
     output        cmos_16bit_wr,
@@ -40,10 +40,10 @@ module CAM (
     assign i2c_sel    = 'b101;
     assign cmos_xclk  = cmos_clk;
     assign cmos_pwdn  = 1'b0;
-    //    assign cmos_rst_n = 1'b1;
+    // assign cmos_rst_n = 1'b1;
     assign cmos_rst_n = cmos_reset;
     assign write_data = cmos_16bit_data;
-    //assign write_data = {cmos_16bit_data[4:0],cmos_16bit_data[10:5],cmos_16bit_data[15:11]};
+    // assign write_data = {cmos_16bit_data[4:0],cmos_16bit_data[10:5],cmos_16bit_data[15:11]};
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
@@ -84,7 +84,7 @@ module CAM (
         .fps_valid  (fps_valid)
     );
 
-    //configure look-up table
+    // configure look-up table
     lut_ov5640_rgb565 #(
         .HActive(12'd1280),
         .VActive(12'd720),
@@ -96,7 +96,7 @@ module CAM (
         .lut_data (lut_data)
     );
 
-    //I2C master controller
+    // I2C master controller
     i2c_config i2c_config_m0 (
         .rst           (~cmos_start_config),
         .clk           (clk),
@@ -112,7 +112,7 @@ module CAM (
         .i2c_sda       (cmos_sda)
     );
 
-    //CMOS sensor 8bit data is converted to 16bit data
+    // CMOS sensor 8bit data is converted to 16bit data
     cmos_8_16bit cmos_8_16bit_m0 (
         .rst    (~rst_n),
         .pclk   (cmos_pclk),
@@ -138,7 +138,7 @@ module cmos_8_16bit (
 
     reg [7:0] pdata_i_d0;
     reg       x_cnt;
-    always@(posedge pclk)  //Latch
+    always@(posedge pclk)  // Latch
 	begin
         pdata_i_d0 <= pdata_i;
     end
@@ -155,10 +155,10 @@ module cmos_8_16bit (
         else de_o <= 1'b0;
     end
 
-    reg de_d1;  //,de_d2;
+    reg de_d1;  // ,de_d2;
     always @(posedge pclk) begin
         de_d1  <= de_i;
-        //de_d2 <= de_d1;
+        // de_d2 <= de_d1;
         hblank <= de_d1;
     end
 
@@ -238,13 +238,13 @@ module timing_check #(
                 de_d <= 0;
                 vsync_d <= 0;
             end else begin
-                //Sync
+                // Sync
                 pps_clk_d <= {pps_clk_d[2:0], pps_1Hz_clk};
                 de_d <= video_de;
                 vsync_d <= video_vsync;
 
                 // Horzental
-                if(de_d & ~video_de)    //Negedge of DE, H end
+                if(de_d & ~video_de)    // Negedge of DE, H end
                 begin
                     HA_CNT <= 0;
                     HA_Out <= HA_CNT;
@@ -272,7 +272,7 @@ module timing_check #(
                 end
 
                 // Vertical
-                if(~vsync_d & video_vsync)    //Posedge of vsync
+                if(~vsync_d & video_vsync)    // Posedge of vsync
                 begin
                     VA_Out <= VA_CNT;
                     VA_updated <= 1;
@@ -280,7 +280,7 @@ module timing_check #(
                 end else begin
                     VA_Out <= VA_Out;
                     VA_updated <= 0;
-                    if(video_de & ~de_d)    //Posedge of DE, H start
+                    if(video_de & ~de_d)    // Posedge of DE, H start
                     begin
                         VA_CNT = VA_CNT + 1;
                     end else begin
@@ -289,7 +289,7 @@ module timing_check #(
                 end
 
                 // FPS
-                if(pps_clk_d[2] & ~pps_clk_d[3])    //Posedge of pps_1Hz_clk
+                if(pps_clk_d[2] & ~pps_clk_d[3])  // Posedge of pps_1Hz_clk
                 begin
                     fps_out <= fps_CNT;
                     fps_updated <= 1;
@@ -297,7 +297,7 @@ module timing_check #(
                 end else begin
                     fps_out <= fps_out;
                     fps_updated <= 0;
-                    if(~vsync_d & video_vsync)   //Posedge of VSYNC
+                    if(~vsync_d & video_vsync)  // Posedge of VSYNC
                     begin
                         fps_CNT = fps_CNT + 1;
                     end else begin
@@ -469,14 +469,14 @@ module i2c_master_top (
     output reg [ 7:0] i2c_read_data,       // I2c read register data
     output reg        error                // The error indication, generally there is no response
 );
-    //State machine definition
+    // State machine definition
     localparam S_IDLE = 0;  // Idle state, waiting for read and write
     localparam S_WR_DEV_ADDR = 1;  // Write device address
     localparam S_WR_REG_ADDR = 2;  // Write register address
     localparam S_WR_DATA = 3;  // Write register data
     localparam S_WR_ACK = 4;  // Write request response
     localparam S_WR_ERR_NACK = 5;  // Write error, I2C device is not responding
-    localparam S_RD_DEV_ADDR0     =  6;             // I2C read state, first writes the device address and the register address
+    localparam S_RD_DEV_ADDR0 = 6;  // I2C read state, first writes the device address and the register address
     localparam S_RD_REG_ADDR = 7;  // I2C read state, read register address (8bit)
     localparam S_RD_DEV_ADDR1 = 8;  // Write the device address again
     localparam S_RD_DATA = 9;  // Read data
@@ -509,14 +509,14 @@ module i2c_master_top (
     begin
         case(state)
             S_IDLE:
-                //Waiting for read and write requests
+                // Waiting for read and write requests
                 if(i2c_write_req)
                     next_state <= S_WR_DEV_ADDR;
                 else if(i2c_read_req)
                     next_state <= S_RD_DEV_ADDR0;
                 else
                     next_state <= S_IDLE;
-            //Write I2C device address
+            // Write I2C device address
             S_WR_DEV_ADDR:
                 if(done && irxack)
                     next_state <= S_WR_ERR_NACK;
@@ -524,10 +524,10 @@ module i2c_master_top (
                     next_state <= S_WR_REG_ADDR;
                 else
                     next_state <= S_WR_DEV_ADDR;
-            //Write the address of the I2C register
+            // Write the address of the I2C register
             S_WR_REG_ADDR:
                 if(done)
-                    //If it is the 8bit register address, it enters the write data state
+                    // If it is the 8bit register address, it enters the write data state
                     next_state <= i2c_addr_2byte ? S_WR_REG_ADDR1 : S_WR_DATA;
                 else
                     next_state <= S_WR_REG_ADDR;
@@ -536,7 +536,7 @@ module i2c_master_top (
                     next_state <= S_WR_DATA;
                 else
                     next_state <= S_WR_REG_ADDR1;
-            //Write data
+            // Write data
             S_WR_DATA:
                 if(done)
                     next_state <= S_WR_STOP;

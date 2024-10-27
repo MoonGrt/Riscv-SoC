@@ -163,6 +163,7 @@ module algorithm #(
         .topFracOffset  (0)
     );
 
+
     wire [DATA_WIDTH*CHANNELS-1:0] fill_data;
     wire                           fill_dataValid;
     assign algorithm_data      = fill_data;

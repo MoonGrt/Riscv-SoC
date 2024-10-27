@@ -1,22 +1,20 @@
 module AHBDMA (
-    input clk,
-    input memory_clk,
-    input dma_clk,
-    input video_clk,
-    input rst_n,
+    input  clk,
+    input  memory_clk,
+    input  video_clk,
+    input  rst_n,
+    input  DDR_pll_lock,
+    output pll_stop,
 
     // video input
-    input          fb_vin_clk,
-    input          fb_vin_vsync,
-    input          fb_vin_de,
-    input [32-1:0] fb_vin_data,
+    input        vin_clk,
+    input        vin_vs,
+    input        vin_de,
+    input [15:0] vin_data,
 
     // ddr interface
-    output pll_stop,
-    input  DDR_pll_lock,
-
-    output [16-1:0] ddr_addr,     //ROW_WIDTH=16
-    output [ 3-1:0] ddr_bank,     //BANK_WIDTH=3
+    output [16-1:0] ddr_addr,     // ROW_WIDTH=16
+    output [ 3-1:0] ddr_bank,     // BANK_WIDTH=3
     output          ddr_cs,
     output          ddr_ras,
     output          ddr_cas,
@@ -26,31 +24,31 @@ module AHBDMA (
     output          ddr_cke,
     output          ddr_odt,
     output          ddr_reset_n,
-    output [ 4-1:0] ddr_dm,       //DM_WIDTH=4
-    inout  [32-1:0] ddr_dq,       //DQ_WIDTH=32
-    inout  [ 4-1:0] ddr_dqs,      //DQS_WIDTH=4
-    inout  [ 4-1:0] ddr_dqs_n,    //DQS_WIDTH=4
+    output [ 4-1:0] ddr_dm,       // DM_WIDTH=4
+    inout  [32-1:0] ddr_dq,       // DQ_WIDTH=32
+    inout  [ 4-1:0] ddr_dqs,      // DQS_WIDTH=4
+    inout  [ 4-1:0] ddr_dqs_n,    // DQS_WIDTH=4
 
     // video output
-    output        syn_off0_vs,
-    output        out_de,
-    output        off0_syn_de,
-    output [15:0] off0_syn_data
+    input         vout_vs,
+    input         vout_de,
+    output        video_de,
+    output [15:0] video_data
 );
 
-    //SRAM parameters
+    // SRAM parameters
     `define USE_THREE_FRAME_BUFFER
-    parameter ADDR_WIDTH     = 29;   //存储单元是byte，总容量=2^29*16bit = 8Gbit,增加1位rank地址，{rank[0],bank[2:0],row[15:0],cloumn[9:0]}
-    parameter DATA_WIDTH     = 256;  //与生成DDR3IP有关，此ddr3 4Gbit, x32， 时钟比例1:4 ，则固定256bit
+    parameter ADDR_WIDTH     = 29;   // 存储单元是byte，总容量=2^29*16bit = 8Gbit,增加1位rank地址，{rank[0],bank[2:0],row[15:0],cloumn[9:0]}
+    parameter DATA_WIDTH     = 256;  // 与生成DDR3IP有关，此ddr3 4Gbit, x32， 时钟比例1:4 ，则固定256bit
     parameter WR_VIDEO_WIDTH = 32;
     parameter RD_VIDEO_WIDTH = 32;
 
-    //memory interface
+    // memory interface
     wire                    dma_clk;
     wire                    cmd_ready;
     wire [             2:0] cmd;
     wire                    cmd_en;
-    //wire[5:0]              app_burst_number   ;
+    // wire[5:0]              app_burst_number   ;
     wire [  ADDR_WIDTH-1:0] addr;
     wire                    wr_data_rdy;
     wire                    wr_data_en;
@@ -58,7 +56,7 @@ module AHBDMA (
     wire [  DATA_WIDTH-1:0] wr_data;
     wire [DATA_WIDTH/8-1:0] wr_data_mask;
     wire                    rd_data_valid;
-    wire                    rd_data_end;  //unused
+    wire                    rd_data_end;  // unused
     wire [  DATA_WIDTH-1:0] rd_data;
     wire                    init_calib_complete;
 
@@ -66,37 +64,37 @@ module AHBDMA (
         .I_rst_n         (init_calib_complete),
         .I_dma_clk       (dma_clk),
 `ifdef USE_THREE_FRAME_BUFFER
-        .I_wr_halt       (1'd0),                 //1:halt,  0:no halt
-        .I_rd_halt       (1'd0),                 //1:halt,  0:no halt
+        .I_wr_halt       (1'd0),                 // 1:halt,  0:no halt
+        .I_rd_halt       (1'd0),                 // 1:halt,  0:no halt
 `endif
         // video data input
-        .I_vin0_clk      (fb_vin_clk),
-        .I_vin0_vs_n     (~fb_vin_vsync),        //只接收负极性
-        .I_vin0_de       (fb_vin_de),
-        .I_vin0_data     (fb_vin_data),
+        .I_vin0_clk      (vin_clk),
+        .I_vin0_vs_n     (~vin_vs),              // 只接收负极性
+        .I_vin0_de       (vin_de),
+        .I_vin0_data     (vin_data),
         .O_vin0_fifo_full(),
 
         // video data output
         .I_vout0_clk          (video_clk),
-        .I_vout0_vs_n         (~syn_off0_vs),        //只接收负极性
-        .I_vout0_de           (out_de),
-        .O_vout0_den          (off0_syn_de),
-        .O_vout0_data         (off0_syn_data),
+        .I_vout0_vs_n         (~vout_vs),            // 只接收负极性
+        .I_vout0_de           (vout_de),
+        .O_vout0_den          (video_de),
+        .O_vout0_data         (video_data),
         .O_vout0_fifo_empty   (),
         // ddr write request
         .I_cmd_ready          (cmd_ready),
-        .O_cmd                (cmd),                 //0:write;  1:read
+        .O_cmd                (cmd),                 // 0:write;  1:read
         .O_cmd_en             (cmd_en),
         //    .O_app_burst_number   (app_burst_number   ),
-        .O_addr               (addr),                //[ADDR_WIDTH-1:0]
+        .O_addr               (addr),                // [ADDR_WIDTH-1:0]
         .I_wr_data_rdy        (wr_data_rdy),
-        .O_wr_data_en         (wr_data_en),          //
-        .O_wr_data_end        (wr_data_end),         //
-        .O_wr_data            (wr_data),             //[DATA_WIDTH-1:0]
+        .O_wr_data_en         (wr_data_en),
+        .O_wr_data_end        (wr_data_end),
+        .O_wr_data            (wr_data),             // [DATA_WIDTH-1:0]
         .O_wr_data_mask       (wr_data_mask),
         .I_rd_data_valid      (rd_data_valid),
-        .I_rd_data_end        (rd_data_end),         //unused
-        .I_rd_data            (rd_data),             //[DATA_WIDTH-1:0]
+        .I_rd_data_end        (rd_data_end),         // unused
+        .I_rd_data            (rd_data),             // [DATA_WIDTH-1:0]
         .I_init_calib_complete(init_calib_complete)
     );
 
