@@ -70,11 +70,6 @@ module Cyber (
     wire        io_ahb_decoder_io_input_PREADY;
     wire [31:0] io_ahb_decoder_io_input_PRDATA;
     wire        io_ahb_decoder_io_input_PSLVERROR;
-    // wire [19:0] io_ahb_decoder_io_output_PADDR;
-    // wire [ 2:0] io_ahb_decoder_io_output_PSEL;
-    // wire        io_ahb_decoder_io_output_PENABLE;
-    // wire        io_ahb_decoder_io_output_PWRITE;
-    // wire [31:0] io_ahb_decoder_io_output_PWDATA;
 
     wire        system_rccCtrl_io_ahb_PREADY;  // RCC
     wire [31:0] system_rccCtrl_io_ahb_PRDATA;  // RCC

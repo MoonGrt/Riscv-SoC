@@ -244,7 +244,8 @@ module Apb3TIM (
                     if (clk_div_counter == 2'b00 || CKD == 2'b00)
                         if (CNT == ARR) begin
                             CNT <= 16'h0000;    // 当计数器达到自动重装载值时，重置计数器
-                            SR[0] <= 1'b1;  // 设置更新中断标志位
+                            if (UIE)
+                                SR[0] <= 1'b1;  // 设置更新中断标志位
                         end else
                             CNT <= CNT + 1'b1;
                 end else if (~UIF) prescaler_counter <= prescaler_counter + 1'b1;
