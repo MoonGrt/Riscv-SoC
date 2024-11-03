@@ -5,8 +5,8 @@ module AHBVO (
     input TMDS_DDR_pll_lock,
 
     // video interface
-    output        vout_vs,     // hdmi reset
-    output        vout_de,     // hdmi de
+    output        vo_vs,     // hdmi reset
+    output        vo_de,     // hdmi de
     input  [15:0] video_data,  // hdmi data
     input         video_de,    // hdmi de
 
@@ -22,8 +22,8 @@ module AHBVO (
     wire lcd_vs, lcd_de, lcd_hs, lcd_dclk;
 
     assign {lcd_r, lcd_g, lcd_b} = video_de ? video_data[15:0] : 16'h0000;  // {r,g,b}
-    assign lcd_vs                = Pout_vs_dn[1];  // vout_vs;
-    assign lcd_hs                = Pout_hs_dn[1];  // vout_hs;
+    assign lcd_vs                = Pout_vs_dn[1];  // vo_vs;
+    assign lcd_hs                = Pout_hs_dn[1];  // vo_hs;
     assign lcd_de                = Pout_de_dn[1];  // video_de;
     assign lcd_dclk              = video_clk;  // video_clk_phs;
 
@@ -37,9 +37,9 @@ module AHBVO (
             Pout_vs_dn <= {2'b11};
             Pout_de_dn <= {2'b00};
         end else begin
-            Pout_hs_dn <= {Pout_hs_dn[0], vout_hs};
-            Pout_vs_dn <= {Pout_vs_dn[0], vout_vs};
-            Pout_de_dn <= {Pout_de_dn[0], vout_de};
+            Pout_hs_dn <= {Pout_hs_dn[0], vo_hs};
+            Pout_vs_dn <= {Pout_vs_dn[0], vo_vs};
+            Pout_de_dn <= {Pout_de_dn[0], vo_de};
         end
     end
 
@@ -77,9 +77,9 @@ module AHBVO (
     ) vga_timing (
         .clk(video_clk),
         .rst(~rst_n),
-        .hs (vout_hs),
-        .vs (vout_vs),
-        .de (vout_de)
+        .hs (vo_hs),
+        .vs (vo_vs),
+        .de (vo_de)
     );
 
     DVI_TX DVI_TX (

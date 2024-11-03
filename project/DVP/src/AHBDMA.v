@@ -7,10 +7,10 @@ module AHBDMA (
     output pll_stop,
 
     // video input
-    input        vin_clk,
-    input        vin_vs,
-    input        vin_de,
-    input [15:0] vin_data,
+    input        vi_clk,
+    input        vi_vs,
+    input        vi_de,
+    input [15:0] vi_data,
 
     // ddr interface
     output [16-1:0] ddr_addr,     // ROW_WIDTH=16
@@ -30,8 +30,8 @@ module AHBDMA (
     inout  [ 4-1:0] ddr_dqs_n,    // DQS_WIDTH=4
 
     // video output
-    input         vout_vs,
-    input         vout_de,
+    input         vo_vs,
+    input         vo_de,
     output        video_de,
     output [15:0] video_data
 );
@@ -68,16 +68,16 @@ module AHBDMA (
         .I_rd_halt       (1'd0),                 // 1:halt,  0:no halt
 `endif
         // video data input
-        .I_vin0_clk      (vin_clk),
-        .I_vin0_vs_n     (~vin_vs),              // 只接收负极性
-        .I_vin0_de       (vin_de),
-        .I_vin0_data     (vin_data),
+        .I_vin0_clk      (vi_clk),
+        .I_vin0_vs_n     (~vi_vs),              // 只接收负极性
+        .I_vin0_de       (vi_de),
+        .I_vin0_data     (vi_data),
         .O_vin0_fifo_full(),
 
         // video data output
         .I_vout0_clk          (video_clk),
-        .I_vout0_vs_n         (~vout_vs),            // 只接收负极性
-        .I_vout0_de           (vout_de),
+        .I_vout0_vs_n         (~vo_vs),            // 只接收负极性
+        .I_vout0_de           (vo_de),
         .O_vout0_den          (video_de),
         .O_vout0_data         (video_data),
         .O_vout0_fifo_empty   (),

@@ -16,10 +16,10 @@ module AHBVI #(
     output       cmos_rst_n,  // cmos reset
     output       cmos_pwdn,   // cmos power down
 
-    output        vin_clk,
-    output        vin_vs,
-    output [15:0] vin_data,
-    output        vin_de
+    output        vi_clk,
+    output        vi_vs,
+    output [15:0] vi_data,
+    output        vi_de
 );
 
     wire cmos_16bit_clk, cmos_16bit_wr;
@@ -81,16 +81,16 @@ module AHBVI #(
 
     generate
         if (USE_TPG == "true") begin
-            // assign vin_clk  = video_clk;
-            assign vin_clk  = cmos_clk;
-            assign vin_vs   = tp0_vs_in;
-            assign vin_data = {tp0_data_r[7:3], tp0_data_g[7:2], tp0_data_b[7:3]};
-            assign vin_de   = tp0_de_in;
+            // assign vi_clk  = video_clk;
+            assign vi_clk  = cmos_clk;
+            assign vi_vs   = tp0_vs_in;
+            assign vi_data = {tp0_data_r[7:3], tp0_data_g[7:2], tp0_data_b[7:3]};
+            assign vi_de   = tp0_de_in;
         end else begin  // CMOS DATA
-            assign vin_clk  = cmos_16bit_clk;
-            assign vin_vs   = cmos_vsync;
-            assign vin_data = write_data;
-            assign vin_de   = cmos_16bit_wr;
+            assign vi_clk  = cmos_16bit_clk;
+            assign vi_vs   = cmos_vsync;
+            assign vi_data = write_data;
+            assign vi_de   = cmos_16bit_wr;
         end
     endgenerate
 

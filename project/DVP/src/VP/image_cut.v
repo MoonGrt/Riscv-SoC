@@ -14,7 +14,6 @@ module image_cut #(
     input wire [OUTPUT_X_RES_WIDTH-1:0] end_x,
     input wire [OUTPUT_Y_RES_WIDTH-1:0] end_y,
 
-    input wire        hs_i,
     input wire        vs_i,
     input wire        de_i,
     input wire [23:0] rgb_i,

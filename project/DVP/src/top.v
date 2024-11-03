@@ -53,18 +53,18 @@ module top #(
     // assign state_led[0] = ~init_calib_complete;  //DDR3初始化指示灯
 
     // video interface
-    wire        vin_clk;
-    wire        vin_vs;
-    wire [15:0] vin_data;
-    wire        vin_de;
+    wire        vi_clk;
+    wire        vi_vs;
+    wire [15:0] vi_data;
+    wire        vi_de;
 
     wire        vp_clk;
     wire        vp_vs;
     wire        vp_de;
     wire [15:0] vp_data;
 
-    wire        vout_de;
-    wire        vout_vs;
+    wire        vo_de;
+    wire        vo_vs;
     wire        video_de;
     wire [15:0] video_data;
 
@@ -113,10 +113,10 @@ module top #(
         .cmos_rst_n(cmos_rst_n),
         .cmos_pwdn (cmos_pwdn),
 
-        .vin_clk (vin_clk),
-        .vin_vs  (vin_vs),
-        .vin_data(vin_data),
-        .vin_de  (vin_de)
+        .vi_clk (vi_clk),
+        .vi_vs  (vi_vs),
+        .vi_data(vi_data),
+        .vi_de  (vi_de)
     );
 
     // 视频处理模块
@@ -124,10 +124,10 @@ module top #(
         .clk     (clk),
         .rst_n   (rst_n),
 
-        .vin_clk (vin_clk),
-        .vin_vs  (vin_vs),
-        .vin_de  (vin_de),
-        .vin_data(vin_data),
+        .vi_clk (vi_clk),
+        .vi_vs  (vi_vs),
+        .vi_de  (vi_de),
+        .vi_data(vi_data),
 
         .vp_clk  (vp_clk),
         .vp_vs   (vp_vs),
@@ -143,14 +143,14 @@ module top #(
          .DDR_pll_lock(DDR_pll_lock),
          .pll_stop    (pll_stop),
 
-        //  .vin_clk (vin_clk),
-        //  .vin_vs  (vin_vs),
-        //  .vin_de  (vin_de),
-        //  .vin_data(vin_data),
-         .vin_clk (vp_clk),
-         .vin_vs  (vp_vs),
-         .vin_de  (vp_de),
-         .vin_data(vp_data),
+        //  .vi_clk (vi_clk),
+        //  .vi_vs  (vi_vs),
+        //  .vi_de  (vi_de),
+        //  .vi_data(vi_data),
+         .vi_clk (vp_clk),
+         .vi_vs  (vp_vs),
+         .vi_de  (vp_de),
+         .vi_data(vp_data),
 
          .ddr_addr   (ddr_addr),
          .ddr_bank   (ddr_bank),
@@ -169,8 +169,8 @@ module top #(
          .ddr_dqs_n  (ddr_dqs_n),
 
          .video_clk (video_clk),
-         .vout_vs   (vout_vs),
-         .vout_de   (vout_de),
+         .vo_vs   (vo_vs),
+         .vo_de   (vo_de),
          .video_de  (video_de),
          .video_data(video_data)
      );
@@ -183,8 +183,8 @@ module top #(
          .TMDS_DDR_pll_lock(TMDS_DDR_pll_lock),
 
          // 向 ddr 请求数据
-         .vout_vs   (vout_vs),
-         .vout_de   (vout_de),
+         .vo_vs   (vo_vs),
+         .vo_de   (vo_de),
          // ddr 输出数据
          .video_data(video_data),
          .video_de  (video_de),
