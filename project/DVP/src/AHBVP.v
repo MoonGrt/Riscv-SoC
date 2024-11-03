@@ -34,12 +34,12 @@ module AHBVP (
     parameter SCALE_BITS = SCALE_INT_BITS + SCALE_FRAC_BITS;
 
     // algorithm Inputs
-    parameter START_X = 12'd1280 / 4;
-    parameter START_Y = 12'd720 / 4;
-    parameter END_X = 12'd1280 * 3 / 4;
-    parameter END_Y = 12'd720 * 3 / 4;
-    parameter OUTPUT_X_RES = 12'd1280 - 1;  //Resolution of output data minus 1
-    parameter OUTPUT_Y_RES = 12'd720 - 1;  //Resolution of output data minus 1
+    // parameter START_X = 12'd1280 / 4;
+    // parameter START_Y = 12'd720 / 4;
+    // parameter END_X = 12'd1280 * 3 / 4;
+    // parameter END_Y = 12'd720 * 3 / 4;
+    // parameter OUTPUT_X_RES = 12'd1280 - 1;  //Resolution of output data minus 1
+    // parameter OUTPUT_Y_RES = 12'd720 - 1;  //Resolution of output data minus 1
 
     // parameter START_X = 0;
     // parameter START_Y = 0;
@@ -48,12 +48,12 @@ module AHBVP (
     // parameter OUTPUT_X_RES = 12'd1280 - 1;  //Resolution of output data minus 1
     // parameter OUTPUT_Y_RES = 12'd720 - 1;  //Resolution of output data minus 1
 
-    // parameter START_X = 0;
-    // parameter START_Y = 0;
-    // parameter END_X = 12'd1280;
-    // parameter END_Y = 12'd720;
-    // parameter OUTPUT_X_RES = 12'd1280 - 1;  //Resolution of output data minus 1
-    // parameter OUTPUT_Y_RES = 12'd720 - 1;  //Resolution of output data minus 1
+    parameter START_X = 0;
+    parameter START_Y = 0;
+    parameter END_X = 12'd1280;
+    parameter END_Y = 12'd720;
+    parameter OUTPUT_X_RES = 12'd1280 - 1;  //Resolution of output data minus 1
+    parameter OUTPUT_Y_RES = 12'd720 - 1;  //Resolution of output data minus 1
 
     // parameter START_X = 0;
     // parameter START_Y = 0;
@@ -124,7 +124,7 @@ module AHBVP (
         .DATA_WIDTH(24),
         .FIFO_DEPTH(1024)
     ) FIFO (
-        /*i*/.Reset(~state),  //System Reset
+        /*i*/.Reset(~state|vs),  //System Reset
 
         /*i*/.WrClk (vi_clk),        //(I)Wirte Clock
         /*i*/.WrEn  (image_cut_de),  //(I)Write Enable
