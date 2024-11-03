@@ -1,5 +1,5 @@
 module top #(
-    parameter USE_TPG = "false"
+    parameter USE_TPG = "true"
 ) (
     input clk,
     input rst_n,
@@ -42,6 +42,8 @@ module top #(
     output [2:0] tmds_d_n_0,    // {r,g,b}
     output [2:0] tmds_d_p_0
 );
+
+    assign i2c_sel = 'b101;
 
     // 状态指示灯
     // assign state_led[4] = ~i2c_done;
@@ -133,64 +135,64 @@ module top #(
         .vp_data (vp_data)
     );
 
-    // 视频存储模块
-    AHBDMA AHBDMA (
-        .clk         (clk),
-        .memory_clk  (memory_clk),
-        .rst_n       (rst_n),
-        .DDR_pll_lock(DDR_pll_lock),
-        .pll_stop    (pll_stop),
+     // 视频存储模块
+     AHBDMA AHBDMA (
+         .clk         (clk),
+         .memory_clk  (memory_clk),
+         .rst_n       (rst_n),
+         .DDR_pll_lock(DDR_pll_lock),
+         .pll_stop    (pll_stop),
 
-        .vin_clk (vin_clk),
-        .vin_vs  (vin_vs),
-        .vin_de  (vin_de),
-        .vin_data(vin_data),
-        // .vin_clk (vp_clk),
-        // .vin_vs  (vp_vs),
-        // .vin_de  (vp_de),
-        // .vin_data(vp_data),
+        //  .vin_clk (vin_clk),
+        //  .vin_vs  (vin_vs),
+        //  .vin_de  (vin_de),
+        //  .vin_data(vin_data),
+         .vin_clk (vp_clk),
+         .vin_vs  (vp_vs),
+         .vin_de  (vp_de),
+         .vin_data(vp_data),
 
-        .ddr_addr   (ddr_addr),
-        .ddr_bank   (ddr_bank),
-        .ddr_cs     (ddr_cs),
-        .ddr_ras    (ddr_ras),
-        .ddr_cas    (ddr_cas),
-        .ddr_we     (ddr_we),
-        .ddr_ck     (ddr_ck),
-        .ddr_ck_n   (ddr_ck_n),
-        .ddr_cke    (ddr_cke),
-        .ddr_odt    (ddr_odt),
-        .ddr_reset_n(ddr_reset_n),
-        .ddr_dm     (ddr_dm),
-        .ddr_dq     (ddr_dq),
-        .ddr_dqs    (ddr_dqs),
-        .ddr_dqs_n  (ddr_dqs_n),
+         .ddr_addr   (ddr_addr),
+         .ddr_bank   (ddr_bank),
+         .ddr_cs     (ddr_cs),
+         .ddr_ras    (ddr_ras),
+         .ddr_cas    (ddr_cas),
+         .ddr_we     (ddr_we),
+         .ddr_ck     (ddr_ck),
+         .ddr_ck_n   (ddr_ck_n),
+         .ddr_cke    (ddr_cke),
+         .ddr_odt    (ddr_odt),
+         .ddr_reset_n(ddr_reset_n),
+         .ddr_dm     (ddr_dm),
+         .ddr_dq     (ddr_dq),
+         .ddr_dqs    (ddr_dqs),
+         .ddr_dqs_n  (ddr_dqs_n),
 
-        .video_clk (video_clk),
-        .vout_vs   (vout_vs),
-        .vout_de   (vout_de),
-        .video_de  (video_de),
-        .video_data(video_data)
-    );
+         .video_clk (video_clk),
+         .vout_vs   (vout_vs),
+         .vout_de   (vout_de),
+         .video_de  (video_de),
+         .video_data(video_data)
+     );
 
-    // 视频输出模块
-    AHBVO AHBVO (
-        .video_clk        (video_clk),
-        .serial_clk       (serial_clk),
-        .rst_n            (rst_n),
-        .TMDS_DDR_pll_lock(TMDS_DDR_pll_lock),
+     // 视频输出模块
+     AHBVO AHBVO (
+         .video_clk        (video_clk),
+         .serial_clk       (serial_clk),
+         .rst_n            (rst_n),
+         .TMDS_DDR_pll_lock(TMDS_DDR_pll_lock),
 
-        // 向 ddr 请求数据
-        .vout_vs   (vout_vs),
-        .vout_de   (vout_de),
-        // ddr 输出数据
-        .video_data(video_data),
-        .video_de  (video_de),
+         // 向 ddr 请求数据
+         .vout_vs   (vout_vs),
+         .vout_de   (vout_de),
+         // ddr 输出数据
+         .video_data(video_data),
+         .video_de  (video_de),
 
-        .tmds_clk_n_0(tmds_clk_n_0),
-        .tmds_clk_p_0(tmds_clk_p_0),
-        .tmds_d_n_0  (tmds_d_n_0),
-        .tmds_d_p_0  (tmds_d_p_0)
-    );
+         .tmds_clk_n_0(tmds_clk_n_0),
+         .tmds_clk_p_0(tmds_clk_p_0),
+         .tmds_d_n_0  (tmds_d_n_0),
+         .tmds_d_p_0  (tmds_d_p_0)
+     );
 
 endmodule

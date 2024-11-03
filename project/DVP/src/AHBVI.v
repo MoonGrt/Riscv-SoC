@@ -53,10 +53,11 @@ module AHBVI #(
     wire [7:0] tp0_data_r;
     wire [7:0] tp0_data_g;
     wire [7:0] tp0_data_b;
-    testpattern testpattern_inst_1280 (
-        .I_pxl_clk(video_clk),  // pixel clock
+    testpattern testpattern (
+        // .I_pxl_clk(video_clk),  // pixel clock
+        .I_pxl_clk(cmos_clk),
         .I_rst_n(rst_n),  // low active
-        .I_mode(3'b010),  // data select
+        .I_mode(3'b000),  // data select
         .I_single_r(8'd255),
         .I_single_g(8'd255),
         .I_single_b(8'd255),  // 800x600    // 1024x768   // 1280x720   // 1920x1080
@@ -80,7 +81,8 @@ module AHBVI #(
 
     generate
         if (USE_TPG == "true") begin
-            assign vin_clk  = video_clk;
+            // assign vin_clk  = video_clk;
+            assign vin_clk  = cmos_clk;
             assign vin_vs   = tp0_vs_in;
             assign vin_data = {tp0_data_r[7:3], tp0_data_g[7:2], tp0_data_b[7:3]};
             assign vin_de   = tp0_de_in;

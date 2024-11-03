@@ -1,6 +1,6 @@
 module AHBVP (
-    input        clk,
-    input        rst_n,
+    input clk,
+    input rst_n,
 
     // video input
     input        vin_clk,
@@ -34,10 +34,17 @@ module AHBVP (
 
     parameter START_X = 0;
     parameter START_Y = 0;
-    parameter END_X = 12'd1280;
-    parameter END_Y = 12'd720;
+    parameter END_X = 12'd1280 / 2;
+    parameter END_Y = 12'd720 / 2;
     parameter OUTPUT_X_RES = 12'd1280 - 1;  //Resolution of output data minus 1
     parameter OUTPUT_Y_RES = 12'd720 - 1;  //Resolution of output data minus 1
+
+    // parameter START_X = 0;
+    // parameter START_Y = 0;
+    // parameter END_X = 12'd1280;
+    // parameter END_Y = 12'd720;
+    // parameter OUTPUT_X_RES = 12'd1280 - 1;  //Resolution of output data minus 1
+    // parameter OUTPUT_Y_RES = 12'd720 - 1;  //Resolution of output data minus 1
 
     // parameter START_X = 0;
     // parameter START_Y = 0;
@@ -46,11 +53,13 @@ module AHBVP (
     // parameter OUTPUT_X_RES = 12'd1280 / 2 - 1;  //Resolution of output data minus 1
     // parameter OUTPUT_Y_RES = 12'd720 / 2 - 1;  //Resolution of output data minus 1
 
-    reg                                algorithm_sel = 1;
-    wire                               algorithm_dataValid;
+    reg algorithm_sel = 1;
+    wire algorithm_dataValid;
     wire [VIO_DATA_WIDTH*CHANNELS-1:0] algorithm_data;
-    wire                               de_i = vin_de;
-    wire [VIO_DATA_WIDTH*CHANNELS-1:0] rgb_i = {vp_data[15:11], 3'b0, vp_data[10:5], 2'b0, vp_data[4:0], 3'b0};
+    wire de_i = vin_de;
+    wire [VIO_DATA_WIDTH*CHANNELS-1:0] rgb_i = {
+        vin_data[15:11], 3'b0, vin_data[10:5], 2'b0, vin_data[4:0], 3'b0
+    };
     algorithm #(
         .H_DISP(12'd1280),
         .V_DISP(12'd720),
@@ -76,7 +85,7 @@ module AHBVP (
 
         .algorithm_sel(algorithm_sel),
         .hs_i         (),
-        .vs_i         (vin_vs),  // 检查极性
+        .vs_i         (vin_vs),         // 检查极性
         .de_i         (de_i),
         .rgb_i        (rgb_i),
 
@@ -84,12 +93,9 @@ module AHBVP (
         .algorithm_dataValid(algorithm_dataValid)
     );
 
-    assign vp_clk = clk;
-    assign vp_vs = vin_vs;
-    assign vp_de = algorithm_dataValid;
-    assign vp_data = algorithm_data[VIO_DATA_WIDTH*CHANNELS-1:VIO_DATA_WIDTH*2-1];
-
-
-
+    assign vp_clk  = clk;
+    assign vp_vs   = vin_vs;
+    assign vp_de   = algorithm_dataValid;
+    assign vp_data = {algorithm_data[23:19], algorithm_data[15:10], algorithm_data[7:3]};
 
 endmodule

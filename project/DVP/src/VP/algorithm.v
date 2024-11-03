@@ -108,7 +108,6 @@ module algorithm #(
         .DATA_WIDTH(24),
         .FIFO_DEPTH(1024)
     ) FIFO (
-
         /*i*/.Reset(~state),  //System Reset
 
         /*i*/.WrClk (clk),           //(I)Wirte Clock

@@ -1,5 +1,6 @@
 project/DVP/impl/
 project/SoC/impl/
+project/DVP/src/gowin_workfile
 project/Murax/Murax.cache/
 project/Murax/Murax.hw/
 project/Murax/Murax.ip_user_files/

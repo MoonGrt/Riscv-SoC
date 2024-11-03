@@ -74,7 +74,7 @@ module AHBVO (
         .V_BP(16'd20),
         .HS_POL(1'b1),
         .VS_POL(1'b1)
-    ) vga_timing_m0 (
+    ) vga_timing (
         .clk(video_clk),
         .rst(~rst_n),
         .hs (vout_hs),
@@ -82,7 +82,7 @@ module AHBVO (
         .de (vout_de)
     );
 
-    DVI_TX DVI_TX_Top_inst0 (
+    DVI_TX DVI_TX (
         .I_rst_n     (hdmi4_rst_n),  // asynchronous reset, low active
         .I_serial_clk(serial_clk),
 

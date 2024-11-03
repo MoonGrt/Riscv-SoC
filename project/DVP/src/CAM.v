@@ -70,7 +70,7 @@ module CAM (
     timing_check #(
         .REFCLK_FREQ_MHZ(50),
         .IS_2Pclk_1Pixel("true")
-    ) timing_check_5640 (
+    ) timing_check (
         .Refclk     (clk),
         .pxl_clk    (cmos_pclk),
         .rst_n      (rst_n),
@@ -91,13 +91,13 @@ module CAM (
         .HTotal(13'd1892),
         .VTotal(13'd740),
         .USE_4vs3_frame("false")
-    ) lut_ov5640_rgb565_m0 (
+    ) lut_ov5640_rgb565 (
         .lut_index(lut_index),
         .lut_data (lut_data)
     );
 
     // I2C master controller
-    i2c_config i2c_config_m0 (
+    i2c_config i2c_config (
         .rst           (~cmos_start_config),
         .clk           (clk),
         .clk_div_cnt   (16'd500),
@@ -113,7 +113,7 @@ module CAM (
     );
 
     // CMOS sensor 8bit data is converted to 16bit data
-    cmos_8_16bit cmos_8_16bit_m0 (
+    cmos_8_16bit cmos_8_16bit (
         .rst    (~rst_n),
         .pclk   (cmos_pclk),
         .pdata_i(cmos_db),
@@ -143,6 +143,7 @@ module cmos_8_16bit (
         pdata_i_d0 <= pdata_i;
     end
 
+    reg de_d1;  // ,de_d2;
     always@(posedge pclk)
 	begin
         if (de_i & !de_d1) x_cnt <= 1;
@@ -155,7 +156,6 @@ module cmos_8_16bit (
         else de_o <= 1'b0;
     end
 
-    reg de_d1;  // ,de_d2;
     always @(posedge pclk) begin
         de_d1  <= de_i;
         // de_d2 <= de_d1;
