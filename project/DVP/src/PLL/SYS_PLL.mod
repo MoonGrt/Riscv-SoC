@@ -7,7 +7,7 @@
 
 -mod_name SYS_PLL
 -file_name SYS_PLL
--path F:/Project/Sipeed/FPGA/Tang_Mega/Project/DVP/src/PLL/
+-path F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/project/DVP/src/PLL/
 -type PLL_ADV
 -file_type vlg
 -ssc false
@@ -41,7 +41,7 @@
 -en_clkout1 true
 -clkout1_bypass false
 -dyn_odiv1_sel false
--odiv1_sel 127
+-odiv1_sel 12
 -dyn_dt1_sel false
 -clkout1_dt_dir 1
 -clkout1_dt_step 0

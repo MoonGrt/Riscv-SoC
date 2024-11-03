@@ -1,5 +1,5 @@
 module top #(
-    parameter USE_TPG = "true"
+    parameter USE_TPG = "false"
 ) (
     input clk,
     input rst_n,
@@ -72,11 +72,12 @@ module top #(
     wire        serial_clk;
     wire        video_clk;  // video pixel clock
     wire        memory_clk;
+    wire        clk_vpm;
     wire        DDR_pll_lock;
     wire        TMDS_DDR_pll_lock;
     HDMI_PLL HDMI_PLL (
         .clkin  (clk),               // input clk
-        .clkout0(serial_clk),        // output clk x5ni
+        .clkout0(serial_clk),        // output clk x5
         .clkout1(video_clk),         // output clk x1
         .lock   (TMDS_DDR_pll_lock)  // output lock
     );
@@ -84,7 +85,7 @@ module top #(
     SYS_PLL SYS_PLL (
         .clkin  (clk),
         .clkout0(cmos_clk),
-        .clkout1(aux_clk),
+        .clkout1(clk_vpm),
         .clkout2(memory_clk),
         .lock   (DDR_pll_lock),
         .reset  (1'b0),
@@ -121,7 +122,7 @@ module top #(
 
     // 视频处理模块
     AHBVP AHBVP (
-        .clk     (clk),
+        .clk_vpm  (clk_vpm),
         .rst_n   (rst_n),
 
         .vi_clk (vi_clk),

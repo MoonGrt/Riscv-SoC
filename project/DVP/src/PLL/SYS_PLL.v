@@ -5,7 +5,7 @@
 //Part Number: GW5AST-LV138FPG676AES
 //Device: GW5AST-138
 //Device Version: B
-//Created Time: Sun Oct 27 20:20:29 2024
+//Created Time: Sun Nov  3 19:00:21 2024
 
 module SYS_PLL (lock, clkout0, clkout1, clkout2, clkin, reset, enclk0, enclk1, enclk2);
 
@@ -85,7 +85,7 @@ defparam PLL_inst.FCLKIN = "50";
 defparam PLL_inst.IDIV_SEL = 1;
 defparam PLL_inst.FBDIV_SEL = 1;
 defparam PLL_inst.ODIV0_SEL = 50;
-defparam PLL_inst.ODIV1_SEL = 127;
+defparam PLL_inst.ODIV1_SEL = 12;
 defparam PLL_inst.ODIV2_SEL = 3;
 defparam PLL_inst.ODIV3_SEL = 8;
 defparam PLL_inst.ODIV4_SEL = 8;

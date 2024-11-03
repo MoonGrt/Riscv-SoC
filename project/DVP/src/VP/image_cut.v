@@ -26,9 +26,10 @@ module image_cut #(
 
     reg [11:0] pixel_x = 0;
     reg [11:0] pixel_y = 0;
-    assign rgb_o = de_o ? rgb_i : 24'dz;
+    assign rgb_o = de_o ? rgb_i : 24'bz;
     assign de_o  = ((pixel_x >= start_x && pixel_x < end_x) && (pixel_y >= start_y && pixel_y < end_y)) ? de_i & state : 0;
-    assign vs_o  = (start_x == 0 && start_y == 0) ? vs_i : (pixel_x == start_x) & (pixel_y == start_y);
+    // assign vs_o  = (start_x == 0 && start_y == 0) ? vs_i : (pixel_x == start_x) & (pixel_y == start_y);
+    assign vs_o = vs_i;
 
     always @(posedge clk) begin
         if (vs_i) state <= 1;

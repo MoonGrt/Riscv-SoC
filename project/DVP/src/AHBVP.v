@@ -1,5 +1,5 @@
 module AHBVP (
-    input clk,
+    input clk_vp,
     input rst_n,
 
     // video input
@@ -68,37 +68,6 @@ module AHBVP (
     wire vs_i = vi_vs;
     wire de_i = vi_de;
     wire [DATA_WIDTH*CHANNELS-1:0] rgb_i = {vi_data[15:11], 3'b0, vi_data[10:5], 2'b0, vi_data[4:0], 3'b0};
-    // algorithm #(
-    //     .H_DISP(12'd1280),
-    //     .V_DISP(12'd720),
-
-    //     .DATA_WIDTH (DATA_WIDTH),
-    //     .CHANNELS   (CHANNELS),
-    //     .BUFFER_SIZE(BUFFER_SIZE),
-
-    //     .INPUT_X_RES_WIDTH (INPUT_X_RES_WIDTH),
-    //     .INPUT_Y_RES_WIDTH (INPUT_Y_RES_WIDTH),
-    //     .OUTPUT_X_RES_WIDTH(OUTPUT_X_RES_WIDTH),
-    //     .OUTPUT_Y_RES_WIDTH(OUTPUT_Y_RES_WIDTH)
-    // ) algorithm (
-    //     .clk   (vi_clk),
-    //     .clk_2x(clk),
-
-    //     .START_X   (START_X),
-    //     .START_Y   (START_Y),
-    //     .END_X     (END_X),
-    //     .END_Y     (END_Y),
-    //     .outputXRes(OUTPUT_X_RES),
-    //     .outputYRes(OUTPUT_Y_RES),
-
-    //     .algorithm_sel(algorithm_sel),
-    //     .vs_i         (vi_vs),         // 检查极性
-    //     .de_i         (de_i),
-    //     .rgb_i        (rgb_i),
-
-    //     .algorithm_data     (algorithm_data),
-    //     .algorithm_dataValid(algorithm_dataValid)
-    // );
 
     wire [ INPUT_X_RES_WIDTH-1:0] inputXRes = END_X - START_X - 1;  //Resolution of input data minus 1
     wire [ INPUT_Y_RES_WIDTH-1:0] inputYRes = END_Y - START_Y - 1;
@@ -143,7 +112,7 @@ module AHBVP (
 
     reg vs_reg1, vs_reg2;
     assign vs = vs_reg1 & ~vs_reg2;
-    always @(posedge clk) begin
+    always @(posedge clk_vp) begin
         vs_reg1 <= image_cut_vs;
         vs_reg2 <= vs_reg1;
     end
@@ -161,7 +130,7 @@ module AHBVP (
         /*o*/.WrFull(fifo1_full),    //(I)Write Full
         /*i*/.WrData(image_cut_rgb), //(I)Write Data
 
-        /*i*/.RdClk  (clk),          //(I)Read Clock
+        /*i*/.RdClk  (clk_vp),       //(I)Read Clock
         /*i*/.RdEn   (scaler_re),    //(I)Read Enable
         /*o*/.RdDNum (),             //(O)Radd Data Number In Fifo
         /*o*/.RdEmpty(fifo1_empty),  //(O)Read FifoEmpty
@@ -181,7 +150,7 @@ module AHBVP (
         .SCALE_INT_BITS    (SCALE_INT_BITS),
         .SCALE_FRAC_BITS   (SCALE_FRAC_BITS)
     ) streamScaler (
-        .clk(clk),
+        .clk(clk_vp),
 
         .dIn     (fifo1_data),
         .dInValid(scaler_re & ~fifo1_empty),
@@ -212,20 +181,20 @@ module AHBVP (
     assign algorithm_dataValid = fill_dataValid;
     pixel_cnt pixel_cnt (
         .rst(image_cut_vs),
-        .clk(clk),
+        .clk(clk_vp),
         .de (fill_dataValid)
     );
     fill_brank #(
         .H_DISP(H_DISP)
     ) fill_brank (
-        .clk        (clk),
+        .clk        (clk_vp),
         .data_i     (scaler_data),
         .dataValid_i(scaler_dataValid),
         .data_o     (fill_data),
         .dataValid_o(fill_dataValid)
     );
 
-    assign vp_clk  = clk;
+    assign vp_clk  = clk_vp;
     assign vp_vs   = vi_vs;
     assign vp_de   = algorithm_dataValid;
     assign vp_data = {algorithm_data[23:19], algorithm_data[15:10], algorithm_data[7:3]};
