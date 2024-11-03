@@ -17,7 +17,6 @@
         <File path="src/PLL/HDMI_PLL.v" type="file.verilog" enable="1"/>
         <File path="src/PLL/SYS_PLL.v" type="file.verilog" enable="1"/>
         <File path="src/VP/FIFO.v" type="file.verilog" enable="1"/>
-        <File path="src/VP/algorithm.v" type="file.verilog" enable="1"/>
         <File path="src/VP/fill_brank.v" type="file.verilog" enable="1"/>
         <File path="src/VP/image_cut.v" type="file.verilog" enable="1"/>
         <File path="src/VP/pixel_cnt.v" type="file.verilog" enable="1"/>
@@ -27,6 +26,6 @@
         <File path="src/top.v" type="file.verilog" enable="1"/>
         <File path="src/top.cst" type="file.cst" enable="1"/>
         <File path="src/top.sdc" type="file.sdc" enable="1"/>
-        <File path="src/top.rao" type="file.gao" enable="1"/>
+        <File path="src/top.rao" type="file.gao" enable="0"/>
     </FileList>
 </Project>

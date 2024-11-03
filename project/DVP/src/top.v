@@ -122,7 +122,7 @@ module top #(
 
     // 视频处理模块
     AHBVP AHBVP (
-        .clk_vpm  (clk_vpm),
+        .clk_vpm (clk_vpm),
         .rst_n   (rst_n),
 
         .vi_clk (vi_clk),
