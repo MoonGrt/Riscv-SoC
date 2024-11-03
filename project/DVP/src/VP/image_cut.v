@@ -1,9 +1,9 @@
 `timescale 1ns / 1ps
 
 module image_cut #(
-    parameter H_DISP = 12'd1920,
-    parameter V_DISP = 12'd1080,
-    parameter INPUT_X_RES_WIDTH = 11,  //Widths of input/output resolution control signals
+    parameter H_DISP = 12'd1280,
+    parameter V_DISP = 12'd720,
+    parameter INPUT_X_RES_WIDTH = 11,  // Widths of input/output resolution control signals
     parameter INPUT_Y_RES_WIDTH = 11,
     parameter OUTPUT_X_RES_WIDTH = 11,
     parameter OUTPUT_Y_RES_WIDTH = 11

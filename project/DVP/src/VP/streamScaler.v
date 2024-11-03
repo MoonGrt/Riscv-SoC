@@ -262,44 +262,44 @@ module streamScaler #(
         for (channel = 0; channel < CHANNELS; channel = channel + 1) begin : blend_mult_generate
             always @(posedge clk or posedge start) begin
                 if (start) begin
-                    //  // productxx[channel] <= 0;
-                    //  product00[ (DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel] <= 0;
-                    //  product01[ (DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel] <= 0;
-                    //  product10[ (DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel] <= 0;
-                    //  product11[ (DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel] <= 0;
+                    // productxx[channel] <= 0;
+                    product00[(DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel] <= 0;
+                    product01[(DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel] <= 0;
+                    product10[(DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel] <= 0;
+                    product11[(DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel] <= 0;
 
-                    //  // readDataxxReg[channel] <= 0;
-                    //  readData00Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <= 0;
-                    //  readData01Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <= 0;
-                    //  readData10Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <= 0;
-                    //  readData11Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <= 0;
+                    // readDataxxReg[channel] <= 0;
+                    readData00Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <= 0;
+                    readData01Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <= 0;
+                    readData10Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <= 0;
+                    readData11Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <= 0;
 
-                    //  dOut[channel] <= 0;
-                    //  dOut[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <= 0;
+                    // dOut[channel] <= 0;
+                    dOut[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <= 0;
                 end else begin
                     // readDataxxReg[channel] <= readDataxx[channel];
-                    readData00Reg[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ] <= readData00[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ];
+                    readData00Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <= readData00[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel];
                     if (fix)
-                        readData01Reg[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ] <= readData00[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ];
+                        readData01Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <= readData00[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel];
                     else
-                        readData01Reg[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ] <= readData01[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ];
-                    readData10Reg[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ] <= readData10[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ];
+                        readData01Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <= readData01[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel];
+                    readData10Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <= readData10[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel];
                     if (fix)
-                        readData11Reg[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ] <= readData10[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ];
+                        readData11Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <= readData10[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel];
                     else
-                        readData11Reg[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ] <= readData11[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ];
+                        readData11Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <= readData11[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel];
 
                     // productxx[channel] <= readDataxxReg[channel] * coeffxx
-                    product00[ (DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel] <= readData00Reg[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ] * coeff00;
-                    product01[ (DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel] <= readData01Reg[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ] * coeff01;
-                    product10[ (DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel] <= readData10Reg[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ] * coeff10;
-                    product11[ (DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel] <= readData11Reg[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ] * coeff11;
+                    product00[(DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel] <= readData00Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] * coeff00;
+                    product01[(DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel] <= readData01Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] * coeff01;
+                    product10[(DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel] <= readData10Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] * coeff10;
+                    product11[(DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel] <= readData11Reg[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] * coeff11;
 
                     // dOut[channel] <= (((product00[channel]) + 
                     //                   (product01[channel]) +
                     //                   (product10[channel]) +
                     //                   (product11[channel])) >> FRACTION_BITS) & ({ {COEFF_WIDTH{1'b0}}, {DATA_WIDTH{1'b1}} });
-                    dOut[ DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel ] <=
+                    dOut[DATA_WIDTH*(channel+1)-1 : DATA_WIDTH*channel] <=
                         (((product00[ (DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel]) + 
                         (product01[ (DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel]) +
                         (product10[ (DATA_WIDTH+COEFF_WIDTH)*(channel+1)-1 : (DATA_WIDTH+COEFF_WIDTH)*channel]) +
@@ -437,7 +437,7 @@ module streamScaler #(
         .DATA_WIDTH(DATA_WIDTH * CHANNELS),
         .ADDRESS_WIDTH(INPUT_X_RES_WIDTH),  // Controls width of RAMs
         .BUFFER_SIZE(BUFFER_SIZE)  // Number of RAMs
-    ) ramRB (
+    ) ramFifo (
         .clk         (clk),
         .rst         (start),
         .advanceRead1(advanceRead1),
