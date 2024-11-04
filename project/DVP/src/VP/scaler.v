@@ -57,7 +57,7 @@ module scaler #(
         .DATA_WIDTH(24),
         .FIFO_DEPTH(1024)
     ) FIFO (
-        /*i*/.Reset(~state | per_vs),  // System Reset
+        /*i*/.Reset(~state | pre_vs),  // System Reset
 
         /*i*/.WrClk (pre_clk),  // (I)Wirte Clock
         /*i*/.WrEn  (pre_de),   // (I)Write Enable
@@ -90,19 +90,19 @@ module scaler #(
         .dIn     (fifo_data),
         .dInValid(scaler_re & ~fifo_empty),
         .nextDin (scaler_re),
-        .start   (per_vs),
+        .start   (pre_vs),
 
         .dOut     (scaler_data),
         .dOutValid(scaler_dataValid),
         .nextDout (1'b1),
 
         // Control
-        .inputXRes(inputXRes),  // Input data number of pixels per line
-        .inputYRes(inputYRes),
+        .inputXRes (inputXRes),  // Input data number of pixels per line
+        .inputYRes (inputYRes),
         .outputXRes(outputXRes),  // Resolution of output data
         .outputYRes(outputYRes),
-        .xScale(xScale),  // Scaling factors. Input resolution scaled by 1/xScale. Format Q4.14
-        .yScale(yScale),  // Scaling factors. Input resolution scaled by 1/yScale. Format Q4.14
+        .xScale    (xScale),  // Scaling factors. Input resolution scaled by 1/xScale. Format Q4.14
+        .yScale    (yScale),  // Scaling factors. Input resolution scaled by 1/yScale. Format Q4.14
 
         .nearestNeighbor(algorithm_sel),
         .inputDiscardCnt(0),  // Number of input pixels to discard before processing data. Used for clipping
