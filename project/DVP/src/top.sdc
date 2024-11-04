@@ -16,13 +16,13 @@ create_clock -name cmos_pclk -period 23.81 -waveform {0 11.9} [get_ports {cmos_p
 create_generated_clock -name cmos_pclk_div2 -source [get_ports {cmos_pclk}] -master_clock cmos_pclk -divide_by 2 -multiply_by 1 [get_nets {vi_clk}]
 create_clock -name cmos_vsync -period 10000 -waveform {0 5000} [get_ports {cmos_vsync}]
 
-set_clock_groups -asynchronous 
-                               -group [get_clocks {clk_74_25}] 
-                               -group [get_clocks {clk_x1}] 
-                               -group [get_clocks {mem_clk}] 
-                               -group [get_clocks {cmos_pclk}] 
-                               -group [get_clocks {cmos_pclk_div2}] 
-                               -group [get_clocks {cmos_vsync}] 
+set_clock_groups -asynchronous
+                               -group [get_clocks {clk_74_25}]
+                               -group [get_clocks {clk_x1}]
+                               -group [get_clocks {mem_clk}]
+                               -group [get_clocks {cmos_pclk}]
+                               -group [get_clocks {cmos_pclk_div2}]
+                               -group [get_clocks {cmos_vsync}]
                                -group [get_clocks {clk}]
 
 //report_timing -hold -from_clock [get_clocks {clk*}] -to_clock [get_clocks {clk*}] -max_paths 25 -max_common_paths 1

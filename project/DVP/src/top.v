@@ -16,9 +16,6 @@ module top #(
     output       cmos_pwdn,   // cmos power down
     output [2:0] i2c_sel,
 
-    // LED interface
-    output [4:0] state_led,
-
     // DDR3 interface
     output [16-1:0] ddr_addr,     // ROW_WIDTH=16
     output [ 3-1:0] ddr_bank,     // BANK_WIDTH=3

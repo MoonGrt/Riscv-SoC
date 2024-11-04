@@ -6,12 +6,10 @@ module scaler #(
 ) (
     input wire EN,     // Enable
 
-    input wire [ INPUT_X_RES_WIDTH-1:0] START_X,
-    input wire [ INPUT_Y_RES_WIDTH-1:0] START_Y,
-    input wire [OUTPUT_X_RES_WIDTH-1:0] END_X,
-    input wire [OUTPUT_Y_RES_WIDTH-1:0] END_Y,
-    input wire [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES,  // Resolution of input data minus 1
-    input wire [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES,
+    input wire [ INPUT_X_RES_WIDTH-1:0] inputXRes,  // Resolution of input data minus 1
+    input wire [ INPUT_Y_RES_WIDTH-1:0] inputYRes,
+    input wire [OUTPUT_X_RES_WIDTH-1:0] outputXRes,  // Resolution of input data minus 1
+    input wire [OUTPUT_Y_RES_WIDTH-1:0] outputYRes,
 
     // Image data prepred to be processed
     input wire        pre_clk,  // Prepared Image data clock
@@ -23,7 +21,7 @@ module scaler #(
     input  wire        post_clk,  // Processed Image data clock
     output wire        post_vs,   // Processed Image data vs valid signal
     output wire        post_de,   // Processed Image data output/capture enable clock
-    output wire [23:0] post_data  // Prepared Image data
+    output wire [23:0] post_data  // Processed Image data
 );
     // Scaler Parameters
     parameter DATA_WIDTH = 8;
@@ -36,12 +34,8 @@ module scaler #(
     parameter SCALE_FRAC_BITS = 14;  // Don't modify
     parameter SCALE_BITS = SCALE_INT_BITS + SCALE_FRAC_BITS;
 
-    wire [ INPUT_X_RES_WIDTH-1:0] inputXRes = END_X - START_X - 1;  // Resolution of input data minus 1
-    wire [ INPUT_Y_RES_WIDTH-1:0] inputYRes = END_Y - START_Y - 1;
-    wire [OUTPUT_X_RES_WIDTH-1:0] outputXRes = OUTPUT_X_RES;  // Resolution of input data minus 1
-    wire [OUTPUT_Y_RES_WIDTH-1:0] outputYRes = OUTPUT_Y_RES;
-    wire [        SCALE_BITS-1:0] xScale = 32'h4000 * (inputXRes + 1) / (outputXRes + 1);  // Scaling factors. Input resolution scaled up by 1/xScale. Format Q SCALE_INT_BITS.SCALE_FRAC_BITS
-    wire [        SCALE_BITS-1:0] yScale = 32'h4000 * (inputYRes + 1) / (outputYRes + 1);  // Scaling factors. Input resolution scaled up by 1/yScale. Format Q SCALE_INT_BITS.SCALE_FRAC_BITS
+    wire [SCALE_BITS-1:0] xScale = 32'h4000 * (inputXRes + 1) / (outputXRes + 1);  // Scaling factors. Input resolution scaled up by 1/xScale. Format Q SCALE_INT_BITS.SCALE_FRAC_BITS
+    wire [SCALE_BITS-1:0] yScale = 32'h4000 * (inputYRes + 1) / (outputYRes + 1);  // Scaling factors. Input resolution scaled up by 1/yScale. Format Q SCALE_INT_BITS.SCALE_FRAC_BITS
 
     wire fifo_empty;
     wire [23:0] fifo_data;

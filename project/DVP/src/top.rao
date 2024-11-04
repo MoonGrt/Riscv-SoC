@@ -4,33 +4,62 @@
     <Mode>Standard</Mode>
     <AoCore index="0" sample_clock="clk" trig_type="0" storage_depth="16384" window_num="1" capture_amount="8192" implementation="0" trigger_pos="512" module_name="top" force_trigger_by_falling_edge="false" capture_init_data_enabled="false">
         <SignalList>
-            <Bus capture_enable="true" name="AHBVP/image_cut_rgb[23:0]">
-                <Signal>AHBVP/image_cut_rgb[23]</Signal>
-                <Signal>AHBVP/image_cut_rgb[22]</Signal>
-                <Signal>AHBVP/image_cut_rgb[21]</Signal>
-                <Signal>AHBVP/image_cut_rgb[20]</Signal>
-                <Signal>AHBVP/image_cut_rgb[19]</Signal>
-                <Signal>AHBVP/image_cut_rgb[18]</Signal>
-                <Signal>AHBVP/image_cut_rgb[17]</Signal>
-                <Signal>AHBVP/image_cut_rgb[16]</Signal>
-                <Signal>AHBVP/image_cut_rgb[15]</Signal>
-                <Signal>AHBVP/image_cut_rgb[14]</Signal>
-                <Signal>AHBVP/image_cut_rgb[13]</Signal>
-                <Signal>AHBVP/image_cut_rgb[12]</Signal>
-                <Signal>AHBVP/image_cut_rgb[11]</Signal>
-                <Signal>AHBVP/image_cut_rgb[10]</Signal>
-                <Signal>AHBVP/image_cut_rgb[9]</Signal>
-                <Signal>AHBVP/image_cut_rgb[8]</Signal>
-                <Signal>AHBVP/image_cut_rgb[7]</Signal>
-                <Signal>AHBVP/image_cut_rgb[6]</Signal>
-                <Signal>AHBVP/image_cut_rgb[5]</Signal>
-                <Signal>AHBVP/image_cut_rgb[4]</Signal>
-                <Signal>AHBVP/image_cut_rgb[3]</Signal>
-                <Signal>AHBVP/image_cut_rgb[2]</Signal>
-                <Signal>AHBVP/image_cut_rgb[1]</Signal>
-                <Signal>AHBVP/image_cut_rgb[0]</Signal>
+            <Signal capture_enable="true">AHBVP/de_i</Signal>
+            <Signal capture_enable="true">AHBVP/scaler/pre_de</Signal>
+            <Bus capture_enable="true" name="AHBVP/scaler/pre_data[23:0]">
+                <Signal>AHBVP/scaler/pre_data[23]</Signal>
+                <Signal>AHBVP/scaler/pre_data[22]</Signal>
+                <Signal>AHBVP/scaler/pre_data[21]</Signal>
+                <Signal>AHBVP/scaler/pre_data[20]</Signal>
+                <Signal>AHBVP/scaler/pre_data[19]</Signal>
+                <Signal>AHBVP/scaler/pre_data[18]</Signal>
+                <Signal>AHBVP/scaler/pre_data[17]</Signal>
+                <Signal>AHBVP/scaler/pre_data[16]</Signal>
+                <Signal>AHBVP/scaler/pre_data[15]</Signal>
+                <Signal>AHBVP/scaler/pre_data[14]</Signal>
+                <Signal>AHBVP/scaler/pre_data[13]</Signal>
+                <Signal>AHBVP/scaler/pre_data[12]</Signal>
+                <Signal>AHBVP/scaler/pre_data[11]</Signal>
+                <Signal>AHBVP/scaler/pre_data[10]</Signal>
+                <Signal>AHBVP/scaler/pre_data[9]</Signal>
+                <Signal>AHBVP/scaler/pre_data[8]</Signal>
+                <Signal>AHBVP/scaler/pre_data[7]</Signal>
+                <Signal>AHBVP/scaler/pre_data[6]</Signal>
+                <Signal>AHBVP/scaler/pre_data[5]</Signal>
+                <Signal>AHBVP/scaler/pre_data[4]</Signal>
+                <Signal>AHBVP/scaler/pre_data[3]</Signal>
+                <Signal>AHBVP/scaler/pre_data[2]</Signal>
+                <Signal>AHBVP/scaler/pre_data[1]</Signal>
+                <Signal>AHBVP/scaler/pre_data[0]</Signal>
             </Bus>
-            <Signal capture_enable="true">AHBVP/image_cut_de</Signal>
+            <Signal capture_enable="true">AHBVP/scaler/fifo_empty</Signal>
+            <Signal capture_enable="true">AHBVP/scaler/scaler_re</Signal>
+            <Bus capture_enable="true" name="AHBVP/scaler/fifo_data[23:0]">
+                <Signal>AHBVP/scaler/fifo_data[23]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[22]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[21]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[20]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[19]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[18]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[17]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[16]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[15]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[14]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[13]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[12]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[11]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[10]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[9]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[8]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[7]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[6]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[5]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[4]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[3]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[2]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[1]</Signal>
+                <Signal>AHBVP/scaler/fifo_data[0]</Signal>
+            </Bus>
             <Signal capture_enable="true">AHBVP/post_de_scaler</Signal>
             <Bus capture_enable="true" name="AHBVP/post_data_scaler[23:0]">
                 <Signal>AHBVP/post_data_scaler[23]</Signal>
@@ -62,7 +91,7 @@
         <Triggers>
             <Trigger index="0">
                 <SignalList>
-                    <Signal>AHBVI/vi_vs</Signal>
+                    <Signal>AHBVP/image_cut_de</Signal>
                 </SignalList>
             </Trigger>
             <Trigger index="1"/>
@@ -82,7 +111,7 @@
             <Trigger index="15"/>
         </Triggers>
         <MatchUnits>
-            <MatchUnit index="0" enabled="1" match_type="0" counter_enable="0" counter_width="2" counter="2" countinuous="0" func="0" value0="0" value1="0" trigger="0"/>
+            <MatchUnit index="0" enabled="1" match_type="0" counter_enable="0" counter_width="2" counter="2" countinuous="0" func="0" value0="1" value1="0" trigger="0"/>
             <MatchUnit index="1" enabled="0" match_type="0" counter_enable="0" counter_width="2" counter="2" countinuous="0" func="0" value0="" value1=""/>
             <MatchUnit index="2" enabled="0" match_type="0" counter_enable="0" counter_width="2" counter="2" countinuous="0" func="0" value0="" value1=""/>
             <MatchUnit index="3" enabled="0" match_type="0" counter_enable="0" counter_width="2" counter="2" countinuous="0" func="0" value0="" value1=""/>
@@ -103,5 +132,5 @@
             <Expression>M0</Expression>
         </Expressions>
     </AoCore>
-    <GAO_ID>1011010010001111</GAO_ID>
+    <GAO_ID>1110001101111000</GAO_ID>
 </GAO_CONFIG>

@@ -4,18 +4,6 @@ IO_PORT "clk" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 IO_LOC "rst_n" K16;
 IO_PORT "rst_n" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 
-//============ LED ===============
-IO_LOC "state_led[0]" J14;
-IO_LOC "state_led[1]" R26;
-IO_LOC "state_led[2]" L20;
-IO_LOC "state_led[3]" M25;
-IO_LOC "state_led[4]" N21;
-IO_PORT "state_led[0]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
-IO_PORT "state_led[1]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
-IO_PORT "state_led[2]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
-IO_PORT "state_led[3]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
-IO_PORT "state_led[4]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
-
 //============ CAM ===============
 IO_LOC "i2c_sel[0]" N19;
 IO_LOC "i2c_sel[1]" P19;
