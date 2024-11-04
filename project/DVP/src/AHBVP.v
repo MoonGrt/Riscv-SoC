@@ -62,6 +62,7 @@ module AHBVP (
         .OUTPUT_Y_RES_WIDTH(OUTPUT_Y_RES_WIDTH)
     ) image_cut (
         .clk(vi_clk),
+        .clk_vpm(clk_vpm),
         .rst_n(rst_n),
 
         .start_x(START_X),
@@ -91,9 +92,9 @@ module AHBVP (
         .clk      (vi_clk),
         .rst_n    (rst_n),
         .mode     (2'b01),  // 00: bypass, 01: gaussian, 10: median, 11: mean
-        .per_vs   (image_cut_vs),
-        .per_de   (image_cut_de),
-        .per_data (image_cut_rgb),
+        .pre_vs   (image_cut_vs),
+        .pre_de   (image_cut_de),
+        .pre_data (image_cut_rgb),
         .post_vs  (post_vs_filter),
         .post_de  (post_de_filter),
         .post_data(post_data_filter)
@@ -124,12 +125,12 @@ module AHBVP (
         .outputYRes (outputYRes),
 
         .pre_clk  (vi_clk),
-        // .pre_vs   (image_cut_vs),
-        // .pre_de   (image_cut_de),
-        // .pre_data (image_cut_rgb),
-        .pre_vs   (post_vs_filter),
-        .pre_de   (post_de_filter),
-        .pre_data (post_data_filter),
+        .pre_vs   (image_cut_vs),
+        .pre_de   (image_cut_de),
+        .pre_data (image_cut_rgb),
+        // .pre_vs   (post_vs_filter),
+        // .pre_de   (post_de_filter),
+        // .pre_data (post_data_filter),
         .post_clk (clk_vpm),
         .post_vs  (post_vs_scaler),
         .post_de  (post_de_scaler),
@@ -156,9 +157,9 @@ module AHBVP (
     //--------------------------------------------------------------------------
     assign vp_clk  = clk_vpm;
     assign vp_vs   = post_vs_scaler;
-    assign vp_de   = fill_dataValid;
-    assign vp_data = {fill_data[23:19], fill_data[15:10], fill_data[7:3]};
-    // assign vp_de   = post_de_scaler;
-    // assign vp_data = {post_data_scaler[23:19], post_data_scaler[15:10], post_data_scaler[7:3]};
+    // assign vp_de   = fill_dataValid;
+    // assign vp_data = {fill_data[23:19], fill_data[15:10], fill_data[7:3]};
+    assign vp_de   = post_de_scaler;
+    assign vp_data = {post_data_scaler[23:19], post_data_scaler[15:10], post_data_scaler[7:3]};
 
 endmodule

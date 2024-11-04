@@ -8,14 +8,14 @@ module filter #(
     input wire [1:0] mode,  // enable
 
     // Image data prepred to be processed
-    input wire        per_vs,   // Prepared Image data vs valid signal
-    input wire        per_de,   // Prepared Image data output/capture enable clock
-    input wire [23:0] per_data, // Prepared Image data
+    input wire        pre_vs,   // Prepared Image data vs valid signal
+    input wire        pre_de,   // Prepared Image data output/capture enable clock
+    input wire [23:0] pre_data, // Prepared Image data
 
     // Image data has been processed
     output reg        post_vs,   // Processed Image data vs valid signal
     output reg        post_de,   // Processed Image data output/capture enable clock
-    output reg [23:0] post_data  // Prepared Image data
+    output reg [23:0] post_data  // Processed Image data
 );
 
     wire gaussian_en = (mode == 2'b01);  // enable gaussian filter
@@ -30,14 +30,14 @@ module filter #(
         .IMG_VDISP(IMG_VDISP)
     ) gaussian (
         // global clock
-        .clk  (vi_clk),    // cmos video pixel clock
-        .rst_n(rst_n),     // global reset
+        .clk  (clk),  // cmos video pixel clock
+        .rst_n(rst_n),  // global reset
         .EN   (gaussian_en),  // enable
 
         // Image data prepred to be processd
-        .per_vs  (per_vs),  // Prepared Image data vs valid signal
-        .per_de  (per_de),  // Prepared Image data output/capture enable clock
-        .per_data(per_data),
+        .pre_vs  (pre_vs),  // Prepared Image data vs valid signal
+        .pre_de  (pre_de),  // Prepared Image data output/capture enable clock
+        .pre_data(pre_data),
 
         // Image data has been processd
         .post_vs  (post_vs_gaussian),  // Processed Image data vs valid signal
@@ -54,15 +54,15 @@ module filter #(
     //     .IMG_VDISP(V_DISP)
     // ) median (
     //     // global clock
-    //     .clk  (vi_clk),  // cmos video pixel clock
-    //     .rst_n(rst_n),   // global reset
+    //     .clk  (clk),  // cmos video pixel clock
+    //     .rst_n(rst_n),  // global reset
 
     //     // Image data prepred to be processd
-    //     .per_vs(post_vs_ycbcr),  // Prepared Image data vs valid signal
-    //     .per_clken(post_clken_ycbcr),  // Prepared Image data output/capture enable clock
-    //     .per_y(img_y),  // Prepared Image brightness input
-    //     .per_Cr(img_Cr),
-    //     .per_Cb(img_Cb),
+    //     .pre_vs(post_vs_ycbcr),  // Prepared Image data vs valid signal
+    //     .pre_clken(post_clken_ycbcr),  // Prepared Image data output/capture enable clock
+    //     .pre_y(img_y),  // Prepared Image brightness input
+    //     .pre_Cr(img_Cr),
+    //     .pre_Cb(img_Cb),
 
     //     // Image data has been processd
     //     .post_vs(post_vs_mid_value),  // Processed Image data vs valid signal
@@ -98,9 +98,9 @@ module filter #(
                     post_data = post_data_mean;
                 end
                 default: begin
-                    post_vs   = per_vs;
-                    post_de   = per_de;
-                    post_data = per_data;
+                    post_vs   = pre_vs;
+                    post_de   = pre_de;
+                    post_data = pre_data;
                 end
             endcase
         end

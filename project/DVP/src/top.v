@@ -133,64 +133,64 @@ module top #(
         .vp_data (vp_data)
     );
 
-     // 视频存储模块
-     AHBDMA AHBDMA (
-         .clk         (clk),
-         .memory_clk  (memory_clk),
-         .rst_n       (rst_n),
-         .DDR_pll_lock(DDR_pll_lock),
-         .pll_stop    (pll_stop),
+    // 视频存储模块
+    AHBDMA AHBDMA (
+        .clk         (clk),
+        .memory_clk  (memory_clk),
+        .rst_n       (rst_n),
+        .DDR_pll_lock(DDR_pll_lock),
+        .pll_stop    (pll_stop),
 
         //  .vi_clk (vi_clk),
         //  .vi_vs  (vi_vs),
         //  .vi_de  (vi_de),
         //  .vi_data(vi_data),
-         .vi_clk (vp_clk),
-         .vi_vs  (vp_vs),
-         .vi_de  (vp_de),
-         .vi_data(vp_data),
+        .vi_clk (vp_clk),
+        .vi_vs  (vp_vs),
+        .vi_de  (vp_de),
+        .vi_data(vp_data),
 
-         .ddr_addr   (ddr_addr),
-         .ddr_bank   (ddr_bank),
-         .ddr_cs     (ddr_cs),
-         .ddr_ras    (ddr_ras),
-         .ddr_cas    (ddr_cas),
-         .ddr_we     (ddr_we),
-         .ddr_ck     (ddr_ck),
-         .ddr_ck_n   (ddr_ck_n),
-         .ddr_cke    (ddr_cke),
-         .ddr_odt    (ddr_odt),
-         .ddr_reset_n(ddr_reset_n),
-         .ddr_dm     (ddr_dm),
-         .ddr_dq     (ddr_dq),
-         .ddr_dqs    (ddr_dqs),
-         .ddr_dqs_n  (ddr_dqs_n),
+        .ddr_addr   (ddr_addr),
+        .ddr_bank   (ddr_bank),
+        .ddr_cs     (ddr_cs),
+        .ddr_ras    (ddr_ras),
+        .ddr_cas    (ddr_cas),
+        .ddr_we     (ddr_we),
+        .ddr_ck     (ddr_ck),
+        .ddr_ck_n   (ddr_ck_n),
+        .ddr_cke    (ddr_cke),
+        .ddr_odt    (ddr_odt),
+        .ddr_reset_n(ddr_reset_n),
+        .ddr_dm     (ddr_dm),
+        .ddr_dq     (ddr_dq),
+        .ddr_dqs    (ddr_dqs),
+        .ddr_dqs_n  (ddr_dqs_n),
 
-         .video_clk (video_clk),
-         .vo_vs   (vo_vs),
-         .vo_de   (vo_de),
-         .video_de  (video_de),
-         .video_data(video_data)
-     );
+        .video_clk (video_clk),
+        .vo_vs   (vo_vs),
+        .vo_de   (vo_de),
+        .video_de  (video_de),
+        .video_data(video_data)
+    );
 
-     // 视频输出模块
-     AHBVO AHBVO (
-         .video_clk        (video_clk),
-         .serial_clk       (serial_clk),
-         .rst_n            (rst_n),
-         .TMDS_DDR_pll_lock(TMDS_DDR_pll_lock),
+    // 视频输出模块
+    AHBVO AHBVO (
+        .video_clk        (video_clk),
+        .serial_clk       (serial_clk),
+        .rst_n            (rst_n),
+        .TMDS_DDR_pll_lock(TMDS_DDR_pll_lock),
 
-         // 向 ddr 请求数据
-         .vo_vs   (vo_vs),
-         .vo_de   (vo_de),
-         // ddr 输出数据
-         .video_data(video_data),
-         .video_de  (video_de),
+        // 向 ddr 请求数据
+        .vo_vs   (vo_vs),
+        .vo_de   (vo_de),
+        // ddr 输出数据
+        .video_data(video_data),
+        .video_de  (video_de),
 
-         .tmds_clk_n_0(tmds_clk_n_0),
-         .tmds_clk_p_0(tmds_clk_p_0),
-         .tmds_d_n_0  (tmds_d_n_0),
-         .tmds_d_p_0  (tmds_d_p_0)
-     );
+        .tmds_clk_n_0(tmds_clk_n_0),
+        .tmds_clk_p_0(tmds_clk_p_0),
+        .tmds_d_n_0  (tmds_d_n_0),
+        .tmds_d_p_0  (tmds_d_p_0)
+    );
 
 endmodule

@@ -9,6 +9,7 @@ module image_cut #(
     parameter OUTPUT_Y_RES_WIDTH = 11
 ) (
     input wire clk,
+    input wire clk_vpm,
     input wire rst_n,
 
     input wire [ INPUT_X_RES_WIDTH-1:0] start_x,
@@ -29,7 +30,14 @@ module image_cut #(
     reg [11:0] pixel_y = 0;
     assign rgb_o = de_o ? rgb_i : 24'bz;
     assign de_o  = ((pixel_x >= start_x && pixel_x < end_x) && (pixel_y >= start_y && pixel_y < end_y)) ? de_i : 0;
-    assign vs_o = vs_i;
+    // assign vs_o = vs_i;
+
+    reg vs_reg1, vs_reg2;
+    assign vs_o = vs_reg1 & ~vs_reg2;
+    always @(posedge clk_vpm) begin
+        vs_reg1 <= vs_i;
+        vs_reg2 <= vs_reg1;
+    end
 
     always @(posedge clk) begin
         if (~rst_n) pixel_x <= 0;

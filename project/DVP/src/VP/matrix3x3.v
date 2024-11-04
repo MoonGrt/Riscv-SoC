@@ -7,9 +7,9 @@ module matrix3x3 #(
     input wire rst_n, // global reset
 
     // Image data prepred to be processd
-    input wire       per_vs,   // Prepared Image data vs valid signal
-    input wire       per_de,   // Prepared Image data output/capture enable clock
-    input wire [7:0] per_data, // Prepared Image brightness input
+    input wire       pre_vs,   // Prepared Image data vs valid signal
+    input wire       pre_de,   // Prepared Image data output/capture enable clock
+    input wire [7:0] pre_data, // Prepared Image brightness input
 
     // Image data has been processd
     output wire       matrix_vs,  // Prepared Image data vs valid signal
@@ -23,21 +23,21 @@ module matrix3x3 #(
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
     //--------------------------------------------------------------------------
-    // sync row3_data with per_de & row1_data & raw2_data
+    // sync row3_data with pre_de & row1_data & raw2_data
     wire [7:0] row1_data;  // frame data of the 1th row
     wire [7:0] row2_data;  // frame data of the 2th row
     reg  [7:0] row3_data;  // frame data of the 3th row
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) row3_data <= 0;
+        if (~rst_n) row3_data <= 0;
         else begin
-            if (per_de) row3_data <= per_data;
+            if (pre_de) row3_data <= pre_data;
             else row3_data <= row3_data;
         end
     end
 
     //---------------------------------------
     // module of shift ram for raw data
-    wire shift_en = per_de;
+    wire shift_en = pre_de;
     line_shift_ram #(
         .DATA_WIDTH (8),
         .LINE_LENGTH(IMG_HDISP)
@@ -61,22 +61,22 @@ module matrix3x3 #(
 
     //------------------------------------------
     // lag 2 clocks signal sync
-    reg [1:0] per_vs_r;
-    reg [1:0] per_de_r;
+    reg [1:0] pre_vs_r;
+    reg [1:0] pre_de_r;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            per_vs_r <= 0;
-            per_de_r <= 0;
+        if (~rst_n) begin
+            pre_vs_r <= 0;
+            pre_de_r <= 0;
         end else begin
-            per_vs_r <= {per_vs_r[0], per_vs};
-            per_de_r <= {per_de_r[0], per_de};
+            pre_vs_r <= {pre_vs_r[0], pre_vs};
+            pre_de_r <= {pre_de_r[0], pre_de};
         end
     end
     // Give up the 1th and 2th row edge data caculate for simple process
     // Give up the 1th and 2th point of 1 line for simple process
-    wire read_de = per_de_r[0];  // RAM read enable
-    assign matrix_vs = per_vs_r[1];
-    assign matrix_de = per_de_r[1];
+    wire read_de = pre_de_r[0];  // RAM read enable
+    assign matrix_vs = pre_vs_r[1];
+    assign matrix_de = pre_de_r[1];
 
     //----------------------------------------------------------------------------
     //----------------------------------------------------------------------------
@@ -94,7 +94,7 @@ module matrix3x3 #(
         (3) Steady data after Sobel generate
     ************************************************/
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+        if (~rst_n) begin
             {matrix_p11, matrix_p12, matrix_p13} <= 24'h0;
             {matrix_p21, matrix_p22, matrix_p23} <= 24'h0;
             {matrix_p31, matrix_p32, matrix_p33} <= 24'h0;

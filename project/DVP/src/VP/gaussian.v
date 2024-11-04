@@ -8,19 +8,19 @@ module gaussian #(
     input wire EN,    // enable
 
     // Image data prepred to be processed
-    input wire        per_vs,   // Prepared Image data vs valid signal
-    input wire        per_de,   // Prepared Image data output/capture enable clock
-    input wire [23:0] per_data, // Prepared Image data
+    input wire        pre_vs,   // Prepared Image data vs valid signal
+    input wire        pre_de,   // Prepared Image data output/capture enable clock
+    input wire [23:0] pre_data, // Prepared Image data
 
     // Image data has been processed
     output wire        post_vs,   // Processed Image data vs valid signal
     output wire        post_de,   // Processed Image data output/capture enable clock
-    output wire [23:0] post_data  // Prepared Image data
+    output wire [23:0] post_data  // Processed Image data
 );
 
-    wire [7:0] per_r = per_data[23:16];  // Red channel
-    wire [7:0] per_g = per_data[15:8];  // Green channel
-    wire [7:0] per_b = per_data[7:0];  // Blue channel
+    wire [7:0] pre_r = pre_data[23:16];  // Red channel
+    wire [7:0] pre_g = pre_data[15:8];  // Green channel
+    wire [7:0] pre_b = pre_data[7:0];  // Blue channel
     reg  [7:0] post_r;  // Processed Red channel
     reg  [7:0] post_g;  // Processed Green channel
     reg  [7:0] post_b;  // Processed Blue channel
@@ -52,9 +52,9 @@ module gaussian #(
     ) matrix3x3_r (
         .clk        (clk),
         .rst_n      (rst_n),
-        .per_vs     (per_vs),
-        .per_de     (per_de),
-        .per_data   (per_r),
+        .pre_vs     (pre_vs),
+        .pre_de     (pre_de),
+        .pre_data   (pre_r),
         .matrix_vs  (matrix_vs),
         .matrix_de  (matrix_de),
         .matrix_p11 (matrix_p11_r), .matrix_p12(matrix_p12_r), .matrix_p13(matrix_p13_r),
@@ -68,9 +68,9 @@ module gaussian #(
     ) matrix3x3_g (
         .clk        (clk),
         .rst_n      (rst_n),
-        .per_vs     (per_vs),
-        .per_de     (per_de),
-        .per_data   (per_g),
+        .pre_vs     (pre_vs),
+        .pre_de     (pre_de),
+        .pre_data   (pre_g),
         // .matrix_vs  (matrix_vs),
         // .matrix_de  (matrix_de),
         .matrix_p11 (matrix_p11_g), .matrix_p12(matrix_p12_g), .matrix_p13(matrix_p13_g),
@@ -84,9 +84,9 @@ module gaussian #(
     ) matrix3x3_b (
         .clk        (clk),
         .rst_n      (rst_n),
-        .per_vs     (per_vs),
-        .per_de     (per_de),
-        .per_data   (per_b),
+        .pre_vs     (pre_vs),
+        .pre_de     (pre_de),
+        .pre_data   (pre_b),
         // .matrix_vs  (matrix_vs),
         // .matrix_de  (matrix_de),
         .matrix_p11 (matrix_p11_b), .matrix_p12(matrix_p12_b), .matrix_p13(matrix_p13_b),
@@ -105,7 +105,7 @@ module gaussian #(
             post_r <= 8'b0;
             post_g <= 8'b0;
             post_b <= 8'b0;
-        end else if (per_de) begin
+        end else if (pre_de) begin
             post_r <= (matrix_p11_r + matrix_p12_r*2 + matrix_p13_r + matrix_p21_r*2 + matrix_p22_r*4 +
                        matrix_p23_r*2 + matrix_p31_r + matrix_p32_r*2 + matrix_p33_r) >> 4;
             post_g <= (matrix_p11_g + matrix_p12_g*2 + matrix_p13_g + matrix_p21_g*2 + matrix_p22_g*4 +
@@ -117,20 +117,20 @@ module gaussian #(
 
     //---------------------------------------
     // lag 1 clocks signal sync
-    reg per_vs_r;
-    reg per_de_r;
+    reg pre_vs_r;
+    reg pre_de_r;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            per_vs_r   <= 0;
-            per_de_r   <= 0;
+            pre_vs_r   <= 0;
+            pre_de_r   <= 0;
         end else begin
-            per_vs_r   <= matrix_vs;
-            per_de_r   <= matrix_de;
+            pre_vs_r   <= matrix_vs;
+            pre_de_r   <= matrix_de;
         end
     end
 
-    assign post_vs   = EN ? per_vs_r : per_vs;
-    assign post_de   = EN ? per_de_r : per_de;
-    assign post_data = EN ? {post_b, post_g, post_r} : per_data;
+    assign post_vs   = EN ? pre_vs_r : pre_vs;
+    assign post_de   = EN ? pre_de_r : pre_de;
+    assign post_data = EN ? {post_b, post_g, post_r} : pre_data;
 
 endmodule

@@ -11,6 +11,11 @@ module line_shift_ram #(
 
     // 内部存储器，存储一整行像素数据
     reg [DATA_WIDTH-1:0] line_ram[LINE_LENGTH-1:0];
+    integer i;
+    initial begin
+        for (i = 0; i < LINE_LENGTH; i = i + 1)
+            line_ram[i] = {DATA_WIDTH{1'b0}};  // 将所有位设置为0
+    end
 
     // 读写指针，用来指示当前操作的地址
     reg [$clog2(LINE_LENGTH)-1:0] wr_ptr = 0;
