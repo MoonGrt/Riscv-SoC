@@ -1,4 +1,4 @@
-**English | [简体中文](README_cn.md)**
+**简体中文 | [English](README.md)**
 <div id="top"></div>
 
 [![Contributors][contributors-shield]][contributors-url]
@@ -18,13 +18,13 @@
     <p align="center">
     Riscv-SoC
     <br />
-    <a href="https://github.com/MoonGrt/Riscv-SoC"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/MoonGrt/Riscv-SoC"><strong>浏览文档 »</strong></a>
     <br />
-    <a href="https://github.com/MoonGrt/Riscv-SoC">View Demo</a>
+    <a href="https://github.com/MoonGrt/Riscv-SoC">查看 Demo</a>
     ·
-    <a href="https://github.com/MoonGrt/Riscv-SoC/issues">Report Bug</a>
+    <a href="https://github.com/MoonGrt/Riscv-SoC/issues">反馈 Bug</a>
     ·
-    <a href="https://github.com/MoonGrt/Riscv-SoC/issues">Request Feature</a>
+    <a href="https://github.com/MoonGrt/Riscv-SoC/issues">请求新功能</a>
     </p>
 </div>
 
@@ -33,18 +33,18 @@
 
 <!-- CONTENTS -->
 <details open>
-  <summary>Contents</summary>
+  <summary>目录</summary>
   <ol>
-    <li><a href="#file-tree">File Tree</a></li>
+    <li><a href="#文件树">文件树</a></li>
     <li>
-      <a href="#about-the-project">About The Project</a>
+      <a href="#关于本项目">关于本项目</a>
       <ul>
       </ul>
     </li>
-    <li><a href="#contributing">Contributing</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#贡献">贡献</a></li>
+    <li><a href="#许可证">许可证</a></li>
+    <li><a href="#联系我们">联系我们</a></li>
+    <li><a href="#致谢">致谢</a></li>
   </ol>
 </details>
 
@@ -52,8 +52,8 @@
 
 
 
-<!-- FILE TREE -->
-## File Tree
+<!-- 文件树 -->
+## 文件树
 
 ```
 └─ Project
@@ -110,58 +110,56 @@
   │ └─ /SoC/
   └─ /Tool/
     └─ HexExtractor.py
-
 ```
 
 
 
-<!-- ABOUT THE PROJECT -->
-## About The Project
+<!-- 关于本项目 -->
+## 关于本项目
 
 <p style="-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;"><br /></p></body></html>
 <p align="right">(<a href="#top">top</a>)</p>
 
 
 
-<!-- CONTRIBUTING -->
-## Contributing
+<!-- 贡献 -->
+## 贡献
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+贡献让开源社区成为了一个非常适合学习、互相激励和创新的地方。你所做出的任何贡献都是**受人尊敬**的。
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
+如果你有好的建议，请复刻（fork）本仓库并且创建一个拉取请求（pull request）。你也可以简单地创建一个议题（issue），并且添加标签「enhancement」。不要忘记给项目点一个 star！再次感谢！
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. 复刻（Fork）本项目
+2. 创建你的 Feature 分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交你的变更 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到该分支 (`git push origin feature/AmazingFeature`)
+5. 创建一个拉取请求（Pull Request）
 <p align="right">(<a href="#top">top</a>)</p>
 
 
 
-<!-- LICENSE -->
-## License
+<!-- 许可证 -->
+## 许可证
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+根据 MIT 许可证分发。打开 [LICENSE](LICENSE) 查看更多内容。
 <p align="right">(<a href="#top">top</a>)</p>
 
 
 
-<!-- CONTACT -->
-## Contact
+<!-- 联系我们 -->
+## 联系我们
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+MoonGrt - 1561145394@qq.com
+Project Link: [MoonGrt/Riscv-SoC](https://github.com/MoonGrt/Riscv-SoC)
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
 <p align="right">(<a href="#top">top</a>)</p>
 
 
 
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
+<!-- 致谢 -->
+## 致谢
 
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
+在这里列出你觉得有用的资源，并以此致谢。我已经添加了一些我喜欢的资源，以便你可以快速开始！
 
 * [Choose an Open Source License](https://choosealicense.com)
 * [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)

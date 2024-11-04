@@ -87,6 +87,13 @@ module AHBVP (
     wire [DATA_WIDTH*CHANNELS-1:0] scaler_data;
     wire                           scaler_dataValid;
 
+    reg vs_reg1, vs_reg2;
+    assign vs = vs_reg1 & ~vs_reg2;
+    always @(posedge clk_vpm) begin
+        vs_reg1 <= image_cut_vs;
+        vs_reg2 <= vs_reg1;
+    end
+
     image_cut #(
         .H_DISP(H_DISP),
         .V_DISP(V_DISP),
@@ -111,13 +118,6 @@ module AHBVP (
         .rgb_o(image_cut_rgb),
         .state(state)
     );
-
-    reg vs_reg1, vs_reg2;
-    assign vs = vs_reg1 & ~vs_reg2;
-    always @(posedge clk_vpm) begin
-        vs_reg1 <= image_cut_vs;
-        vs_reg2 <= vs_reg1;
-    end
 
     FIFO #(
         .FIFO_MODE ("Normal"),  //"Normal"; //"ShowAhead"
