@@ -1,7 +1,7 @@
 `timescale 1ns / 1ns
-module mid_value #(
-    parameter [8:0] IMG_HDISP = 9'd320,  // 320*240
-    parameter [7:0] IMG_VDISP = 8'd240
+module middle #(
+    parameter [8:0] IMG_HDISP = 9'd1280,  // 1280*720
+    parameter [7:0] IMG_VDISP = 8'd720
 ) (
     //global clock
     input wire clk,   // cmos video pixel clock

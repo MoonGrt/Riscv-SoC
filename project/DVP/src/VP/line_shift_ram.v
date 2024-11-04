@@ -3,8 +3,8 @@ module line_shift_ram #(
     parameter LINE_LENGTH = 1280  // 行长度，默认为1280个像素
 ) (
     input  wire                  clk,    // 时钟信号
-    input  wire                  CE,     // 使能信号
     input  wire                  rst_n,  // 复位信号
+    input  wire                  CE,     // 使能信号
     input  wire [DATA_WIDTH-1:0] D,      // 输入数据
     output reg  [DATA_WIDTH-1:0] Q       // 输出数据
 );

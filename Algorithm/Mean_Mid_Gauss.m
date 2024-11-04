@@ -30,7 +30,7 @@ filter_size = 5;
 % 生成自定义的高斯核
 [x, y] = meshgrid(-floor(filter_size/2):floor(filter_size/2), -floor(filter_size/2):floor(filter_size/2));
 h = exp(-(x.^2 + y.^2) / (2 * sigma^2));
-h = h / sum(h(:)); % 正则化滤波器，使其总和为1
+h = h / sum(h(:)); % 正则化滤波器 使其总和为1
 
 % 对每个颜色通道分别应用高斯滤波
 R_gauss = imfilter(R, h, 'replicate');
