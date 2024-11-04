@@ -9,6 +9,7 @@ module image_cut #(
     parameter OUTPUT_Y_RES_WIDTH = 11
 ) (
     input wire clk,
+    input wire rst_n,
 
     input wire [ INPUT_X_RES_WIDTH-1:0] start_x,
     input wire [ INPUT_Y_RES_WIDTH-1:0] start_y,
@@ -21,42 +22,56 @@ module image_cut #(
 
     output wire        de_o,
     output wire        vs_o,
-    output wire [23:0] rgb_o,
-    output reg         state = 0
+    output wire [23:0] rgb_o
 );
 
     reg [11:0] pixel_x = 0;
     reg [11:0] pixel_y = 0;
     assign rgb_o = de_o ? rgb_i : 24'bz;
-    assign de_o  = ((pixel_x >= start_x && pixel_x < end_x) && (pixel_y >= start_y && pixel_y < end_y)) ? de_i & state : 0;
+    assign de_o  = ((pixel_x >= start_x && pixel_x < end_x) && (pixel_y >= start_y && pixel_y < end_y)) ? de_i : 0;
     // assign vs_o  = (start_x == 0 && start_y == 0) ? vs_i : (pixel_x == start_x) & (pixel_y == start_y);
     assign vs_o = vs_i;
 
+    // always @(posedge clk) begin
+    //     if (~rst_n)
+    //         if (vs_i) pixel_x <= 0;
+    //         else if (de_i)
+    //             if (pixel_x == H_DISP - 1) pixel_x <= 0;
+    //             else pixel_x <= pixel_x + 1;
+    //         else pixel_x <= pixel_x;
+    //     else pixel_x <= 0;
+    // end
+
+    // always @(posedge clk) begin
+    //     if (~rst_n)
+    //         if (vs_i) pixel_y <= 0;
+    //         else if (de_i)
+    //             if (pixel_x == H_DISP - 1)
+    //                 if (pixel_y == V_DISP - 1) pixel_y <= 0;
+    //                 else pixel_y <= pixel_y + 1;
+    //             else pixel_y <= pixel_y;
+    //         else pixel_y <= pixel_y;
+    //     else pixel_y <= 0;
+    // end
+
     always @(posedge clk) begin
-        if (vs_i) state <= 1;
-        else state <= state;
+        if (~rst_n) pixel_x <= 0;
+        else if (vs_i) pixel_x <= 0;
+        else if (de_i)
+            if (pixel_x == H_DISP - 1) pixel_x <= 0;
+            else pixel_x <= pixel_x + 1;
+        else pixel_x <= pixel_x;
     end
 
     always @(posedge clk) begin
-        if (state)
-            if (vs_i) pixel_x <= 0;
-            else if (de_i)
-                if (pixel_x == H_DISP - 1) pixel_x <= 0;
-                else pixel_x <= pixel_x + 1;
-            else pixel_x <= pixel_x;
-        else pixel_x <= 0;
-    end
-
-    always @(posedge clk) begin
-        if (state)
-            if (vs_i) pixel_y <= 0;
-            else if (de_i)
-                if (pixel_x == H_DISP - 1)
-                    if (pixel_y == V_DISP - 1) pixel_y <= 0;
-                    else pixel_y <= pixel_y + 1;
-                else pixel_y <= pixel_y;
+        if (~rst_n) pixel_y <= 0;
+        else if (vs_i) pixel_y <= 0;
+        else if (de_i)
+            if (pixel_x == H_DISP - 1)
+                if (pixel_y == V_DISP - 1) pixel_y <= 0;
+                else pixel_y <= pixel_y + 1;
             else pixel_y <= pixel_y;
-        else pixel_y <= 0;
+        else pixel_y <= pixel_y;
     end
 
 endmodule

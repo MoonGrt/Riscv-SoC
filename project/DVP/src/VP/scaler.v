@@ -4,13 +4,14 @@ module scaler #(
     parameter OUTPUT_X_RES_WIDTH = 11,
     parameter OUTPUT_Y_RES_WIDTH = 11
 ) (
-    input wire state,  // System state
     input wire EN,     // Enable
 
     input wire [ INPUT_X_RES_WIDTH-1:0] START_X,
     input wire [ INPUT_Y_RES_WIDTH-1:0] START_Y,
     input wire [OUTPUT_X_RES_WIDTH-1:0] END_X,
     input wire [OUTPUT_Y_RES_WIDTH-1:0] END_Y,
+    input wire [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES,  // Resolution of input data minus 1
+    input wire [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES,
 
     // Image data prepred to be processed
     input wire        pre_clk,  // Prepared Image data clock
@@ -35,9 +36,6 @@ module scaler #(
     parameter SCALE_FRAC_BITS = 14;  // Don't modify
     parameter SCALE_BITS = SCALE_INT_BITS + SCALE_FRAC_BITS;
 
-    parameter OUTPUT_X_RES = 12'd1280 - 1;  // Resolution of output data minus 1
-    parameter OUTPUT_Y_RES = 12'd720 - 1;  // Resolution of output data minus 1
-
     wire [ INPUT_X_RES_WIDTH-1:0] inputXRes = END_X - START_X - 1;  // Resolution of input data minus 1
     wire [ INPUT_Y_RES_WIDTH-1:0] inputYRes = END_Y - START_Y - 1;
     wire [OUTPUT_X_RES_WIDTH-1:0] outputXRes = OUTPUT_X_RES;  // Resolution of input data minus 1
@@ -57,7 +55,7 @@ module scaler #(
         .DATA_WIDTH(24),
         .FIFO_DEPTH(1024)
     ) FIFO (
-        /*i*/.Reset(~state | pre_vs),  // System Reset
+        /*i*/.Reset(pre_vs),  // System Reset
 
         /*i*/.WrClk (pre_clk),  // (I)Wirte Clock
         /*i*/.WrEn  (pre_de),   // (I)Write Enable
@@ -106,8 +104,8 @@ module scaler #(
 
         .nearestNeighbor(algorithm_sel),
         .inputDiscardCnt(0),  // Number of input pixels to discard before processing data. Used for clipping
-        .leftOffset(0),
-        .topFracOffset(0)
+        .leftOffset     (0),
+        .topFracOffset  (0)
     );
 
     assign post_vs   = pre_vs;
