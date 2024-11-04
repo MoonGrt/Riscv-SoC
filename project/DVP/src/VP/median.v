@@ -1,5 +1,5 @@
 `timescale 1ns / 1ns
-module middle #(
+module median #(
     parameter [8:0] IMG_HDISP = 9'd1280,  // 1280*720
     parameter [7:0] IMG_VDISP = 8'd720
 ) (

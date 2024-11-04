@@ -1,4 +1,4 @@
-module gauss #(
+module gaussian #(
     parameter IMG_HDISP = 12'd1280,  // 1280*720
     parameter IMG_VDISP = 12'd720
 ) (

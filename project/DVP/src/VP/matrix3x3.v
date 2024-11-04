@@ -37,26 +37,26 @@ module matrix3x3 #(
 
     //---------------------------------------
     // module of shift ram for raw data
-    wire shift_clk_en = per_de;
+    wire shift_en = per_de;
     line_shift_ram #(
         .DATA_WIDTH (8),
         .LINE_LENGTH(IMG_HDISP)
     ) line_shift_ram0 (
-        .clk  (clk),    // input wire CLK
-        .rst_n(rst_n),  // input wire RST_N
-        .CE   (CE),     // input wire CE
-        .D    (D),      // input wire [7:0] D
-        .Q    (Q)       // output wire [7:0] Q
+        .clk  (clk),        // input wire CLK
+        .rst_n(rst_n),      // input wire RST_N
+        .CE   (shift_en),   // input wire CE
+        .D    (row3_data),  // input wire [7:0] D
+        .Q    (row2_data)   // output wire [7:0] Q
     );
     line_shift_ram #(
         .DATA_WIDTH (8),
         .LINE_LENGTH(IMG_HDISP)
     ) line_shift_ram1 (
-        .clk  (clk),    // input wire CLK
-        .rst_n(rst_n),  // input wire RST_N
-        .CE   (CE),     // input wire CE
-        .D    (D),      // input wire [7:0] D
-        .Q    (Q)       // output wire [7:0] Q
+        .clk  (clk),        // input wire CLK
+        .rst_n(rst_n),      // input wire RST_N
+        .CE   (shift_en),   // input wire CE
+        .D    (row2_data),  // input wire [7:0] D
+        .Q    (row1_data)   // output wire [7:0] Q
     );
 
     //------------------------------------------

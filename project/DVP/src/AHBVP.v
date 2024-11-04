@@ -55,8 +55,8 @@ module AHBVP (
         .de_i (de_i),
         .rgb_i(rgb_i),
 
-        .de_o (image_cut_de),
         .vs_o (image_cut_vs),
+        .de_o (image_cut_de),
         .rgb_o(image_cut_rgb),
         .state(state)
     );
@@ -71,7 +71,23 @@ module AHBVP (
     //--------------------------------------------------------------------------
     // Filter
     //--------------------------------------------------------------------------
-
+    wire        post_vs_filter;  // Processed Image data vs valid signal
+    wire        post_de_filter;  // Processed Image data output/capture enable clock
+    wire [23:0] post_data_filter;  // Processed Image brightness output
+    filter #(
+        .IMG_HDISP(H_DISP),  // 1280*720
+        .IMG_VDISP(V_DISP)
+    ) filter (
+        .clk      (clk),
+        .rst_n    (rst_n),
+        .mode     (2'b01),  // 00: bypass, 01: gaussian, 10: median, 11: mean
+        .per_vs   (image_cut_vs),
+        .per_de   (image_cut_de),
+        .per_data (image_cut_rgb),
+        .post_vs  (post_vs_filter),
+        .post_de  (post_de_filter),
+        .post_data(post_data_filter)
+    );
 
     //--------------------------------------------------------------------------
     // Scaler
@@ -147,7 +163,7 @@ module AHBVP (
         .INPUT_Y_RES_WIDTH (INPUT_Y_RES_WIDTH),
         .OUTPUT_X_RES_WIDTH(OUTPUT_X_RES_WIDTH),
         .OUTPUT_Y_RES_WIDTH(OUTPUT_Y_RES_WIDTH),
-        .BUFFER_SIZE       (BUFFER_SIZE),         // Number of RAMs in RAM ring buffer
+        .BUFFER_SIZE       (BUFFER_SIZE),  // Number of RAMs in RAM ring buffer
         .FRACTION_BITS     (FRACTION_BITS),
         .SCALE_INT_BITS    (SCALE_INT_BITS),
         .SCALE_FRAC_BITS   (SCALE_FRAC_BITS)
