@@ -25,6 +25,7 @@
         <File path="src/VP/matrix3x3.v" type="file.verilog" enable="1"/>
         <File path="src/VP/pixel_cnt.v" type="file.verilog" enable="1"/>
         <File path="src/VP/scaler.v" type="file.verilog" enable="1"/>
+        <File path="src/VP/streamScaler.v" type="file.verilog" enable="1"/>
         <File path="src/top.v" type="file.verilog" enable="1"/>
         <File path="src/top.cst" type="file.cst" enable="1"/>
         <File path="src/top.sdc" type="file.sdc" enable="1"/>

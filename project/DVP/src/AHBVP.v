@@ -129,12 +129,12 @@ module AHBVP (
     wire [        SCALE_BITS-1:0] yScale = 32'h4000 * (inputYRes + 1) / (outputYRes + 1);  // Scaling factors. Input resolution scaled up by 1/yScale. Format Q SCALE_INT_BITS.SCALE_FRAC_BITS
 
     wire fifo1_empty, fifo1_full;
-    wire [DATA_WIDTH*CHANNELS-1:0] fifo1_data;
-    wire scaler_re;
+    wire [23:0] fifo1_data;
+    wire        scaler_re;
 
     reg  algorithm_sel = 1'b1;
-    wire [DATA_WIDTH*CHANNELS-1:0] scaler_data;
-    wire                           scaler_dataValid;
+    wire [23:0] scaler_data;
+    wire        scaler_dataValid;
     FIFO #(
         .FIFO_MODE ("Normal"),  //"Normal"; //"ShowAhead"
         .DATA_WIDTH(24),
@@ -155,7 +155,7 @@ module AHBVP (
         /*o*/.RdData (fifo1_data)    // (O)Read Data
     );
 
-    scaler #(
+    streamScaler #(
         .DATA_WIDTH        (DATA_WIDTH),
         .CHANNELS          (CHANNELS),
         .DISCARD_CNT_WIDTH (DISCARD_CNT_WIDTH),
@@ -167,7 +167,7 @@ module AHBVP (
         .FRACTION_BITS     (FRACTION_BITS),
         .SCALE_INT_BITS    (SCALE_INT_BITS),
         .SCALE_FRAC_BITS   (SCALE_FRAC_BITS)
-    ) scaler (
+    ) streamScaler (
         .clk(clk_vpm),
 
         .dIn     (fifo1_data),
@@ -196,8 +196,8 @@ module AHBVP (
     //--------------------------------------------------------------------------
     // Fill Brank
     //--------------------------------------------------------------------------
-    wire [DATA_WIDTH*CHANNELS-1:0] fill_data;
-    wire                           fill_dataValid;
+    wire [23:0] fill_data;
+    wire        fill_dataValid;
     pixel_cnt pixel_cnt (
         .rst(image_cut_vs),
         .clk(clk_vpm),
