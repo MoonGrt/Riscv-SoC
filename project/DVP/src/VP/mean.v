@@ -1,4 +1,4 @@
-module gaussian #(
+module mean #(
     parameter IMG_HDISP = 12'd1280,  // 1280*720
     parameter IMG_VDISP = 12'd720
 ) (
@@ -121,12 +121,12 @@ module gaussian #(
             post_g <= 8'b0;
             post_b <= 8'b0;
         end else if (pre_de) begin
-            post_r <= (matrix_p11_r + matrix_p12_r*2 + matrix_p13_r + matrix_p21_r*2 + matrix_p22_r*4 +
-                       matrix_p23_r*2 + matrix_p31_r + matrix_p32_r*2 + matrix_p33_r) >> 4;
-            post_g <= (matrix_p11_g + matrix_p12_g*2 + matrix_p13_g + matrix_p21_g*2 + matrix_p22_g*4 +
-                       matrix_p23_g*2 + matrix_p31_g + matrix_p32_g*2 + matrix_p33_g) >> 4;
-            post_b <= (matrix_p11_b + matrix_p12_b*2 + matrix_p13_b + matrix_p21_b*2 + matrix_p22_b*4 +
-                       matrix_p23_b*2 + matrix_p31_b + matrix_p32_b*2 + matrix_p33_b) >> 4;
+            post_r <= (matrix_p11_r + matrix_p12_r + matrix_p13_r + matrix_p21_r + matrix_p22_r +
+                       matrix_p23_r + matrix_p31_r + matrix_p32_r + matrix_p33_r) / 9;
+            post_g <= (matrix_p11_g + matrix_p12_g + matrix_p13_g + matrix_p21_g + matrix_p22_g +
+                       matrix_p23_g + matrix_p31_g + matrix_p32_g + matrix_p33_g) / 9;
+            post_b <= (matrix_p11_b + matrix_p12_b + matrix_p13_b + matrix_p21_b + matrix_p22_b +
+                       matrix_p23_b + matrix_p31_b + matrix_p32_b + matrix_p33_b) / 9;
         end
     end
 

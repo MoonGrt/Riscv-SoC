@@ -13,7 +13,7 @@ module edge_detector #(
     // Image data prepred to be processd
     input wire       pre_vs,  // Prepared Image data vs valid signal
     input wire       pre_de,  // Prepared Image data output/capture enable clock
-    input wire [7:0] pre_img,          // Prepared Image brightness input
+    input wire [7:0] pre_img,          // Prepared Image input
 
     // Image data has been processd
     output wire        post_vs,  // Processed Image data vs valid signal

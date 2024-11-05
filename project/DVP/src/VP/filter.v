@@ -22,9 +22,9 @@ module filter #(
     wire median_en = (mode == 2'b10);  // enable median filter
     wire mean_en = (mode == 2'b11);  // enable mean filter
 
-    wire        post_vs_gaussian;  // Processed Image data vs valid signal
-    wire        post_de_gaussian;  // Processed Image data output/capture enable clock
-    wire [23:0] post_data_gaussian;  // Processed Image brightness output
+    wire        gaussian_post_vs;  // Processed Image data vs valid signal
+    wire        gaussian_post_de;  // Processed Image data output/capture enable clock
+    wire [23:0] gaussian_post_data;  // Processed Image output
     gaussian #(
         .IMG_HDISP(IMG_HDISP),  // 1280*720
         .IMG_VDISP(IMG_VDISP)
@@ -40,40 +40,56 @@ module filter #(
         .pre_data(pre_data),
 
         // Image data has been processd
-        .post_vs  (post_vs_gaussian),  // Processed Image data vs valid signal
-        .post_de  (post_de_gaussian),  // Processed Image data output/capture enable clock
-        .post_data(post_data_gaussian)
+        .post_vs  (gaussian_post_vs),  // Processed Image data vs valid signal
+        .post_de  (gaussian_post_de),  // Processed Image data output/capture enable clock
+        .post_data(gaussian_post_data)
     );
 
-    wire  [7:0] post_y, post_Cr, post_Cb;  // Processed Image brightness output
-    wire        post_vs_median;  // Processed Image data vs valid signal
-    wire        post_de_median;  // Processed Image data output/capture enable clock
-    wire [23:0] post_data_median;  // Processed Image brightness output
-    // median #(
-    //     .IMG_HDISP(H_DISP),  // 1280*720
-    //     .IMG_VDISP(V_DISP)
-    // ) median (
-    //     // global clock
-    //     .clk  (clk),  // cmos video pixel clock
-    //     .rst_n(rst_n),  // global reset
+    wire        mean_post_vs;  // Processed Image data vs valid signal
+    wire        mean_post_de;  // Processed Image data output/capture enable clock
+    wire [23:0] mean_post_data;  // Processed Image output
+    mean #(
+        .IMG_HDISP(IMG_HDISP),  // 1280*720
+        .IMG_VDISP(IMG_VDISP)
+    ) mean (
+        // global clock
+        .clk  (clk),  // cmos video pixel clock
+        .rst_n(rst_n),  // global reset
+        .EN   (mean_en),  // enable
 
-    //     // Image data prepred to be processd
-    //     .pre_vs(post_vs_ycbcr),  // Prepared Image data vs valid signal
-    //     .pre_clken(post_clken_ycbcr),  // Prepared Image data output/capture enable clock
-    //     .pre_y(img_y),  // Prepared Image brightness input
-    //     .pre_Cr(img_Cr),
-    //     .pre_Cb(img_Cb),
+        // Image data prepred to be processd
+        .pre_vs  (pre_vs),  // Prepared Image data vs valid signal
+        .pre_de  (pre_de),  // Prepared Image data output/capture enable clock
+        .pre_data(pre_data),
 
-    //     // Image data has been processd
-    //     .post_vs(post_vs_mid_value),  // Processed Image data vs valid signal
-    //     .post_clken(post_clken_mid_value),  // Processed Image data output/capture enable clock
-    //     .post_y(post_y)
-    // );
+        // Image data has been processd
+        .post_vs  (mean_post_vs),  // Processed Image data vs valid signal
+        .post_de  (mean_post_de),  // Processed Image data output/capture enable clock
+        .post_data(mean_post_data)
+    );
 
-    wire        post_vs_mean;  // Processed Image data vs valid signal
-    wire        post_de_mean;  // Processed Image data output/capture enable clock
-    wire [23:0] post_data_mean;  // Processed Image brightness output
+    wire        median_post_vs;  // Processed Image data vs valid signal
+    wire        median_post_de;  // Processed Image data output/capture enable clock
+    wire [23:0] median_post_data;  // Processed Image output
+    median #(
+        .IMG_HDISP(IMG_HDISP),  // 1280*720
+        .IMG_VDISP(IMG_VDISP)
+    ) median (
+        // global clock
+        .clk  (clk),  // cmos video pixel clock
+        .rst_n(rst_n),  // global reset
+        .EN   (median_en),  // enable
 
+        // Image data prepred to be processd
+        .pre_vs  (pre_vs),  // Prepared Image data vs valid signal
+        .pre_de  (pre_de),  // Prepared Image data output/capture enable clock
+        .pre_data(pre_data),
+
+        // Image data has been processd
+        .post_vs  (median_post_vs),  // Processed Image data vs valid signal
+        .post_de  (median_post_de),  // Processed Image data output/capture enable clock
+        .post_data(median_post_data)
+    );
 
     always @(*) begin
         if(~rst_n) begin
@@ -83,19 +99,19 @@ module filter #(
         end else begin
             case(mode)
                 2'b01: begin
-                    post_vs   = post_vs_gaussian;
-                    post_de   = post_de_gaussian;
-                    post_data = post_data_gaussian;
+                    post_vs   = gaussian_post_vs;
+                    post_de   = gaussian_post_de;
+                    post_data = gaussian_post_data;
                 end
                 2'b10: begin
-                    post_vs   = post_vs_median;
-                    post_de   = post_de_median;
-                    post_data = post_data_median;
+                    post_vs   = mean_post_vs;
+                    post_de   = mean_post_de;
+                    post_data = mean_post_data;
                 end
                 2'b11: begin
-                    post_vs   = post_vs_mean;
-                    post_de   = post_de_mean;
-                    post_data = post_data_mean;
+                    post_vs   = median_post_vs;
+                    post_de   = median_post_de;
+                    post_data = median_post_data;
                 end
                 default: begin
                     post_vs   = pre_vs;
