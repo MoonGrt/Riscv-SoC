@@ -11,11 +11,12 @@ module image_cut #(
     input wire clk,
     input wire clk_vp,
     input wire rst_n,
+    input wire EN,
 
-    input wire [ INPUT_X_RES_WIDTH-1:0] start_x,
-    input wire [ INPUT_Y_RES_WIDTH-1:0] start_y,
-    input wire [OUTPUT_X_RES_WIDTH-1:0] end_x,
-    input wire [OUTPUT_Y_RES_WIDTH-1:0] end_y,
+    input wire [ INPUT_X_RES_WIDTH-1:0] START_X,
+    input wire [ INPUT_Y_RES_WIDTH-1:0] START_Y,
+    input wire [OUTPUT_X_RES_WIDTH-1:0] END_X,
+    input wire [OUTPUT_Y_RES_WIDTH-1:0] END_Y,
 
     input wire        vs_i,
     input wire        de_i,
@@ -26,21 +27,22 @@ module image_cut #(
     output wire [23:0] rgb_o
 );
 
-    reg [11:0] pixel_x = 0;
-    reg [11:0] pixel_y = 0;
-    wire vs = (start_x == 0 && start_y == 0) ? vs_i : (pixel_x == start_x) & (pixel_y == start_y);
-    assign rgb_o = de_o ? rgb_i : 24'bz;
-    assign de_o  = ((pixel_x >= start_x && pixel_x < end_x) && (pixel_y >= start_y && pixel_y < end_y)) ? de_i : 0;
+    reg [11:0] pixel_x, pixel_y;
+    wire image_cut = (pixel_x >= START_X && pixel_x < END_X) && (pixel_y >= START_Y && pixel_y < END_Y);
+    // wire vs = (START_X == 0 && START_Y == 0) ? vs_i : (pixel_x == START_X) & (pixel_y == START_Y);
+    wire vs = vs_i;
+    assign rgb_o = EN ? rgb_i : vs_i;
+    assign de_o  = EN ? (image_cut & de_i) : de_i;
+    assign vs_o  = EN ? (vs_reg1 & ~vs_reg2) : rgb_i;
 
     reg vs_reg1, vs_reg2;
-    assign vs_o = vs_reg1 & ~vs_reg2;
     always @(posedge clk_vp) begin
         vs_reg1 <= vs;
         vs_reg2 <= vs_reg1;
     end
 
     always @(posedge clk) begin
-        if (~rst_n | vs_i) pixel_x <= 0;
+        if (~rst_n | vs_o) pixel_x <= 0;
         else if (de_i)
             if (pixel_x == H_DISP - 1) pixel_x <= 0;
             else pixel_x <= pixel_x + 1;
@@ -48,7 +50,7 @@ module image_cut #(
     end
 
     always @(posedge clk) begin
-        if (~rst_n | vs_i) pixel_y <= 0;
+        if (~rst_n | vs_o) pixel_y <= 0;
         else if (pixel_x == H_DISP - 1)
             if (pixel_y == V_DISP - 1) pixel_y <= 0;
             else pixel_y <= pixel_y + 1;

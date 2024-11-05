@@ -1,5 +1,7 @@
 module top #(
-    parameter USE_TPG = "false"
+    parameter USE_TPG = "false",
+    parameter H_DISP = 12'd1280,
+    parameter V_DISP = 12'd720
 ) (
     input clk,
     input rst_n,
@@ -40,7 +42,11 @@ module top #(
     output [2:0] tmds_d_p_0
 );
 
-    assign i2c_sel = 'b101;
+    reg [31:0] VP_CR = 32'h00000000;
+    reg [31:0] VP_SR = 32'h00000000;
+    reg [31:0] VP_START = 32'h00000000;
+    reg [31:0] VP_END = 32'h00000000;
+    reg [31:0] VP_SCALER = 32'h00000000;
 
     // 状态指示灯
     // assign state_led[4] = ~i2c_done;
@@ -100,6 +106,7 @@ module top #(
         .video_clk(video_clk),
         .rst_n    (rst_n),
 
+        .i2c_sel (i2c_sel),
         .cmos_scl(cmos_scl),
         .cmos_sda(cmos_sda),
 
@@ -118,19 +125,27 @@ module top #(
     );
 
     // 视频处理模块
-    AHBVP AHBVP (
-        .clk_vp (clk_vp),
-        .rst_n   (rst_n),
+    AHBVP #(
+        .H_DISP(H_DISP),
+        .V_DISP(V_DISP)
+    ) AHBVP (
+        .clk_vp(clk_vp),
+        .rst_n (rst_n),
+
+        .VP_CR    (VP_CR),
+        .VP_START (VP_START),
+        .VP_END   (VP_END),
+        .VP_SCALER(VP_SCALER),
 
         .vi_clk (vi_clk),
         .vi_vs  (vi_vs),
         .vi_de  (vi_de),
         .vi_data(vi_data),
 
-        // .vp_clk  (vp_clk),
-        .vp_vs   (vp_vs),
-        .vp_de   (vp_de),
-        .vp_data (vp_data)
+        .vp_clk (vp_clk),
+        .vp_vs  (vp_vs),
+        .vp_de  (vp_de),
+        .vp_data(vp_data)
     );
 
     // 视频存储模块
@@ -141,11 +156,11 @@ module top #(
         .DDR_pll_lock(DDR_pll_lock),
         .pll_stop    (pll_stop),
 
-        //  .vi_clk (vi_clk),
-        //  .vi_vs  (vi_vs),
-        //  .vi_de  (vi_de),
-        //  .vi_data(vi_data),
-        .vi_clk (clk_vp),
+        // .vi_clk (vi_clk),
+        // .vi_vs  (vi_vs),
+        // .vi_de  (vi_de),
+        // .vi_data(vi_data),
+        .vi_clk (vp_clk),
         .vi_vs  (vp_vs),
         .vi_de  (vp_de),
         .vi_data(vp_data),

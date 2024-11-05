@@ -6,6 +6,7 @@ module AHBVI #(
     input video_clk,  // video clock
     input rst_n,      // system reset
 
+    output [2:0] i2c_sel,
     inout        cmos_scl,    // cmos i2c clock
     inout        cmos_sda,    // cmos i2c data
     input        cmos_vsync,  // cmos vsync
@@ -29,6 +30,7 @@ module AHBVI #(
         .cmos_clk(cmos_clk),
         .rst_n   (rst_n),
 
+        .i2c_sel   (i2c_sel),
         .cmos_scl  (cmos_scl),
         .cmos_sda  (cmos_sda),
         .cmos_vsync(cmos_vsync),

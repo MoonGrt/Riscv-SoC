@@ -5,62 +5,6 @@
     <AoCore index="0" sample_clock="clk" trig_type="0" storage_depth="16384" window_num="1" capture_amount="8192" implementation="0" trigger_pos="512" module_name="top" force_trigger_by_falling_edge="false" capture_init_data_enabled="false">
         <SignalList>
             <Signal capture_enable="true">AHBVP/de_i</Signal>
-            <Signal capture_enable="true">AHBVP/scaler/pre_de</Signal>
-            <Bus capture_enable="true" name="AHBVP/scaler/pre_data[23:0]">
-                <Signal>AHBVP/scaler/pre_data[23]</Signal>
-                <Signal>AHBVP/scaler/pre_data[22]</Signal>
-                <Signal>AHBVP/scaler/pre_data[21]</Signal>
-                <Signal>AHBVP/scaler/pre_data[20]</Signal>
-                <Signal>AHBVP/scaler/pre_data[19]</Signal>
-                <Signal>AHBVP/scaler/pre_data[18]</Signal>
-                <Signal>AHBVP/scaler/pre_data[17]</Signal>
-                <Signal>AHBVP/scaler/pre_data[16]</Signal>
-                <Signal>AHBVP/scaler/pre_data[15]</Signal>
-                <Signal>AHBVP/scaler/pre_data[14]</Signal>
-                <Signal>AHBVP/scaler/pre_data[13]</Signal>
-                <Signal>AHBVP/scaler/pre_data[12]</Signal>
-                <Signal>AHBVP/scaler/pre_data[11]</Signal>
-                <Signal>AHBVP/scaler/pre_data[10]</Signal>
-                <Signal>AHBVP/scaler/pre_data[9]</Signal>
-                <Signal>AHBVP/scaler/pre_data[8]</Signal>
-                <Signal>AHBVP/scaler/pre_data[7]</Signal>
-                <Signal>AHBVP/scaler/pre_data[6]</Signal>
-                <Signal>AHBVP/scaler/pre_data[5]</Signal>
-                <Signal>AHBVP/scaler/pre_data[4]</Signal>
-                <Signal>AHBVP/scaler/pre_data[3]</Signal>
-                <Signal>AHBVP/scaler/pre_data[2]</Signal>
-                <Signal>AHBVP/scaler/pre_data[1]</Signal>
-                <Signal>AHBVP/scaler/pre_data[0]</Signal>
-            </Bus>
-            <Signal capture_enable="true">AHBVP/scaler/fifo_empty</Signal>
-            <Signal capture_enable="true">AHBVP/scaler/scaler_re</Signal>
-            <Bus capture_enable="true" name="AHBVP/scaler/fifo_data[23:0]">
-                <Signal>AHBVP/scaler/fifo_data[23]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[22]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[21]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[20]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[19]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[18]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[17]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[16]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[15]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[14]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[13]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[12]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[11]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[10]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[9]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[8]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[7]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[6]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[5]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[4]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[3]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[2]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[1]</Signal>
-                <Signal>AHBVP/scaler/fifo_data[0]</Signal>
-            </Bus>
-            <Signal capture_enable="true">AHBVP/post_de_scaler</Signal>
             <Bus capture_enable="true" name="AHBVP/post_data_scaler[23:0]">
                 <Signal>AHBVP/post_data_scaler[23]</Signal>
                 <Signal>AHBVP/post_data_scaler[22]</Signal>
@@ -87,6 +31,7 @@
                 <Signal>AHBVP/post_data_scaler[1]</Signal>
                 <Signal>AHBVP/post_data_scaler[0]</Signal>
             </Bus>
+            <Signal capture_enable="true">AHBVP/post_de_scaler</Signal>
         </SignalList>
         <Triggers>
             <Trigger index="0">
@@ -132,5 +77,5 @@
             <Expression>M0</Expression>
         </Expressions>
     </AoCore>
-    <GAO_ID>1110001101111000</GAO_ID>
+    <GAO_ID>0011100100110001</GAO_ID>
 </GAO_CONFIG>

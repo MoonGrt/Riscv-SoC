@@ -13,11 +13,12 @@ module AhbDVP (
 
     // DVP寄存器定义
     reg [31:0] VI_CR;
-    reg [31:0] VI_START;
-    reg [31:0] VI_END;
     reg [31:0] VI_SR;
     reg [31:0] VP_CR;
     reg [31:0] VP_SR;
+    reg [31:0] VP_START;
+    reg [31:0] VP_END;
+    reg [31:0] VP_SCALER;
     reg [31:0] VO_CR;
     reg [31:0] VO_SR;
 
@@ -32,7 +33,7 @@ module AhbDVP (
     wire [1:0] VP_FILTER = VP_CR[4:3];  // VP滤波器 00: 均值滤波 01: 中值滤波 10: 双边滤波 11: 高斯滤波
     // VO
     wire       VO_EN = VO_CR[0];  // VO使能
-    wire [1:0] VO_MODE = VO_CR[2:1];  // VO模式 00: 输出模式 01: 输入模式 10: 未定义 11: 未定义
+    wire [1:0] VO_MODE = VO_CR[2:1];  // VO模式 00: HDMI输出 01: RGB输出 10: 未定义 11: 未定义
 
     // AHB 写寄存器逻辑
     assign io_ahb_PREADY = 1'b1;  // AHB 准备信号始终为高，表示设备始终准备好
@@ -40,18 +41,18 @@ module AhbDVP (
     always @(posedge io_ahb_PCLK or posedge io_ahb_PRESET) begin
         if (io_ahb_PRESET) begin
             VI_CR <= 32'h00000000;
-            VI_START <= 32'h00000000;
-            VI_END <= 32'h00000000;
             VP_CR <= 32'h00000000;
+            VP_START <= 32'h00000000;
+            VP_END <= 32'h00000000;
             VO_CR <= 32'h00000000;
         end else begin
             if (io_ahb_PSEL && io_ahb_PENABLE && io_ahb_PWRITE) begin
                 // 写寄存器
                 case (io_ahb_PADDR)  // 假设基地址为0x00，寄存器偏移4字节
                     3'd0:  VI_CR <= io_ahb_PWDATA;
-                    3'd1:  VI_START <= io_ahb_PWDATA;
-                    3'd2:  VI_END <= io_ahb_PWDATA;
-                    3'd4:  VP_CR <= io_ahb_PWDATA;
+                    3'd2:  VP_CR <= io_ahb_PWDATA;
+                    3'd4:  VP_START <= io_ahb_PWDATA;
+                    3'd5:  VP_END <= io_ahb_PWDATA;
                     3'd6:  VO_CR <= io_ahb_PWDATA;
                     default: ;  // 其他寄存器不处理
                 endcase
@@ -64,11 +65,11 @@ module AhbDVP (
         else if (io_ahb_PSEL && io_ahb_PENABLE && ~io_ahb_PWRITE) begin
             case (io_ahb_PADDR)
                 3'd0:  io_ahb_PRDATA = VI_CR;
-                3'd1:  io_ahb_PRDATA = VI_START;
-                3'd2:  io_ahb_PRDATA = VI_END;
-                3'd3:  io_ahb_PRDATA = VI_SR;
-                3'd4:  io_ahb_PRDATA = VP_CR;
-                3'd5:  io_ahb_PRDATA = VP_SR;
+                3'd1:  io_ahb_PRDATA = VI_SR;
+                3'd2:  io_ahb_PRDATA = VP_CR;
+                3'd3:  io_ahb_PRDATA = VP_SR;
+                3'd4:  io_ahb_PRDATA = VP_START;
+                3'd5:  io_ahb_PRDATA = VP_END;
                 3'd6:  io_ahb_PRDATA = VO_CR;
                 3'd7:  io_ahb_PRDATA = VO_SR;
                 default: io_ahb_PRDATA = 32'h00000000;  // 默认返回0

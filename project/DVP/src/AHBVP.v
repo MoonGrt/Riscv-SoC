@@ -1,6 +1,19 @@
-module AHBVP (
+module AHBVP #(
+    parameter H_DISP = 12'd1280,
+    parameter V_DISP = 12'd720,
+    parameter INPUT_X_RES_WIDTH = 11,
+    parameter INPUT_Y_RES_WIDTH = 11,
+    parameter OUTPUT_X_RES_WIDTH = 11,
+    parameter OUTPUT_Y_RES_WIDTH = 11
+) (
     input clk_vp,
     input rst_n,
+
+    // VP parameters
+    input [31:0] VP_CR,
+    input [31:0] VP_START,
+    input [31:0] VP_END,
+    input [31:0] VP_SCALER,
 
     // video input
     input        vi_clk,
@@ -9,18 +22,24 @@ module AHBVP (
     input [15:0] vi_data,
 
     // video process
-    // output        vp_clk,
+    output        vp_clk,
     output        vp_vs,
     output        vp_de,
     output [15:0] vp_data
 );
 
-    parameter H_DISP = 12'd1280;
-    parameter V_DISP = 12'd720;
-    parameter INPUT_X_RES_WIDTH = 11;
-    parameter INPUT_Y_RES_WIDTH = 11;
-    parameter OUTPUT_X_RES_WIDTH = 11;
-    parameter OUTPUT_Y_RES_WIDTH = 11;
+    // VP parameters
+    // wire       cuter_en = VP_CR[0];
+    // wire [1:0] filter_mode = VP_CR[2:1];
+    // wire       scaler_en = VP_CR[3];
+    wire       cuter_en = 1'b0;
+    wire [1:0] filter_mode = 2'b01;
+    wire       scaler_en = 1'b1;
+    // wire [ INPUT_X_RES_WIDTH-1:0] START_X = VP_START[INPUT_X_RES_WIDTH-1:0];
+    // wire [ INPUT_Y_RES_WIDTH-1:0] START_Y = VP_START[INPUT_X_RES_WIDTH-1+16:0+16];
+    // wire [OUTPUT_X_RES_WIDTH-1:0] END_X = VP_END[OUTPUT_X_RES_WIDTH-1:0];
+    // wire [OUTPUT_Y_RES_WIDTH-1:0] END_Y = VP_END[OUTPUT_X_RES_WIDTH-1+16:0+16];
+
 
     // Video Parameters
     // 放大
@@ -61,19 +80,19 @@ module AHBVP (
         .OUTPUT_X_RES_WIDTH(OUTPUT_X_RES_WIDTH),
         .OUTPUT_Y_RES_WIDTH(OUTPUT_Y_RES_WIDTH)
     ) image_cut (
-        .clk(vi_clk),
+        .clk   (vi_clk),
         .clk_vp(clk_vp),
-        .rst_n(rst_n),
+        .rst_n (rst_n),
+        .EN    (cuter_en),
 
-        .start_x(START_X),
-        .start_y(START_Y),
-        .end_x  (END_X),
-        .end_y  (END_Y),
+        .START_X(START_X),
+        .START_Y(START_Y),
+        .END_X  (END_X),
+        .END_Y  (END_Y),
 
         .vs_i (vs_i),
         .de_i (de_i),
         .rgb_i(rgb_i),
-
         .vs_o (image_cut_vs),
         .de_o (image_cut_de),
         .rgb_o(image_cut_rgb)
@@ -91,7 +110,8 @@ module AHBVP (
     ) filter (
         .clk      (vi_clk),
         .rst_n    (rst_n),
-        .mode     (2'b01),  // 00: bypass, 01: gaussian, 10: median, 11: mean
+        .mode     (filter_mode),  // 00: bypass, 01: gaussian, 10: median, 11: mean
+
         .pre_vs   (image_cut_vs),
         .pre_de   (image_cut_de),
         .pre_data (image_cut_rgb),
@@ -117,7 +137,7 @@ module AHBVP (
         .OUTPUT_X_RES_WIDTH(OUTPUT_X_RES_WIDTH),
         .OUTPUT_Y_RES_WIDTH(OUTPUT_Y_RES_WIDTH)
     ) scaler (
-        .EN   (1'b1),
+        .EN   (scaler_en),
 
         .inputXRes  (inputXRes),
         .inputYRes  (inputYRes),
@@ -125,9 +145,12 @@ module AHBVP (
         .outputYRes (outputYRes),
 
         .pre_clk  (vi_clk),
-        .pre_vs   (image_cut_vs),
-        .pre_de   (image_cut_de),
-        .pre_data (image_cut_rgb),
+        .pre_vs   (vs_i),
+        .pre_de   (de_i),
+        .pre_data (rgb_i),
+        // .pre_vs   (image_cut_vs),
+        // .pre_de   (image_cut_de),
+        // .pre_data (image_cut_rgb),
         // .pre_vs   (post_vs_filter),
         // .pre_de   (post_de_filter),
         // .pre_data (post_data_filter),
@@ -155,11 +178,11 @@ module AHBVP (
     //--------------------------------------------------------------------------
     // Output
     //--------------------------------------------------------------------------
-    // assign vp_clk  = clk_vp;
+    assign vp_clk  = clk_vp;
     assign vp_vs   = post_vs_scaler;
-    // assign vp_de   = fill_dataValid;
-    // assign vp_data = {fill_data[23:19], fill_data[15:10], fill_data[7:3]};
-    assign vp_de   = post_de_scaler;
-    assign vp_data = {post_data_scaler[23:19], post_data_scaler[15:10], post_data_scaler[7:3]};
+    assign vp_de   = fill_dataValid;
+    assign vp_data = {fill_data[23:19], fill_data[15:10], fill_data[7:3]};
+    // assign vp_de   = post_de_scaler;
+    // assign vp_data = {post_data_scaler[23:19], post_data_scaler[15:10], post_data_scaler[7:3]};
 
 endmodule

@@ -3,6 +3,7 @@ module CAM (
     input         cmos_clk,    // cmos pixel clock
     input         rst_n,       // system reset
 
+    output [2:0]  i2c_sel,     // select i2c slave
     inout         cmos_scl,    // cmos i2c clock
     inout         cmos_sda,    // cmos i2c data
     input         cmos_vsync,  // cmos vsync
@@ -1709,6 +1710,7 @@ module lut_ov5640_rgb565 #(
                 10'd201: lut_data <= {8'h78, 24'h5025_00};
                 //系统时钟分频
                 // 10'd202: lut_data <= {8'h78, 24'h3035_11};  //41:15fps, 21:30Fps, 11:60Fps
+                // 10'd202: lut_data <= {8'h78, 24'h3035_21};  //41:15fps, 21:30Fps, 11:60Fps
                 10'd202: lut_data <= {8'h78, 24'h3035_41};  //41:15fps, 21:30Fps, 11:60Fps
                 10'd203:
                 if (USE_4vs3_frame == "true")
