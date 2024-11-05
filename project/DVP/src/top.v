@@ -69,7 +69,7 @@ module top #(
     wire        serial_clk;
     wire        video_clk;  // video pixel clock
     wire        memory_clk;
-    wire        clk_vpm;
+    wire        clk_vp;
     wire        DDR_pll_lock;
     wire        TMDS_DDR_pll_lock;
     HDMI_PLL HDMI_PLL (
@@ -82,7 +82,7 @@ module top #(
     SYS_PLL SYS_PLL (
         .clkin  (clk),
         .clkout0(cmos_clk),
-        .clkout1(clk_vpm),
+        .clkout1(clk_vp),
         .clkout2(memory_clk),
         .lock   (DDR_pll_lock),
         .reset  (1'b0),
@@ -119,7 +119,7 @@ module top #(
 
     // 视频处理模块
     AHBVP AHBVP (
-        .clk_vpm (clk_vpm),
+        .clk_vp (clk_vp),
         .rst_n   (rst_n),
 
         .vi_clk (vi_clk),
@@ -127,7 +127,7 @@ module top #(
         .vi_de  (vi_de),
         .vi_data(vi_data),
 
-        .vp_clk  (vp_clk),
+        // .vp_clk  (vp_clk),
         .vp_vs   (vp_vs),
         .vp_de   (vp_de),
         .vp_data (vp_data)
@@ -145,7 +145,7 @@ module top #(
         //  .vi_vs  (vi_vs),
         //  .vi_de  (vi_de),
         //  .vi_data(vi_data),
-        .vi_clk (vp_clk),
+        .vi_clk (clk_vp),
         .vi_vs  (vp_vs),
         .vi_de  (vp_de),
         .vi_data(vp_data),

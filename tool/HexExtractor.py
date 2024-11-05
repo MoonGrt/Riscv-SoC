@@ -78,7 +78,6 @@ def save_bytes_to_files(instructions, output_dir):
     print(f"Saved {len(instructions)} instructions to {output_dir}")
 
 
-
 if __name__ == '__main__':
     input_file_path = 'test.hex'
     output_file_path = 'ram'

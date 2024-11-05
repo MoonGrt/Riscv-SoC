@@ -1,5 +1,5 @@
 module AHBVP (
-    input clk_vpm,
+    input clk_vp,
     input rst_n,
 
     // video input
@@ -9,7 +9,7 @@ module AHBVP (
     input [15:0] vi_data,
 
     // video process
-    output        vp_clk,
+    // output        vp_clk,
     output        vp_vs,
     output        vp_de,
     output [15:0] vp_data
@@ -62,7 +62,7 @@ module AHBVP (
         .OUTPUT_Y_RES_WIDTH(OUTPUT_Y_RES_WIDTH)
     ) image_cut (
         .clk(vi_clk),
-        .clk_vpm(clk_vpm),
+        .clk_vp(clk_vp),
         .rst_n(rst_n),
 
         .start_x(START_X),
@@ -131,7 +131,7 @@ module AHBVP (
         // .pre_vs   (post_vs_filter),
         // .pre_de   (post_de_filter),
         // .pre_data (post_data_filter),
-        .post_clk (clk_vpm),
+        .post_clk (clk_vp),
         .post_vs  (post_vs_scaler),
         .post_de  (post_de_scaler),
         .post_data(post_data_scaler)
@@ -145,7 +145,7 @@ module AHBVP (
     fill_brank #(
         .H_DISP(H_DISP)
     ) fill_brank (
-        .clk        (clk_vpm),
+        .clk        (clk_vp),
         .dataValid_i(post_de_scaler),
         .data_i     (post_data_scaler),
         .dataValid_o(fill_dataValid),
@@ -155,7 +155,7 @@ module AHBVP (
     //--------------------------------------------------------------------------
     // Output
     //--------------------------------------------------------------------------
-    assign vp_clk  = clk_vpm;
+    // assign vp_clk  = clk_vp;
     assign vp_vs   = post_vs_scaler;
     // assign vp_de   = fill_dataValid;
     // assign vp_data = {fill_data[23:19], fill_data[15:10], fill_data[7:3]};

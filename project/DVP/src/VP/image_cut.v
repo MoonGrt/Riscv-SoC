@@ -8,8 +8,8 @@ module image_cut #(
     parameter OUTPUT_X_RES_WIDTH = 11,
     parameter OUTPUT_Y_RES_WIDTH = 11
 ) (
-    input 
-wire clk,    input wire clk_vpm,
+    input wire clk,
+    input wire clk_vp,
     input wire rst_n,
 
     input wire [ INPUT_X_RES_WIDTH-1:0] start_x,
@@ -34,14 +34,13 @@ wire clk,    input wire clk_vpm,
 
     reg vs_reg1, vs_reg2;
     assign vs_o = vs_reg1 & ~vs_reg2;
-    always @(posedge clk_vpm) begin
+    always @(posedge clk_vp) begin
         vs_reg1 <= vs;
         vs_reg2 <= vs_reg1;
     end
 
     always @(posedge clk) begin
-        if (~rst_n) pixel_x <= 0;
-        else if (vs_i) pixel_x <= 0;
+        if (~rst_n | vs_i) pixel_x <= 0;
         else if (de_i)
             if (pixel_x == H_DISP - 1) pixel_x <= 0;
             else pixel_x <= pixel_x + 1;
@@ -49,13 +48,10 @@ wire clk,    input wire clk_vpm,
     end
 
     always @(posedge clk) begin
-        if (~rst_n) pixel_y <= 0;
-        else if (vs_i) pixel_y <= 0;
-        else if (de_i)
-            if (pixel_x == H_DISP - 1)
-                if (pixel_y == V_DISP - 1) pixel_y <= 0;
-                else pixel_y <= pixel_y + 1;
-            else pixel_y <= pixel_y;
+        if (~rst_n | vs_i) pixel_y <= 0;
+        else if (pixel_x == H_DISP - 1)
+            if (pixel_y == V_DISP - 1) pixel_y <= 0;
+            else pixel_y <= pixel_y + 1;
         else pixel_y <= pixel_y;
     end
 
