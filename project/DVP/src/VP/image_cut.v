@@ -27,19 +27,16 @@ module image_cut #(
     output wire [23:0] rgb_o
 );
 
-    reg [11:0] pixel_x, pixel_y;
-    wire image_cut = (pixel_x >= START_X && pixel_x < END_X) && (pixel_y >= START_Y && pixel_y < END_Y);
-    // wire vs = (START_X == 0 && START_Y == 0) ? vs_i : (pixel_x == START_X) & (pixel_y == START_Y);
     wire vs = vs_i;
-    assign rgb_o = EN ? rgb_i : vs_i;
-    assign de_o  = EN ? (image_cut & de_i) : de_i;
-    assign vs_o  = EN ? (vs_reg1 & ~vs_reg2) : rgb_i;
-
     reg vs_reg1, vs_reg2;
     always @(posedge clk_vp) begin
         vs_reg1 <= vs;
         vs_reg2 <= vs_reg1;
     end
+
+    reg [11:0] pixel_x, pixel_y;
+    wire image_cut = (pixel_x >= START_X && pixel_x < END_X) && (pixel_y >= START_Y && pixel_y < END_Y);
+    // wire vs = (START_X == 0 && START_Y == 0) ? vs_i : (pixel_x == START_X) & (pixel_y == START_Y);
 
     always @(posedge clk) begin
         if (~rst_n | vs_o) pixel_x <= 0;
@@ -56,5 +53,9 @@ module image_cut #(
             else pixel_y <= pixel_y + 1;
         else pixel_y <= pixel_y;
     end
+
+    assign vs_o  = EN ? (vs_reg1 & ~vs_reg2) : vs_i;
+    assign de_o  = EN ? (image_cut & de_i) : de_i;
+    assign rgb_o = EN ? rgb_i : rgb_i;
 
 endmodule

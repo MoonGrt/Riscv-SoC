@@ -32,14 +32,21 @@ module AHBVP #(
     // wire       cuter_en = VP_CR[0];
     // wire [1:0] filter_mode = VP_CR[2:1];
     // wire       scaler_en = VP_CR[3];
-    wire       cuter_en = 1'b0;
-    wire [1:0] filter_mode = 2'b01;
+    // wire       color_en = VP_CR[4];
+    // wire       edge_en = VP_CR[5];
+    // wire       binarizer_en = VP_CR[6];
+    wire       cuter_en = 1'b1;
+    wire [1:0] filter_mode = 2'b00;
     wire       scaler_en = 1'b1;
+    wire       color_en = 1'b0;
+    wire       edge_en = 1'b0;
+    wire       binarizer_en = 1'b0;
     // wire [ INPUT_X_RES_WIDTH-1:0] START_X = VP_START[INPUT_X_RES_WIDTH-1:0];
     // wire [ INPUT_Y_RES_WIDTH-1:0] START_Y = VP_START[INPUT_X_RES_WIDTH-1+16:0+16];
     // wire [OUTPUT_X_RES_WIDTH-1:0] END_X = VP_END[OUTPUT_X_RES_WIDTH-1:0];
     // wire [OUTPUT_Y_RES_WIDTH-1:0] END_Y = VP_END[OUTPUT_X_RES_WIDTH-1+16:0+16];
-
+    // wire [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = VP_SCALER[INPUT_X_RES_WIDTH-1:0];  // Resolution of output data minus 1
+    // wire [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = VP_SCALER[INPUT_X_RES_WIDTH-1+16:0+16];  // Resolution of output data minus 1
 
     // Video Parameters
     // 放大
@@ -72,38 +79,63 @@ module AHBVP #(
     wire [23:0] rgb_i = {vi_data[15:11], 3'b0, vi_data[10:5], 2'b0, vi_data[4:0], 3'b0};
     wire image_cut_de, image_cut_vs;
     wire [23:0] image_cut_rgb;
-    image_cut #(
-        .H_DISP(H_DISP),
-        .V_DISP(V_DISP),
-        .INPUT_X_RES_WIDTH(INPUT_X_RES_WIDTH),
-        .INPUT_Y_RES_WIDTH(INPUT_Y_RES_WIDTH),
+    // image_cut #(
+    //     .H_DISP(H_DISP),
+    //     .V_DISP(V_DISP),
+    //     .INPUT_X_RES_WIDTH(INPUT_X_RES_WIDTH),
+    //     .INPUT_Y_RES_WIDTH(INPUT_Y_RES_WIDTH),
+    //     .OUTPUT_X_RES_WIDTH(OUTPUT_X_RES_WIDTH),
+    //     .OUTPUT_Y_RES_WIDTH(OUTPUT_Y_RES_WIDTH)
+    // ) image_cut (
+    //     .clk   (vi_clk),
+    //     .clk_vp(clk_vp),
+    //     .rst_n (rst_n),
+    //     .EN    (cuter_en),
+
+    //     .START_X(START_X),
+    //     .START_Y(START_Y),
+    //     .END_X  (END_X),
+    //     .END_Y  (END_Y),
+
+    //     .vs_i (vs_i),
+    //     .de_i (de_i),
+    //     .rgb_i(rgb_i)
+    //     // ,
+    //     // .vs_o (image_cut_vs),
+    //     // .de_o (image_cut_de),
+    //     // .rgb_o(image_cut_rgb)
+    // );
+    cutter #(
+        .H_DISP            (H_DISP),
+        .V_DISP            (V_DISP),
+        .INPUT_X_RES_WIDTH (INPUT_X_RES_WIDTH),
+        .INPUT_Y_RES_WIDTH (INPUT_Y_RES_WIDTH),
         .OUTPUT_X_RES_WIDTH(OUTPUT_X_RES_WIDTH),
         .OUTPUT_Y_RES_WIDTH(OUTPUT_Y_RES_WIDTH)
-    ) image_cut (
-        .clk   (vi_clk),
-        .clk_vp(clk_vp),
-        .rst_n (rst_n),
-        .EN    (cuter_en),
+    ) cutter (
+        .clk  (vi_clk),
+        .rst_n(rst_n),
+        .EN   (cuter_en),
 
         .START_X(START_X),
         .START_Y(START_Y),
         .END_X  (END_X),
         .END_Y  (END_Y),
 
-        .vs_i (vs_i),
-        .de_i (de_i),
-        .rgb_i(rgb_i),
-        .vs_o (image_cut_vs),
-        .de_o (image_cut_de),
-        .rgb_o(image_cut_rgb)
+        .pre_vs   (vs_i),
+        .pre_de   (de_i),
+        .pre_data (rgb_i),
+        .post_vs  (image_cut_vs),
+        .post_de  (image_cut_de),
+        .post_data(image_cut_rgb)
     );
 
     //--------------------------------------------------------------------------
     // Filter
     //--------------------------------------------------------------------------
-    wire        post_vs_filter;  // Processed Image data vs valid signal
-    wire        post_de_filter;  // Processed Image data output/capture enable clock
-    wire [23:0] post_data_filter;  // Processed Image brightness output
+    wire        filter_post_vs;  // Processed Image data vs valid signal
+    wire        filter_post_de;  // Processed Image data output/capture enable clock
+    wire [23:0] filter_post_data;  // Processed Image brightness output
     filter #(
         .IMG_HDISP(H_DISP),  // 1280*720
         .IMG_VDISP(V_DISP)
@@ -115,18 +147,17 @@ module AHBVP #(
         .pre_vs   (image_cut_vs),
         .pre_de   (image_cut_de),
         .pre_data (image_cut_rgb),
-        .post_vs  (post_vs_filter),
-        .post_de  (post_de_filter),
-        .post_data(post_data_filter)
+        .post_vs  (filter_post_vs),
+        .post_de  (filter_post_de),
+        .post_data(filter_post_data)
     );
 
     //--------------------------------------------------------------------------
     // Scaler
     //--------------------------------------------------------------------------
-    // Scaler Parameters
-    wire        post_vs_scaler;  // Processed Image data vs valid signal
-    wire        post_de_scaler;  // Processed Image data output/capture enable clock
-    wire [23:0] post_data_scaler;  // Processed Image output
+    wire        scaler_post_vs;  // Processed Image data vs valid signal
+    wire        scaler_post_de;  // Processed Image data output/capture enable clock
+    wire [23:0] scaler_post_data;  // Processed Image output
     wire [ INPUT_X_RES_WIDTH-1:0] inputXRes = END_X - START_X - 1;  // Resolution of input data minus 1
     wire [ INPUT_Y_RES_WIDTH-1:0] inputYRes = END_Y - START_Y - 1;
     wire [OUTPUT_X_RES_WIDTH-1:0] outputXRes = OUTPUT_X_RES;  // Resolution of input data minus 1
@@ -145,19 +176,77 @@ module AHBVP #(
         .outputYRes (outputYRes),
 
         .pre_clk  (vi_clk),
-        .pre_vs   (vs_i),
-        .pre_de   (de_i),
-        .pre_data (rgb_i),
-        // .pre_vs   (image_cut_vs),
-        // .pre_de   (image_cut_de),
-        // .pre_data (image_cut_rgb),
-        // .pre_vs   (post_vs_filter),
-        // .pre_de   (post_de_filter),
-        // .pre_data (post_data_filter),
+        .pre_vs   (filter_post_vs),
+        .pre_de   (filter_post_de),
+        .pre_data (filter_post_data),
         .post_clk (clk_vp),
-        .post_vs  (post_vs_scaler),
-        .post_de  (post_de_scaler),
-        .post_data(post_data_scaler)
+        .post_vs  (scaler_post_vs),
+        .post_de  (scaler_post_de),
+        .post_data(scaler_post_data)
+    );
+
+    //--------------------------------------------------------------------------
+    // Color space convert
+    //--------------------------------------------------------------------------
+    wire       color_post_vs;  // Processed Image data vs valid signal
+    wire       color_post_de;  // Processed Image data output/capture enable clock
+    wire [7:0] color_post_y;  // Processed Image output
+    rgb2ycbcr rgb2ycbcr (
+        .clk     (vi_clk),
+        .rst_n   (rst_n),
+        .EN      (color_en),
+
+        .pre_vs  (filter_post_vs),
+        .pre_de  (filter_post_de),
+        .pre_data(filter_post_data),
+        .post_vs (color_post_vs),
+        .post_de (color_post_de),
+        .post_y  (color_post_y),
+        .post_cb (),
+        .post_cr ()
+    );
+
+    //--------------------------------------------------------------------------
+    // Edge Detector
+    //--------------------------------------------------------------------------
+    wire        edge_post_vs;  // Processed Image data vs valid signal
+    wire        edge_post_de;  // Processed Image data output/capture enable clock
+    wire [23:0] edge_post_data;  // Processed Image output
+    edge_detector #(
+        .IMG_HDISP(H_DISP),
+        .IMG_VDISP(V_DISP)
+    ) edge_detector (
+        .clk      (vi_clk),
+        .rst_n    (rst_n),
+        .EN       (edge_en),
+        .threshold(8'd0),
+
+        .pre_vs  (color_post_vs),
+        .pre_de  (color_post_de),
+        .pre_img (color_post_y),
+        .post_vs (edge_post_vs),
+        .post_de (edge_post_de),
+        .post_img(edge_post_data)
+    );
+
+    //--------------------------------------------------------------------------
+    // Binarization
+    //--------------------------------------------------------------------------
+    wire        binarizer_post_vs;  // Processed Image data vs valid signal
+    wire        binarizer_post_de;  // Processed Image data output/capture enable clock
+    wire [23:0] binarizer_post_data;  // Processed Image output
+    binarizer binarizer (
+        .clk      (vi_clk),
+        .rst_n    (rst_n),
+        .EN       (binarizer_en),
+        .threshold(8'd0),
+
+        .pre_vs  (color_post_vs),
+        .pre_de  (color_post_de),
+        .pre_data(color_post_y),
+        .post_vs (binarizer_post_vs),
+        .post_de (binarizer_post_de),
+        .post_bit(binarizer_post_data)
     );
 
     //--------------------------------------------------------------------------
@@ -169,8 +258,8 @@ module AHBVP #(
         .H_DISP(H_DISP)
     ) fill_brank (
         .clk        (clk_vp),
-        .dataValid_i(post_de_scaler),
-        .data_i     (post_data_scaler),
+        .dataValid_i(scaler_post_de),
+        .data_i     (scaler_post_data),
         .dataValid_o(fill_dataValid),
         .data_o     (fill_data)
     );
@@ -179,10 +268,16 @@ module AHBVP #(
     // Output
     //--------------------------------------------------------------------------
     assign vp_clk  = clk_vp;
-    assign vp_vs   = post_vs_scaler;
+    assign vp_vs   = scaler_post_vs;
     assign vp_de   = fill_dataValid;
     assign vp_data = {fill_data[23:19], fill_data[15:10], fill_data[7:3]};
-    // assign vp_de   = post_de_scaler;
-    // assign vp_data = {post_data_scaler[23:19], post_data_scaler[15:10], post_data_scaler[7:3]};
+    // assign vp_de   = scaler_post_de;
+    // assign vp_data = {scaler_post_data[23:19], scaler_post_data[15:10], scaler_post_data[7:3]};
+
+    pixel_cnt pixel_cnt(
+        .clk(vi_clk),
+        .rst(image_cut_vs),
+        .de (image_cut_de)
+    );
 
 endmodule
