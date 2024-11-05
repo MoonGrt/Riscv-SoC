@@ -29,7 +29,6 @@ module AHBVP #(
 );
 
     // VP parameters
-    // wire       cuter_en = VP_CR[0];
     wire       cuter_en = 1'b1;
     wire [1:0] filter_mode = 2'b01;
     wire       scaler_en = 1'b1;
@@ -37,6 +36,7 @@ module AHBVP #(
     wire       edge_en = 1'b0;
     wire       binarizer_en = 1'b0;
     wire       filler_en = 1'b1;
+    wire [1:0] filler_mode = 2'b00;  // 00: scaler, 01: edge, 10: binarizer, 11: bypass
     // wire [ INPUT_X_RES_WIDTH-1:0] START_X = VP_START[INPUT_X_RES_WIDTH-1:0];
     // wire [ INPUT_Y_RES_WIDTH-1:0] START_Y = VP_START[INPUT_X_RES_WIDTH-1+16:0+16];
     // wire [OUTPUT_X_RES_WIDTH-1:0] END_X = VP_END[OUTPUT_X_RES_WIDTH-1:0];
@@ -222,53 +222,73 @@ module AHBVP #(
     //--------------------------------------------------------------------------
     // Fill Brank
     //--------------------------------------------------------------------------
-    wire [23:0] fill_data;
-    wire        fill_dataValid;
-    fill_brank #(
+    reg         filler_pre_vs;  // Prepared Image data vs valid signal
+    reg         filler_pre_de;  // Prepared Image data output/capture enable clock
+    reg  [23:0] filler_pre_data;  // Prepared Image output
+    wire        filler_post_vs;  // Processed Image data vs valid signal
+    wire        filler_post_de;  // Processed Image data output/capture enable clock
+    wire [23:0] filler_post_data;  // Processed Image output
+    always @ (*) begin
+        if (~rst_n) begin
+            filler_pre_vs   = 1'b0;
+            filler_pre_de   = 1'b0;
+            filler_pre_data = 24'd0;
+        end else begin
+            case (filler_mode)
+                2'b00: begin
+                    filler_pre_vs   = scaler_post_vs;
+                    filler_pre_de   = scaler_post_de;
+                    filler_pre_data = scaler_post_data;
+                end
+                2'b01: begin
+                    filler_pre_vs   = edge_post_vs;
+                    filler_pre_de   = edge_post_de;
+                    filler_pre_data = edge_post_data;
+                end
+                2'b10: begin
+                    filler_pre_vs   = binarizer_post_vs;
+                    filler_pre_de   = binarizer_post_de;
+                    filler_pre_data = binarizer_post_data;
+                end
+                2'b11: begin
+                    filler_pre_vs   = vs_i;
+                    filler_pre_de   = de_i;
+                    filler_pre_data = rgb_i;
+                end
+            endcase
+        end
+    end
+    filler #(
         .H_DISP(H_DISP)
-    ) fill_brank (
-        .clk        (clk_vp),
-        .dataValid_i(scaler_post_de),
-        .data_i     (scaler_post_data),
-        .dataValid_o(fill_dataValid),
-        .data_o     (fill_data)
+    ) filler (
+        .clk      (clk_vp),
+        .rst_n    (rst_n),
+        .EN       (filler_en),
+        .pre_vs   (scaler_post_vs),
+        .pre_de   (scaler_post_de),
+        .pre_data (scaler_post_data),
+        // .pre_vs   (filler_pre_vs),
+        // .pre_de   (filler_pre_de),
+        // .pre_data (filler_pre_data),
+        .post_vs  (filler_post_vs),
+        .post_de  (filler_post_de),
+        .post_data(filler_post_data)
     );
-
-    // wire        filler_post_vs;  // Processed Image data vs valid signal
-    // wire        filler_post_de;  // Processed Image data output/capture enable clock
-    // wire [23:0] filler_post_data;  // Processed Image output
-    // filler #(
-    //     .H_DISP(H_DISP)
-    // ) filler (
-    //     .clk      (clk_vp),
-    //     .rst_n    (rst_n),
-    //     .EN       (filler_en),
-
-    //     .pre_vs   (scaler_post_vs),
-    //     .pre_de   (scaler_post_de),
-    //     .pre_data (scaler_post_data),
-    //     .post_vs  (filler_post_vs),
-    //     .post_de  (filler_post_de),
-    //     .post_data(filler_post_data)
-    // );
 
     //--------------------------------------------------------------------------
     // Output
     //--------------------------------------------------------------------------
     assign vp_clk  = clk_vp;
-    assign vp_vs   = scaler_post_vs;
-    // assign vp_de   = scaler_post_de;
-    // assign vp_data = {scaler_post_data[23:19], scaler_post_data[15:10], scaler_post_data[7:3]};
-    assign vp_de   = fill_dataValid;
-    assign vp_data = {fill_data[23:19], fill_data[15:10], fill_data[7:3]};
-    // assign vp_vs   = filler_post_vs;
-    // assign vp_de   = filler_post_de;
-    // assign vp_data = {filler_post_data[23:19], filler_post_data[15:10], filler_post_data[7:3]};
+    assign vp_vs   = filler_post_vs;
+    assign vp_de   = filler_post_de;
+    assign vp_data = {filler_post_data[23:19], filler_post_data[15:10], filler_post_data[7:3]};
 
-    // pixel_cnt pixel_cnt(
+    // pixel_cnt pixel_cnt1(
     //     .clk(clk_vp),
     //     .rst(filler_post_vs),
+    //     // .de (fill_dataValid)
     //     .de (filler_post_de)
     // );
 
 endmodule
+

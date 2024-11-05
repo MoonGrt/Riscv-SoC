@@ -20,7 +20,6 @@
         <File path="src/VP/binarizer.v" type="file.verilog" enable="1"/>
         <File path="src/VP/cutter.v" type="file.verilog" enable="1"/>
         <File path="src/VP/edge_detector.v" type="file.verilog" enable="1"/>
-        <File path="src/VP/fill_brank.v" type="file.verilog" enable="1"/>
         <File path="src/VP/filler.v" type="file.verilog" enable="1"/>
         <File path="src/VP/filter.v" type="file.verilog" enable="1"/>
         <File path="src/VP/gaussian.v" type="file.verilog" enable="1"/>

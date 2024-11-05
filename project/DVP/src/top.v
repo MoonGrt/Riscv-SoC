@@ -185,8 +185,8 @@ if (USE_TPG == "false") begin
         .ddr_dqs_n  (ddr_dqs_n),
 
         .video_clk (video_clk),
-        .vo_vs   (vo_vs),
-        .vo_de   (vo_de),
+        .vo_vs     (vo_vs),
+        .vo_de     (vo_de),
         .video_de  (video_de),
         .video_data(video_data)
     );
