@@ -35,7 +35,7 @@ module cutter #(
 
     // Horizontal and vertical counters
     always @(posedge clk or negedge rst_n) begin
-        if (~rst_n) begin
+        if (~rst_n | pre_vs) begin
             h_cnt <= 0;
             v_cnt <= 0;
         end else if (pre_de) begin

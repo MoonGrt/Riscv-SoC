@@ -30,11 +30,6 @@ module AHBVP #(
 
     // VP parameters
     // wire       cuter_en = VP_CR[0];
-    // wire [1:0] filter_mode = VP_CR[2:1];
-    // wire       scaler_en = VP_CR[3];
-    // wire       color_en = VP_CR[4];
-    // wire       edge_en = VP_CR[5];
-    // wire       binarizer_en = VP_CR[6];
     wire       cuter_en = 1'b1;
     wire [1:0] filter_mode = 2'b00;
     wire       scaler_en = 1'b1;
@@ -51,12 +46,12 @@ module AHBVP #(
 
     // Video Parameters
     // 放大
-    reg [ INPUT_X_RES_WIDTH-1:0] START_X = H_DISP / 10 * 1 /*synthesis preserve*/;
-    reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = V_DISP / 10 * 1 /*synthesis preserve*/;
-    reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP / 10 * 1 + H_DISP / 2 /*synthesis preserve*/;
-    reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP / 10 * 1 + V_DISP / 2 /*synthesis preserve*/;
-    reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
-    reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
+    // reg [ INPUT_X_RES_WIDTH-1:0] START_X = H_DISP / 10 * 1 /*synthesis preserve*/;
+    // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = V_DISP / 10 * 1 /*synthesis preserve*/;
+    // reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP / 10 * 1 + H_DISP / 2 /*synthesis preserve*/;
+    // reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP / 10 * 1 + V_DISP / 2 /*synthesis preserve*/;
+    // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
+    // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
     // 原图
     // reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0 /*synthesis preserve*/;
     // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0 /*synthesis preserve*/;
@@ -65,12 +60,12 @@ module AHBVP #(
     // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
     // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
     // 缩小
-    // reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0 /*synthesis preserve*/;
-    // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0 /*synthesis preserve*/;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP /*synthesis preserve*/;
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP /*synthesis preserve*/;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP / 2 - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP / 2 - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
+    reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0 /*synthesis preserve*/;
+    reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0 /*synthesis preserve*/;
+    reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP /*synthesis preserve*/;
+    reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP /*synthesis preserve*/;
+    reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP / 2 - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
+    reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP / 2 - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
 
     //--------------------------------------------------------------------------
     // Scaler
@@ -227,48 +222,48 @@ module AHBVP #(
     //--------------------------------------------------------------------------
     // Fill Brank
     //--------------------------------------------------------------------------
-    // wire [23:0] fill_data;
-    // wire        fill_dataValid;
-    // fill_brank #(
-    //     .H_DISP(H_DISP)
-    // ) fill_brank (
-    //     .clk        (clk_vp),
-    //     .dataValid_i(scaler_post_de),
-    //     .data_i     (scaler_post_data),
-    //     .dataValid_o(fill_dataValid),
-    //     .data_o     (fill_data)
-    // );
-
-    wire        filler_post_vs;  // Processed Image data vs valid signal
-    wire        filler_post_de;  // Processed Image data output/capture enable clock
-    wire [23:0] filler_post_data;  // Processed Image output
-    filler #(
+    wire [23:0] fill_data;
+    wire        fill_dataValid;
+    fill_brank #(
         .H_DISP(H_DISP)
-    ) filler (
-        .clk      (clk_vp),
-        .rst_n    (rst_n),
-        .EN       (filler_en),
-
-        .pre_vs   (scaler_post_vs),
-        .pre_de   (scaler_post_de),
-        .pre_data (scaler_post_data),
-        .post_vs  (filler_post_vs),
-        .post_de  (filler_post_de),
-        .post_data(filler_post_data)
+    ) fill_brank (
+        .clk        (clk_vp),
+        .dataValid_i(scaler_post_de),
+        .data_i     (scaler_post_data),
+        .dataValid_o(fill_dataValid),
+        .data_o     (fill_data)
     );
+
+    // wire        filler_post_vs;  // Processed Image data vs valid signal
+    // wire        filler_post_de;  // Processed Image data output/capture enable clock
+    // wire [23:0] filler_post_data;  // Processed Image output
+    // filler #(
+    //     .H_DISP(H_DISP)
+    // ) filler (
+    //     .clk      (clk_vp),
+    //     .rst_n    (rst_n),
+    //     .EN       (filler_en),
+
+    //     .pre_vs   (scaler_post_vs),
+    //     .pre_de   (scaler_post_de),
+    //     .pre_data (scaler_post_data),
+    //     .post_vs  (filler_post_vs),
+    //     .post_de  (filler_post_de),
+    //     .post_data(filler_post_data)
+    // );
 
     //--------------------------------------------------------------------------
     // Output
     //--------------------------------------------------------------------------
     assign vp_clk  = clk_vp;
-    // assign vp_vs   = scaler_post_vs;
+    assign vp_vs   = scaler_post_vs;
     // assign vp_de   = scaler_post_de;
     // assign vp_data = {scaler_post_data[23:19], scaler_post_data[15:10], scaler_post_data[7:3]};
-    // assign vp_de   = fill_dataValid;
-    // assign vp_data = {fill_data[23:19], fill_data[15:10], fill_data[7:3]};
-    assign vp_vs   = filler_post_vs;
-    assign vp_de   = filler_post_de;
-    assign vp_data = {filler_post_data[23:19], filler_post_data[15:10], filler_post_data[7:3]};
+    assign vp_de   = fill_dataValid;
+    assign vp_data = {fill_data[23:19], fill_data[15:10], fill_data[7:3]};
+    // assign vp_vs   = filler_post_vs;
+    // assign vp_de   = filler_post_de;
+    // assign vp_data = {filler_post_data[23:19], filler_post_data[15:10], filler_post_data[7:3]};
 
     pixel_cnt pixel_cnt(
         .clk(clk_vp),
