@@ -149,6 +149,8 @@ module top #(
         .vp_data(vp_data)
     );
 
+generate
+if (USE_TPG == "false") begin
     // 视频存储模块
     AHBDMA AHBDMA (
         .clk         (clk),
@@ -208,5 +210,7 @@ module top #(
         .tmds_d_n_0  (tmds_d_n_0),
         .tmds_d_p_0  (tmds_d_p_0)
     );
+end
+endgenerate
 
 endmodule

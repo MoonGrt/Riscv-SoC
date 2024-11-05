@@ -41,6 +41,7 @@ module AHBVP #(
     wire       color_en = 1'b0;
     wire       edge_en = 1'b0;
     wire       binarizer_en = 1'b0;
+    wire       filler_en = 1'b1;
     // wire [ INPUT_X_RES_WIDTH-1:0] START_X = VP_START[INPUT_X_RES_WIDTH-1:0];
     // wire [ INPUT_Y_RES_WIDTH-1:0] START_Y = VP_START[INPUT_X_RES_WIDTH-1+16:0+16];
     // wire [OUTPUT_X_RES_WIDTH-1:0] END_X = VP_END[OUTPUT_X_RES_WIDTH-1:0];
@@ -50,19 +51,19 @@ module AHBVP #(
 
     // Video Parameters
     // 放大
-    // reg [ INPUT_X_RES_WIDTH-1:0] START_X = H_DISP / 10 * 1 /*synthesis preserve*/;
-    // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = V_DISP / 10 * 1 /*synthesis preserve*/;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP / 10 * 1 + H_DISP / 2 /*synthesis preserve*/;
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP / 10 * 1 + V_DISP / 2 /*synthesis preserve*/;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
-    // 原图
-    reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0 /*synthesis preserve*/;
-    reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0 /*synthesis preserve*/;
-    reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP /*synthesis preserve*/;
-    reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP /*synthesis preserve*/;
+    reg [ INPUT_X_RES_WIDTH-1:0] START_X = H_DISP / 10 * 1 /*synthesis preserve*/;
+    reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = V_DISP / 10 * 1 /*synthesis preserve*/;
+    reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP / 10 * 1 + H_DISP / 2 /*synthesis preserve*/;
+    reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP / 10 * 1 + V_DISP / 2 /*synthesis preserve*/;
     reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
     reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
+    // 原图
+    // reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0 /*synthesis preserve*/;
+    // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0 /*synthesis preserve*/;
+    // reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP /*synthesis preserve*/;
+    // reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP /*synthesis preserve*/;
+    // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
+    // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
     // 缩小
     // reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0 /*synthesis preserve*/;
     // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0 /*synthesis preserve*/;
@@ -77,34 +78,8 @@ module AHBVP #(
     wire vs_i = vi_vs;
     wire de_i = vi_de;
     wire [23:0] rgb_i = {vi_data[15:11], 3'b0, vi_data[10:5], 2'b0, vi_data[4:0], 3'b0};
-    wire image_cut_de, image_cut_vs;
-    wire [23:0] image_cut_rgb;
-    // image_cut #(
-    //     .H_DISP(H_DISP),
-    //     .V_DISP(V_DISP),
-    //     .INPUT_X_RES_WIDTH(INPUT_X_RES_WIDTH),
-    //     .INPUT_Y_RES_WIDTH(INPUT_Y_RES_WIDTH),
-    //     .OUTPUT_X_RES_WIDTH(OUTPUT_X_RES_WIDTH),
-    //     .OUTPUT_Y_RES_WIDTH(OUTPUT_Y_RES_WIDTH)
-    // ) image_cut (
-    //     .clk   (vi_clk),
-    //     .clk_vp(clk_vp),
-    //     .rst_n (rst_n),
-    //     .EN    (cuter_en),
-
-    //     .START_X(START_X),
-    //     .START_Y(START_Y),
-    //     .END_X  (END_X),
-    //     .END_Y  (END_Y),
-
-    //     .vs_i (vs_i),
-    //     .de_i (de_i),
-    //     .rgb_i(rgb_i)
-    //     // ,
-    //     // .vs_o (image_cut_vs),
-    //     // .de_o (image_cut_de),
-    //     // .rgb_o(image_cut_rgb)
-    // );
+    wire cutter_post_de, cutter_post_vs;
+    wire [23:0] cutter_post_data;
     cutter #(
         .H_DISP            (H_DISP),
         .V_DISP            (V_DISP),
@@ -125,9 +100,9 @@ module AHBVP #(
         .pre_vs   (vs_i),
         .pre_de   (de_i),
         .pre_data (rgb_i),
-        .post_vs  (image_cut_vs),
-        .post_de  (image_cut_de),
-        .post_data(image_cut_rgb)
+        .post_vs  (cutter_post_vs),
+        .post_de  (cutter_post_de),
+        .post_data(cutter_post_data)
     );
 
     //--------------------------------------------------------------------------
@@ -144,9 +119,9 @@ module AHBVP #(
         .rst_n    (rst_n),
         .mode     (filter_mode),  // 00: bypass, 01: gaussian, 10: median, 11: mean
 
-        .pre_vs   (image_cut_vs),
-        .pre_de   (image_cut_de),
-        .pre_data (image_cut_rgb),
+        .pre_vs   (cutter_post_vs),
+        .pre_de   (cutter_post_de),
+        .pre_data (cutter_post_data),
         .post_vs  (filter_post_vs),
         .post_de  (filter_post_de),
         .post_data(filter_post_data)
@@ -252,32 +227,53 @@ module AHBVP #(
     //--------------------------------------------------------------------------
     // Fill Brank
     //--------------------------------------------------------------------------
-    wire [23:0] fill_data;
-    wire        fill_dataValid;
-    fill_brank #(
+    // wire [23:0] fill_data;
+    // wire        fill_dataValid;
+    // fill_brank #(
+    //     .H_DISP(H_DISP)
+    // ) fill_brank (
+    //     .clk        (clk_vp),
+    //     .dataValid_i(scaler_post_de),
+    //     .data_i     (scaler_post_data),
+    //     .dataValid_o(fill_dataValid),
+    //     .data_o     (fill_data)
+    // );
+
+    wire        filler_post_vs;  // Processed Image data vs valid signal
+    wire        filler_post_de;  // Processed Image data output/capture enable clock
+    wire [23:0] filler_post_data;  // Processed Image output
+    filler #(
         .H_DISP(H_DISP)
-    ) fill_brank (
-        .clk        (clk_vp),
-        .dataValid_i(scaler_post_de),
-        .data_i     (scaler_post_data),
-        .dataValid_o(fill_dataValid),
-        .data_o     (fill_data)
+    ) filler (
+        .clk      (clk_vp),
+        .rst_n    (rst_n),
+        .EN       (filler_en),
+
+        .pre_vs   (scaler_post_vs),
+        .pre_de   (scaler_post_de),
+        .pre_data (scaler_post_data),
+        .post_vs  (filler_post_vs),
+        .post_de  (filler_post_de),
+        .post_data(filler_post_data)
     );
 
     //--------------------------------------------------------------------------
     // Output
     //--------------------------------------------------------------------------
     assign vp_clk  = clk_vp;
-    assign vp_vs   = scaler_post_vs;
-    assign vp_de   = fill_dataValid;
-    assign vp_data = {fill_data[23:19], fill_data[15:10], fill_data[7:3]};
+    // assign vp_vs   = scaler_post_vs;
     // assign vp_de   = scaler_post_de;
     // assign vp_data = {scaler_post_data[23:19], scaler_post_data[15:10], scaler_post_data[7:3]};
+    // assign vp_de   = fill_dataValid;
+    // assign vp_data = {fill_data[23:19], fill_data[15:10], fill_data[7:3]};
+    assign vp_vs   = filler_post_vs;
+    assign vp_de   = filler_post_de;
+    assign vp_data = {filler_post_data[23:19], filler_post_data[15:10], filler_post_data[7:3]};
 
     pixel_cnt pixel_cnt(
-        .clk(vi_clk),
-        .rst(image_cut_vs),
-        .de (image_cut_de)
+        .clk(clk_vp),
+        .rst(filler_post_vs),
+        .de (filler_post_de)
     );
 
 endmodule
