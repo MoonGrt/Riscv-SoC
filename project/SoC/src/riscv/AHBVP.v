@@ -35,16 +35,21 @@ module AHBVP #(
     localparam WHITE = 24'hffffff;
 
     // VP parameters
-    // wire [7:0] edger_th = 8'h40;
-    // wire [7:0] binarizer_th = 8'h80;
     wire [1:0] vp_mode = VP_CR[2:1];  // 2'b01  // 00: , 01: scaler, 10: edge, 11: binarizer
-    wire       cuter_en = VP_CR[3];
-    wire       filter_en = VP_CR[4];
-    wire [1:0] filter_mode = VP_CR[6:5];  // 2'b01  // 00: , 01: gaussian, 10: mean, 11: median
-    wire       scaler_en = VP_CR[7];
-    wire       color_en = VP_CR[8];
-    wire       edger_en = VP_CR[9];
-    wire       binarizer_en = VP_CR[10];
+    wire       cutter_en = VP_CR[3];
+    wire [1:0] cutter_mode = VP_CR[5:4];
+    wire       filter_en = VP_CR[6];
+    wire [1:0] filter_mode = VP_CR[8:7];  // 2'b01  // 00: , 01: gaussian, 10: mean, 11: median
+    wire       scaler_en = VP_CR[9];
+    wire [1:0] scaler_mode = VP_CR[11:10];  // 2'b01  // 00: , 01: neighbor, 10: bilinear, 11: bicubic
+    wire       color_en = VP_CR[12];
+    wire [1:0] color_mode = VP_CR[14:13];
+    wire       edger_en = VP_CR[15];
+    wire [1:0] edger_mode = VP_CR[17:16];
+    wire       binarizer_en = VP_CR[18];
+    wire [1:0] binarizer_mode = VP_CR[20:19];
+    wire       fill_en = VP_CR[21];
+    wire [1:0] fill_mode = VP_CR[23:22];
 
     wire [7:0] edger_th = VP_THRESHOLD[7:0];  // 8'h40
     wire [7:0] binarizer_th = VP_THRESHOLD[15:8];  // 8'h80
@@ -96,7 +101,7 @@ module AHBVP #(
     ) cutter (
         .clk  (vi_clk),
         .rst_n(rst_n),
-        .EN   (cuter_en),
+        .EN   (cutter_en),
 
         .START_X(START_X),
         .START_Y(START_Y),
@@ -150,6 +155,7 @@ module AHBVP #(
         .OUTPUT_Y_RES_WIDTH(OUTPUT_Y_RES_WIDTH)
     ) scaler (
         .EN   (scaler_en),
+        .mode (scaler_mode),
 
         .inputXRes  (inputXRes),
         .inputYRes  (inputYRes),
@@ -176,6 +182,7 @@ module AHBVP #(
         .clk     (vi_clk),
         .rst_n   (rst_n),
         .EN      (color_en),
+        .mode    (color_mode),
 
         .pre_vs  (filter_post_vs),
         .pre_de  (filter_post_de),
@@ -200,6 +207,7 @@ module AHBVP #(
         .clk      (vi_clk),
         .rst_n    (rst_n),
         .EN       (edger_en),
+        .mode     (edger_mode),
         .threshold(edger_th),
 
         .pre_vs  (color_post_vs),
@@ -220,6 +228,7 @@ module AHBVP #(
         .clk      (vi_clk),
         .rst_n    (rst_n),
         .EN       (binarizer_en),
+        .mode     (binarizer_mode),
         .threshold(binarizer_th),
 
         .pre_vs  (color_post_vs),
@@ -282,6 +291,8 @@ module AHBVP #(
     ) filler (
         .rst_n    (rst_n),
         .EN       (filler_en),
+        .mode     (fill_mode),
+
         .pre_clk  (filler_pre_clk),
         .pre_vs   (filler_pre_vs),
         .pre_de   (filler_pre_de),

@@ -1,8 +1,9 @@
 module filler #(
     parameter H_DISP = 12'd1280
 ) (
-    input wire        rst_n,
-    input wire        EN,
+    input wire       rst_n,
+    input wire       EN,
+    input wire [1:0] mode,  // 
 
     input  wire        pre_clk,
     input  wire        pre_vs,

@@ -4,7 +4,8 @@ module scaler #(
     parameter OUTPUT_X_RES_WIDTH = 11,
     parameter OUTPUT_Y_RES_WIDTH = 11
 ) (
-    input wire EN,  // Enable
+    input wire       EN,  // Enable
+    input wire [1:0] mode,  // Select algorithm
 
     input wire [ INPUT_X_RES_WIDTH-1:0] inputXRes,  // Resolution of input data minus 1
     input wire [ INPUT_Y_RES_WIDTH-1:0] inputYRes,

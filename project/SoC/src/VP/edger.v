@@ -3,9 +3,10 @@ module edger #(
     parameter IMG_VDISP = 11'd720
 ) (
     // global clock
-    input wire clk,   // cmos video pixel clock
-    input wire rst_n, // global reset
-    input wire EN,    // enable signal for edge detector
+    input wire       clk,   // cmos video pixel clock
+    input wire       rst_n, // global reset
+    input wire       EN,    // enable signal for edge detector
+    input wire [1:0] mode,  // edge detect mode(0: Sobel, 1: Prewitt)
 
     input wire [7:0] threshold,  // Sobel Threshold for image edge detect
 

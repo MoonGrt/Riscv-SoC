@@ -10,6 +10,7 @@ module cutter #(
     input wire       clk,    // cmos video pixel clock
     input wire       rst_n,  // global reset
     input wire       EN,     // enable
+    input wire [1:0] mode,   // mode selection
 
     input wire [ INPUT_X_RES_WIDTH-1:0] START_X,  // start x-coordinate of cropping region
     input wire [ INPUT_Y_RES_WIDTH-1:0] START_Y,  // start y-coordinate of cropping region

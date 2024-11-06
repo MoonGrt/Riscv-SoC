@@ -1,8 +1,9 @@
 module binarizer (
     // module clock
-    input wire clk,    // 时钟信号
-    input wire rst_n,  // 复位信号（低有效）
-    input wire EN,     // 使能信号
+    input wire       clk,    // 时钟信号
+    input wire       rst_n,  // 复位信号（低有效）
+    input wire       EN,     // 使能信号
+    input wire [1:0] mode,   // 模式选择（00=正常模式，01=反相模式，10=镜像模式，11=反镜像模式）
 
     input wire [7:0] threshold,  // 阈值
  

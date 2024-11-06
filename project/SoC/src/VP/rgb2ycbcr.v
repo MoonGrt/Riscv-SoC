@@ -1,8 +1,9 @@
 module rgb2ycbcr (
     //module clock
-    input wire clk,    // 模块驱动时钟
-    input wire rst_n,  // 复位信号
-    input wire EN,     // 使能信号
+    input wire       clk,    // 模块驱动时钟
+    input wire       rst_n,  // 复位信号
+    input wire       EN,     // 使能信号
+    input wire [1:0] mode,  // 
 
     //图像处理前的数据接口
     input wire        pre_vs,    // Prepared Image data vs valid signal

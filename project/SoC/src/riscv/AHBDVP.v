@@ -89,7 +89,8 @@ module AhbDVP #(
     always @(posedge io_ahb_PCLK or posedge io_ahb_PRESET) begin
         if (io_ahb_PRESET) begin
             VI_CR <= {29'h0, 2'b10, 1'b1};  // VI 默认使能，camera模式
-            VP_CR <= {21'h0, 1'b1, 1'b1, 1'b1, 1'b1, 2'b01, 1'b1, 1'b1, 2'b01, 1'b1};  // VP 默认使能
+            // VP_CR <= {21'h0, 1'b1, 1'b1, 1'b1, 1'b1, 2'b01, 1'b1, 1'b1, 2'b01, 1'b1};
+            VP_CR <= {8'h0, 3'b001, 3'b001, 3'b001, 3'b001, 3'b001, 3'b001, 3'b001, 3'b011};
             VP_START <= {16'd0, 16'd0};
             VP_END <= {16'd720, 16'd1280};
             VP_SCALER <= {16'd720, 16'd1280};
