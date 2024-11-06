@@ -139,10 +139,10 @@ module Cyber (
 
     wire [15:0] system_rccCtrl_io_ahb_PADDR;  // RCC PADDR
     wire [15:0] system_dmaCtrl_io_ahb_PADDR;  // DMA PADDR
-    wire [15:0] system_dvpCtrl_io_ahb_PADDR;  // DVP PADDR
-    assign system_rccCtrl_io_ahb_PADDR = ahbRouter_1_io_outputs_0_PADDR[15:0];  // RCC
-    assign system_dmaCtrl_io_ahb_PADDR = ahbRouter_1_io_outputs_1_PADDR[15:0];  // DMA
-    assign system_dvpCtrl_io_ahb_PADDR = ahbRouter_1_io_outputs_2_PADDR[15:0];  // DVP
+    wire [ 3:0] system_dvpCtrl_io_ahb_PADDR;  // DVP PADDR
+    assign system_rccCtrl_io_ahb_PADDR = ahbRouter_1_io_outputs_0_PADDR[15:2];  // RCC
+    assign system_dmaCtrl_io_ahb_PADDR = ahbRouter_1_io_outputs_1_PADDR[15:2];  // DMA
+    assign system_dvpCtrl_io_ahb_PADDR = ahbRouter_1_io_outputs_2_PADDR[ 5:2];  // DVP
 
     // APB
     reg         system_apbBridge_io_pipelinedMemoryBus_cmd_valid;
@@ -312,6 +312,7 @@ module Cyber (
     wire        system_mainBusDecoder_logic_hits_0;
     wire        _zz_io_bus_cmd_payload_write;
     wire        system_mainBusDecoder_logic_hits_1;
+    wire        system_mainBusDecoder_logic_hits_2;
     wire        _zz_io_pipelinedMemoryBus_cmd_payload_write;
     wire        system_mainBusDecoder_logic_noHit;
     reg         system_mainBusDecoder_logic_rspPending;
@@ -514,8 +515,8 @@ module Cyber (
         .WDG_rst          (WDG_rst)                            // o
     );
     AhbDVP #(
-        // .USE_TPG("true"),
-        .USE_TPG("false"),
+        .USE_TPG("true"),
+        // .USE_TPG("false"),
         .H_DISP (12'd1280),
         .V_DISP (12'd720)
     ) AhbDVP (
@@ -838,6 +839,14 @@ module Cyber (
         system_apbBridge_io_pipelinedMemoryBus_cmd_valid = (system_mainBusDecoder_logic_masterPipelined_cmd_valid && system_mainBusDecoder_logic_hits_1);
         if (when_MuraxUtiles_l133) begin
             system_apbBridge_io_pipelinedMemoryBus_cmd_valid = 1'b0;
+        end
+    end
+
+    assign system_mainBusDecoder_logic_hits_2 = ((system_mainBusDecoder_logic_masterPipelined_cmd_payload_address & (~ 32'h000fffff)) == 32'hf1000000);
+    always @(*) begin
+        system_ahbBridge_io_pipelinedMemoryBus_cmd_valid = (system_mainBusDecoder_logic_masterPipelined_cmd_valid && system_mainBusDecoder_logic_hits_2);
+        if (when_MuraxUtiles_l133) begin
+            system_ahbBridge_io_pipelinedMemoryBus_cmd_valid = 1'b0;
         end
     end
 

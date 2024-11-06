@@ -45,7 +45,7 @@ module AHBVP #(
     wire       color_en = VP_CR[12];
     wire [1:0] color_mode = VP_CR[14:13];
     wire       edger_en = VP_CR[15];
-    wire [1:0] edger_mode = VP_CR[17:16];
+    wire [1:0] edger_mode = VP_CR[17:16];  // 2'b01  // 00: , 01: sobel, 10: prewitt, 11: 
     wire       binarizer_en = VP_CR[18];
     wire [1:0] binarizer_mode = VP_CR[20:19];
     wire       fill_en = VP_CR[21];

@@ -6,7 +6,7 @@ module AhbDVP #(
     // AHB interface
     input  wire        io_ahb_PCLK,
     input  wire        io_ahb_PRESET,
-    input  wire [ 2:0] io_ahb_PADDR,
+    input  wire [ 3:0] io_ahb_PADDR,
     input  wire [ 0:0] io_ahb_PSEL,
     input  wire        io_ahb_PENABLE,
     output wire        io_ahb_PREADY,

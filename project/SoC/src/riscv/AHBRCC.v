@@ -116,22 +116,22 @@ module AhbRCC (
     end
 
     // PLL
-    HDMI_PLL HDMI_PLL (
-        .clkin  (io_ahb_PCLK),       // input clk
-        .clkout0(serial_clk),        // output clk x5
-        .clkout1(video_clk),         // output clk x1
-        .lock   (TMDS_DDR_pll_lock)  // output lock
-    );
-    SYS_PLL SYS_PLL (
-        .clkin  (io_ahb_PCLK),
-        .clkout0(cmos_clk),
-        .clkout1(clk_vp),
-        .clkout2(memory_clk),
-        .lock   (DDR_pll_lock),
-        .reset  (1'b0),
-        .enclk0 (1'b1),
-        .enclk1 (1'b1),
-        .enclk2 (pll_stop)
-    );
+    // HDMI_PLL HDMI_PLL (
+    //     .clkin  (io_ahb_PCLK),       // input clk
+    //     .clkout0(serial_clk),        // output clk x5
+    //     .clkout1(video_clk),         // output clk x1
+    //     .lock   (TMDS_DDR_pll_lock)  // output lock
+    // );
+    // SYS_PLL SYS_PLL (
+    //     .clkin  (io_ahb_PCLK),
+    //     .clkout0(cmos_clk),
+    //     .clkout1(clk_vp),
+    //     .clkout2(memory_clk),
+    //     .lock   (DDR_pll_lock),
+    //     .reset  (1'b0),
+    //     .enclk0 (1'b1),
+    //     .enclk1 (1'b1),
+    //     .enclk2 (pll_stop)
+    // );
 
 endmodule
