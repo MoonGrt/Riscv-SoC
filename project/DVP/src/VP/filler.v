@@ -52,41 +52,41 @@ module filler #(
             post_vs <= 1'b0;
             post_de <= 1'b0;
             post_data <= 24'h000000;
-        end else if (EN) begin
+        end else begin
             // 默认信号赋值
             post_vs <= pre_vs;
-            post_de <= 1'b0;       // 默认不输出数据
-            post_data <= 24'h000000; // 默认填充黑色
-            case (state)
-                IDLE: begin
-                    // 等待一行的开始
-                    pixel_count <= 12'd0;  // 重置像素计数器
-                    if (pre_de) state <= RECV;     // 检测到行开始，进入接收状态
-                end
-                RECV: begin
-                    post_de <= 1'b1;
-                    post_data <= pre_data;
-                    if (pre_de) begin
-                        pixel_count <= pixel_count + 1'b1;
-                        if (pixel_count >= H_DISP - 1) state <= IDLE;  // 行满，回到IDLE状态
-                    end else begin
-                        // 行结束，如果像素数不足H_DISP，进入FILL状态
-                        if (pixel_count < H_DISP) state <= FILL;
-                        else state <= IDLE;
+
+            if (EN) begin
+                post_de <= 1'b0;       // 默认不输出数据
+                post_data <= 24'h000000; // 默认填充黑色
+                case (state)
+                    IDLE: begin  // 等待一行的开始
+                        pixel_count <= 12'd0;  // 重置像素计数器
+                        if (pre_de) state <= RECV;     // 检测到行开始，进入接收状态
                     end
-                end
-                FILL: begin
-                    post_de <= 1'b1;
-                    post_data <= 24'h000000;  // 填充黑色
-                    pixel_count <= pixel_count + 1'b1;
-                    if (pixel_count >= H_DISP - 2) state <= IDLE;  // 达到H_DISP后回到IDLE
-                end
-            endcase
-        end else begin
-            // 如果EN无效，则保持输出无效状态
-            post_vs <= 1'b0;
-            post_de <= 1'b0;
-            post_data <= 24'h000000;
+                    RECV: begin
+                        post_de <= 1'b1;
+                        post_data <= pre_data;
+                        if (pre_de) begin
+                            pixel_count <= pixel_count + 1'b1;
+                            if (pixel_count >= H_DISP - 1) state <= IDLE;  // 行满，回到IDLE状态
+                        end else begin  // 行结束，如果像素数不足H_DISP，进入FILL状态
+                            if (pixel_count < H_DISP) state <= FILL;
+                            else state <= IDLE;
+                        end
+                    end
+                    FILL: begin
+                        post_de <= 1'b1;
+                        post_data <= 24'h000000;  // 填充黑色
+                        pixel_count <= pixel_count + 1'b1;
+                        if (pixel_count >= H_DISP - 2) state <= IDLE;  // 达到H_DISP后回到IDLE
+                    end
+                endcase
+            end else begin
+                state <= IDLE;
+                post_de <= pre_de;
+                post_data <= pre_data;
+            end
         end
     end
 

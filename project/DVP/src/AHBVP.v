@@ -30,8 +30,8 @@ module AHBVP #(
 );
 
     // VP parameters
-    wire       cuter_en = 1'b0;
-    wire [1:0] filter_mode = 2'b00;
+    wire       cuter_en = 1'b1;
+    wire [1:0] filter_mode = 2'b01;
     wire       scaler_en = 1'b1;
     wire       color_en = 1'b0;
     wire       edge_en = 1'b0;
@@ -265,7 +265,7 @@ module AHBVP #(
     ) filler (
         .clk      (clk_vp),
         .rst_n    (rst_n),
-        .EN       (1),
+        .EN       (filler_en),
         // .pre_vs   (scaler_post_vs),
         // .pre_de   (scaler_post_de),
         // .pre_data (scaler_post_data),
