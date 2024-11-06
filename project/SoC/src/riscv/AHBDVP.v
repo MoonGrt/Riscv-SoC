@@ -15,6 +15,16 @@ module AhbDVP #(
     output reg  [31:0] io_ahb_PRDATA,
     output wire        io_ahb_PSLVERROR,
 
+    // Clock
+    output wire pll_stop,
+    input  wire cmos_clk,
+    input  wire serial_clk,
+    input  wire video_clk,
+    input  wire memory_clk,
+    input  wire clk_vp,
+    input  wire DDR_pll_lock,
+    input  wire TMDS_DDR_pll_lock,
+
     // CAM interface
     output [2:0] i2c_sel,
     inout        cmos_scl,    // cmos i2c clock
@@ -117,6 +127,7 @@ module AhbDVP #(
         end
     end
 
+
     wire clk = io_ahb_PCLK;
     wire rst_n = ~io_ahb_PRESET;
 
@@ -137,30 +148,30 @@ module AhbDVP #(
     wire [15:0] video_data;
 
     // HDMI clock generation
-    wire        serial_clk;
-    wire        video_clk;  // video pixel clock
-    wire        memory_clk;
-    wire        clk_vp;
-    wire        DDR_pll_lock;
-    wire        TMDS_DDR_pll_lock;
-    HDMI_PLL HDMI_PLL (
-        .clkin  (clk),               // input clk
-        .clkout0(serial_clk),        // output clk x5
-        .clkout1(video_clk),         // output clk x1
-        .lock   (TMDS_DDR_pll_lock)  // output lock
-    );
-    // generate the CMOS sensor clock and the SDRAM controller, I2C controller clock
-    SYS_PLL SYS_PLL (
-        .clkin  (clk),
-        .clkout0(cmos_clk),
-        .clkout1(clk_vp),
-        .clkout2(memory_clk),
-        .lock   (DDR_pll_lock),
-        .reset  (1'b0),
-        .enclk0 (1'b1),
-        .enclk1 (1'b1),
-        .enclk2 (pll_stop)
-    );
+    // wire serial_clk;
+    // wire video_clk;  // video pixel clock
+    // wire memory_clk;
+    // wire clk_vp;
+    // wire DDR_pll_lock;
+    // wire TMDS_DDR_pll_lock;
+    // HDMI_PLL HDMI_PLL (
+    //     .clkin  (clk),               // input clk
+    //     .clkout0(serial_clk),        // output clk x5
+    //     .clkout1(video_clk),         // output clk x1
+    //     .lock   (TMDS_DDR_pll_lock)  // output lock
+    // );
+    // // generate the CMOS sensor clock and the SDRAM controller, I2C controller clock
+    // SYS_PLL SYS_PLL (
+    //     .clkin  (clk),
+    //     .clkout0(cmos_clk),
+    //     .clkout1(clk_vp),
+    //     .clkout2(memory_clk),
+    //     .lock   (DDR_pll_lock),
+    //     .reset  (1'b0),
+    //     .enclk0 (1'b1),
+    //     .enclk1 (1'b1),
+    //     .enclk2 (pll_stop)
+    // );
 
     // 视频输入模块
     AHBVI #(

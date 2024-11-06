@@ -10,18 +10,29 @@ module AhbRCC (
     output reg  [31:0] io_ahb_PRDATA,     // 读数据总线
     output wire        io_ahb_PSLVERROR,  // AHB 错误信号
 
-    output wire        GPIO_clk,       // GPIOA 时钟
-    output wire        GPIO_rst,       // GPIOA 复位信号
-    output wire        USART_clk,      // USART1 时钟
-    output wire        USART_rst,      // USART1 复位信号
-    output wire        SPI_clk,        // SPI1 时钟
-    output wire        SPI_rst,        // SPI1 复位信号
-    output wire        I2C_clk,        // I2C1 时钟
-    output wire        I2C_rst,        // I2C1 复位信号
-    output wire        TIM_clk,        // TIM1 时钟
-    output wire        TIM_rst,        // TIM1 复位信号
-    output wire        WDG_clk,        // IWDG 时钟
-    output wire        WDG_rst         // IWDG 复位信号
+    // AHB clk and reset
+    input  wire pll_stop,
+    output wire cmos_clk,
+    output wire serial_clk,
+    output wire video_clk,
+    output wire memory_clk,
+    output wire clk_vp,
+    output wire DDR_pll_lock,
+    output wire TMDS_DDR_pll_lock,
+
+    // APB clk and reset
+    output wire GPIO_clk,   // GPIOA 时钟
+    output wire GPIO_rst,   // GPIOA 复位信号
+    output wire USART_clk,  // USART1 时钟
+    output wire USART_rst,  // USART1 复位信号
+    output wire SPI_clk,    // SPI1 时钟
+    output wire SPI_rst,    // SPI1 复位信号
+    output wire I2C_clk,    // I2C1 时钟
+    output wire I2C_rst,    // I2C1 复位信号
+    output wire TIM_clk,    // TIM1 时钟
+    output wire TIM_rst,    // TIM1 复位信号
+    output wire WDG_clk,    // IWDG 时钟
+    output wire WDG_rst     // IWDG 复位信号
 );
 
     // RCC寄存器定义
@@ -103,5 +114,32 @@ module AhbRCC (
             endcase
         end
     end
+
+    // PLL
+    // wire serial_clk;
+    // wire video_clk;  // video pixel clock
+    // wire memory_clk;
+    // wire clk_vp;
+    // wire DDR_pll_lock;
+    // wire TMDS_DDR_pll_lock;
+    HDMI_PLL HDMI_PLL (
+        .clkin  (io_ahb_PCLK),       // input clk
+        .clkout0(serial_clk),        // output clk x5
+        .clkout1(video_clk),         // output clk x1
+        .lock   (TMDS_DDR_pll_lock)  // output lock
+    );
+    // generate the CMOS sensor clock and the SDRAM controller, I2C controller clock
+    SYS_PLL SYS_PLL (
+        .clkin  (io_ahb_PCLK),
+        .clkout0(cmos_clk),
+        .clkout1(clk_vp),
+        .clkout2(memory_clk),
+        .lock   (DDR_pll_lock),
+        .reset  (1'b0),
+        .enclk0 (1'b1),
+        .enclk1 (1'b1),
+        .enclk2 (pll_stop)
+        // .enclk2 (1'b1)
+    );
 
 endmodule

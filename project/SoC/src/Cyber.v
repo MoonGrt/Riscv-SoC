@@ -84,6 +84,12 @@ module Cyber (
     wire TIM2_interrupt, TIM3_interrupt;
 
     // RCC
+    wire pll_stop;
+    wire cmos_clk;
+    wire serial_clk, video_clk;  // video pixel clock
+    wire memory_clk;
+    wire clk_vp;
+    wire DDR_pll_lock, TMDS_DDR_pll_lock;
     wire GPIO_clk, GPIO_rst;
     wire USART_clk, USART_rst;
     wire SPI_clk, SPI_rst;
@@ -357,63 +363,63 @@ module Cyber (
         .resetCtrl_mainClkReset         (resetCtrl_mainClkReset                           )  // i
     );
     VexRiscv VexRiscv (
-        .iBus_cmd_valid                (system_cpu_iBus_cmd_valid                           ), //o
-        .iBus_cmd_ready                (system_mainBusArbiter_io_iBus_cmd_ready             ), //i
-        .iBus_cmd_payload_pc           (system_cpu_iBus_cmd_payload_pc[31:0]                ), //o
-        .iBus_rsp_valid                (system_mainBusArbiter_io_iBus_rsp_valid             ), //i
-        .iBus_rsp_payload_error        (system_mainBusArbiter_io_iBus_rsp_payload_error     ), //i
-        .iBus_rsp_payload_inst         (system_mainBusArbiter_io_iBus_rsp_payload_inst[31:0]), //i
-        .timerInterrupt                (system_timerInterrupt                               ), //i
-        .externalInterrupt             (system_externalInterrupt                            ), //i
-        .softwareInterrupt             (1'b0                                                ), //i
-        .debug_bus_cmd_valid           (systemDebugger_1_io_mem_cmd_valid                   ), //i
-        .debug_bus_cmd_ready           (system_cpu_debug_bus_cmd_ready                      ), //o
-        .debug_bus_cmd_payload_wr      (systemDebugger_1_io_mem_cmd_payload_wr              ), //i
-        .debug_bus_cmd_payload_address (system_cpu_debug_bus_cmd_payload_address[7:0]       ), //i
-        .debug_bus_cmd_payload_data    (systemDebugger_1_io_mem_cmd_payload_data[31:0]      ), //i
-        .debug_bus_rsp_data            (system_cpu_debug_bus_rsp_data[31:0]                 ), //o
-        .debug_resetOut                (system_cpu_debug_resetOut                           ), //o
-        .dBus_cmd_valid                (system_cpu_dBus_cmd_valid                           ), //o
-        .dBus_cmd_ready                (system_cpu_dBus_cmd_ready                           ), //i
-        .dBus_cmd_payload_wr           (system_cpu_dBus_cmd_payload_wr                      ), //o
-        .dBus_cmd_payload_mask         (system_cpu_dBus_cmd_payload_mask[3:0]               ), //o
-        .dBus_cmd_payload_address      (system_cpu_dBus_cmd_payload_address[31:0]           ), //o
-        .dBus_cmd_payload_data         (system_cpu_dBus_cmd_payload_data[31:0]              ), //o
-        .dBus_cmd_payload_size         (system_cpu_dBus_cmd_payload_size[1:0]               ), //o
-        .dBus_rsp_ready                (system_mainBusArbiter_io_dBus_rsp_ready             ), //i
-        .dBus_rsp_error                (system_mainBusArbiter_io_dBus_rsp_error             ), //i
-        .dBus_rsp_data                 (system_mainBusArbiter_io_dBus_rsp_data[31:0]        ), //i
-        .io_mainClk                    (io_mainClk                                          ), //i
-        .resetCtrl_systemReset         (resetCtrl_systemReset                               ), //i
-        .resetCtrl_mainClkReset        (resetCtrl_mainClkReset                              )  //i
+        .iBus_cmd_valid                (system_cpu_iBus_cmd_valid                           ), // o
+        .iBus_cmd_ready                (system_mainBusArbiter_io_iBus_cmd_ready             ), // i
+        .iBus_cmd_payload_pc           (system_cpu_iBus_cmd_payload_pc[31:0]                ), // o
+        .iBus_rsp_valid                (system_mainBusArbiter_io_iBus_rsp_valid             ), // i
+        .iBus_rsp_payload_error        (system_mainBusArbiter_io_iBus_rsp_payload_error     ), // i
+        .iBus_rsp_payload_inst         (system_mainBusArbiter_io_iBus_rsp_payload_inst[31:0]), // i
+        .timerInterrupt                (system_timerInterrupt                               ), // i
+        .externalInterrupt             (system_externalInterrupt                            ), // i
+        .softwareInterrupt             (1'b0                                                ), // i
+        .debug_bus_cmd_valid           (systemDebugger_1_io_mem_cmd_valid                   ), // i
+        .debug_bus_cmd_ready           (system_cpu_debug_bus_cmd_ready                      ), // o
+        .debug_bus_cmd_payload_wr      (systemDebugger_1_io_mem_cmd_payload_wr              ), // i
+        .debug_bus_cmd_payload_address (system_cpu_debug_bus_cmd_payload_address[7:0]       ), // i
+        .debug_bus_cmd_payload_data    (systemDebugger_1_io_mem_cmd_payload_data[31:0]      ), // i
+        .debug_bus_rsp_data            (system_cpu_debug_bus_rsp_data[31:0]                 ), // o
+        .debug_resetOut                (system_cpu_debug_resetOut                           ), // o
+        .dBus_cmd_valid                (system_cpu_dBus_cmd_valid                           ), // o
+        .dBus_cmd_ready                (system_cpu_dBus_cmd_ready                           ), // i
+        .dBus_cmd_payload_wr           (system_cpu_dBus_cmd_payload_wr                      ), // o
+        .dBus_cmd_payload_mask         (system_cpu_dBus_cmd_payload_mask[3:0]               ), // o
+        .dBus_cmd_payload_address      (system_cpu_dBus_cmd_payload_address[31:0]           ), // o
+        .dBus_cmd_payload_data         (system_cpu_dBus_cmd_payload_data[31:0]              ), // o
+        .dBus_cmd_payload_size         (system_cpu_dBus_cmd_payload_size[1:0]               ), // o
+        .dBus_rsp_ready                (system_mainBusArbiter_io_dBus_rsp_ready             ), // i
+        .dBus_rsp_error                (system_mainBusArbiter_io_dBus_rsp_error             ), // i
+        .dBus_rsp_data                 (system_mainBusArbiter_io_dBus_rsp_data[31:0]        ), // i
+        .io_mainClk                    (io_mainClk                                          ), // i
+        .resetCtrl_systemReset         (resetCtrl_systemReset                               ), // i
+        .resetCtrl_mainClkReset        (resetCtrl_mainClkReset                              )  // i
     );
     MasterArbiter MasterArbiter (
-        .io_iBus_cmd_valid                (system_cpu_iBus_cmd_valid                                         ), //i
-        .io_iBus_cmd_ready                (system_mainBusArbiter_io_iBus_cmd_ready                           ), //o
-        .io_iBus_cmd_payload_pc           (system_cpu_iBus_cmd_payload_pc[31:0]                              ), //i
-        .io_iBus_rsp_valid                (system_mainBusArbiter_io_iBus_rsp_valid                           ), //o
-        .io_iBus_rsp_payload_error        (system_mainBusArbiter_io_iBus_rsp_payload_error                   ), //o
-        .io_iBus_rsp_payload_inst         (system_mainBusArbiter_io_iBus_rsp_payload_inst[31:0]              ), //o
-        .io_dBus_cmd_valid                (toplevel_system_cpu_dBus_cmd_halfPipe_valid                       ), //i
-        .io_dBus_cmd_ready                (system_mainBusArbiter_io_dBus_cmd_ready                           ), //o
-        .io_dBus_cmd_payload_wr           (toplevel_system_cpu_dBus_cmd_halfPipe_payload_wr                  ), //i
-        .io_dBus_cmd_payload_mask         (toplevel_system_cpu_dBus_cmd_halfPipe_payload_mask[3:0]           ), //i
-        .io_dBus_cmd_payload_address      (toplevel_system_cpu_dBus_cmd_halfPipe_payload_address[31:0]       ), //i
-        .io_dBus_cmd_payload_data         (toplevel_system_cpu_dBus_cmd_halfPipe_payload_data[31:0]          ), //i
-        .io_dBus_cmd_payload_size         (toplevel_system_cpu_dBus_cmd_halfPipe_payload_size[1:0]           ), //i
-        .io_dBus_rsp_ready                (system_mainBusArbiter_io_dBus_rsp_ready                           ), //o
-        .io_dBus_rsp_error                (system_mainBusArbiter_io_dBus_rsp_error                           ), //o
-        .io_dBus_rsp_data                 (system_mainBusArbiter_io_dBus_rsp_data[31:0]                      ), //o
-        .io_masterBus_cmd_valid           (system_mainBusArbiter_io_masterBus_cmd_valid                      ), //o
-        .io_masterBus_cmd_ready           (system_mainBusDecoder_logic_masterPipelined_cmd_ready             ), //i
-        .io_masterBus_cmd_payload_write   (system_mainBusArbiter_io_masterBus_cmd_payload_write              ), //o
-        .io_masterBus_cmd_payload_address (system_mainBusArbiter_io_masterBus_cmd_payload_address[31:0]      ), //o
-        .io_masterBus_cmd_payload_data    (system_mainBusArbiter_io_masterBus_cmd_payload_data[31:0]         ), //o
-        .io_masterBus_cmd_payload_mask    (system_mainBusArbiter_io_masterBus_cmd_payload_mask[3:0]          ), //o
-        .io_masterBus_rsp_valid           (system_mainBusDecoder_logic_masterPipelined_rsp_valid             ), //i
-        .io_masterBus_rsp_payload_data    (system_mainBusDecoder_logic_masterPipelined_rsp_payload_data[31:0]), //i
-        .io_mainClk                       (io_mainClk                                                        ), //i
-        .resetCtrl_systemReset            (resetCtrl_systemReset                                             )  //i
+        .io_iBus_cmd_valid                (system_cpu_iBus_cmd_valid                                         ), // i
+        .io_iBus_cmd_ready                (system_mainBusArbiter_io_iBus_cmd_ready                           ), // o
+        .io_iBus_cmd_payload_pc           (system_cpu_iBus_cmd_payload_pc[31:0]                              ), // i
+        .io_iBus_rsp_valid                (system_mainBusArbiter_io_iBus_rsp_valid                           ), // o
+        .io_iBus_rsp_payload_error        (system_mainBusArbiter_io_iBus_rsp_payload_error                   ), // o
+        .io_iBus_rsp_payload_inst         (system_mainBusArbiter_io_iBus_rsp_payload_inst[31:0]              ), // o
+        .io_dBus_cmd_valid                (toplevel_system_cpu_dBus_cmd_halfPipe_valid                       ), // i
+        .io_dBus_cmd_ready                (system_mainBusArbiter_io_dBus_cmd_ready                           ), // o
+        .io_dBus_cmd_payload_wr           (toplevel_system_cpu_dBus_cmd_halfPipe_payload_wr                  ), // i
+        .io_dBus_cmd_payload_mask         (toplevel_system_cpu_dBus_cmd_halfPipe_payload_mask[3:0]           ), // i
+        .io_dBus_cmd_payload_address      (toplevel_system_cpu_dBus_cmd_halfPipe_payload_address[31:0]       ), // i
+        .io_dBus_cmd_payload_data         (toplevel_system_cpu_dBus_cmd_halfPipe_payload_data[31:0]          ), // i
+        .io_dBus_cmd_payload_size         (toplevel_system_cpu_dBus_cmd_halfPipe_payload_size[1:0]           ), // i
+        .io_dBus_rsp_ready                (system_mainBusArbiter_io_dBus_rsp_ready                           ), // o
+        .io_dBus_rsp_error                (system_mainBusArbiter_io_dBus_rsp_error                           ), // o
+        .io_dBus_rsp_data                 (system_mainBusArbiter_io_dBus_rsp_data[31:0]                      ), // o
+        .io_masterBus_cmd_valid           (system_mainBusArbiter_io_masterBus_cmd_valid                      ), // o
+        .io_masterBus_cmd_ready           (system_mainBusDecoder_logic_masterPipelined_cmd_ready             ), // i
+        .io_masterBus_cmd_payload_write   (system_mainBusArbiter_io_masterBus_cmd_payload_write              ), // o
+        .io_masterBus_cmd_payload_address (system_mainBusArbiter_io_masterBus_cmd_payload_address[31:0]      ), // o
+        .io_masterBus_cmd_payload_data    (system_mainBusArbiter_io_masterBus_cmd_payload_data[31:0]         ), // o
+        .io_masterBus_cmd_payload_mask    (system_mainBusArbiter_io_masterBus_cmd_payload_mask[3:0]          ), // o
+        .io_masterBus_rsp_valid           (system_mainBusDecoder_logic_masterPipelined_rsp_valid             ), // i
+        .io_masterBus_rsp_payload_data    (system_mainBusDecoder_logic_masterPipelined_rsp_payload_data[31:0]), // i
+        .io_mainClk                       (io_mainClk                                                        ), // i
+        .resetCtrl_systemReset            (resetCtrl_systemReset                                             )  // i
     );
     AhbBridge AhbBridge (
         .io_pipelinedMemoryBus_cmd_valid           (system_ahbBridge_io_pipelinedMemoryBus_cmd_valid                     ), // i
@@ -474,28 +480,38 @@ module Cyber (
         .resetCtrl_systemReset (resetCtrl_systemReset)                   // i
     );
     AhbRCC AhbRCC (
-        .io_ahb_PCLK      (io_mainClk),                                 // i
-        .io_ahb_PRESET    (resetCtrl_systemReset),                      // i
-        .io_ahb_PADDR     (system_rccCtrl_io_ahb_PADDR),                // i
-        .io_ahb_PSEL      (ahbRouter_1_io_outputs_0_PSEL),              // i
-        .io_ahb_PENABLE   (ahbRouter_1_io_outputs_0_PENABLE),           // i
-        .io_ahb_PREADY    (system_rccCtrl_io_ahb_PREADY),               // o
-        .io_ahb_PWRITE    (ahbRouter_1_io_outputs_0_PWRITE),            // i
-        .io_ahb_PWDATA    (ahbRouter_1_io_outputs_0_PWDATA),            // i
-        .io_ahb_PRDATA    (system_rccCtrl_io_ahb_PRDATA),               // o
-        .io_ahb_PSLVERROR (system_rccCtrl_io_ahb_PSLVERROR),            // o
-        .GPIO_clk         (GPIO_clk),                                   // o
-        .GPIO_rst         (GPIO_rst),                                   // o
-        .USART_clk        (USART_clk),                                  // o
-        .USART_rst        (USART_rst),                                  // o
-        .SPI_clk          (SPI_clk),                                    // o
-        .SPI_rst          (SPI_rst),                                    // o
-        .I2C_clk          (I2C_clk),                                    // o
-        .I2C_rst          (I2C_rst),                                    // o
-        .TIM_clk          (TIM_clk),                                    // o
-        .TIM_rst          (TIM_rst),                                    // o
-        .WDG_clk          (WDG_clk),                                    // o
-        .WDG_rst          (WDG_rst)                                     // o
+        .io_ahb_PCLK      (io_mainClk),                        // i
+        .io_ahb_PRESET    (resetCtrl_systemReset),             // i
+        .io_ahb_PADDR     (system_rccCtrl_io_ahb_PADDR),       // i
+        .io_ahb_PSEL      (ahbRouter_1_io_outputs_0_PSEL),     // i
+        .io_ahb_PENABLE   (ahbRouter_1_io_outputs_0_PENABLE),  // i
+        .io_ahb_PREADY    (system_rccCtrl_io_ahb_PREADY),      // o
+        .io_ahb_PWRITE    (ahbRouter_1_io_outputs_0_PWRITE),   // i
+        .io_ahb_PWDATA    (ahbRouter_1_io_outputs_0_PWDATA),   // i
+        .io_ahb_PRDATA    (system_rccCtrl_io_ahb_PRDATA),      // o
+        .io_ahb_PSLVERROR (system_rccCtrl_io_ahb_PSLVERROR),   // o
+        // AHB clk and reset
+        .pll_stop         (pll_stop),
+        .cmos_clk         (cmos_clk),
+        .serial_clk       (serial_clk),
+        .video_clk        (video_clk),
+        .memory_clk       (memory_clk),
+        .clk_vp           (clk_vp),
+        .DDR_pll_lock     (DDR_pll_lock),
+        .TMDS_DDR_pll_lock(TMDS_DDR_pll_lock),
+        // APB clk and reset
+        .GPIO_clk         (GPIO_clk),                          // o
+        .GPIO_rst         (GPIO_rst),                          // o
+        .USART_clk        (USART_clk),                         // o
+        .USART_rst        (USART_rst),                         // o
+        .SPI_clk          (SPI_clk),                           // o
+        .SPI_rst          (SPI_rst),                           // o
+        .I2C_clk          (I2C_clk),                           // o
+        .I2C_rst          (I2C_rst),                           // o
+        .TIM_clk          (TIM_clk),                           // o
+        .TIM_rst          (TIM_rst),                           // o
+        .WDG_clk          (WDG_clk),                           // o
+        .WDG_rst          (WDG_rst)                            // o
     );
     AhbDVP #(
         // .USE_TPG("true"),
@@ -513,38 +529,47 @@ module Cyber (
         .io_ahb_PWDATA   (ahbRouter_1_io_outputs_2_PWDATA),
         .io_ahb_PRDATA   (system_dvpCtrl_io_ahb_PRDATA),
         .io_ahb_PSLVERROR(system_dvpCtrl_io_ahb_PSLVERROR),
+        // clk
+        .pll_stop         (pll_stop),
+        .cmos_clk         (cmos_clk),
+        .serial_clk       (serial_clk),
+        .video_clk        (video_clk),
+        .memory_clk       (memory_clk),
+        .clk_vp           (clk_vp),
+        .DDR_pll_lock     (DDR_pll_lock),
+        .TMDS_DDR_pll_lock(TMDS_DDR_pll_lock),
         // CAM interface
-        .i2c_sel         (i2c_sel),
-        .cmos_scl        (cmos_scl),
-        .cmos_sda        (cmos_sda),
-        .cmos_vsync      (cmos_vsync),
-        .cmos_href       (cmos_href),
-        .cmos_pclk       (cmos_pclk),
-        .cmos_xclk       (cmos_xclk),
-        .cmos_db         (cmos_db),
-        .cmos_rst_n      (cmos_rst_n),
-        .cmos_pwdn       (cmos_pwdn),
+        .i2c_sel   (i2c_sel),
+        .cmos_scl  (cmos_scl),
+        .cmos_sda  (cmos_sda),
+        .cmos_vsync(cmos_vsync),
+        .cmos_href (cmos_href),
+        .cmos_pclk (cmos_pclk),
+        .cmos_xclk (cmos_xclk),
+        .cmos_db   (cmos_db),
+        .cmos_rst_n(cmos_rst_n),
+        .cmos_pwdn (cmos_pwdn),
         // DDR3 interface
-        .ddr_addr        (ddr_addr),
-        .ddr_bank        (ddr_bank),
-        .ddr_cs          (ddr_cs),
-        .ddr_ras         (ddr_ras),
-        .ddr_cas         (ddr_cas),
-        .ddr_we          (ddr_we),
-        .ddr_ck          (ddr_ck),
-        .ddr_ck_n        (ddr_ck_n),
-        .ddr_cke         (ddr_cke),
-        .ddr_odt         (ddr_odt),
-        .ddr_reset_n     (ddr_reset_n),
-        .ddr_dm          (ddr_dm),
-        .ddr_dq          (ddr_dq),
-        .ddr_dqs         (ddr_dqs),
-        .ddr_dqs_n       (ddr_dqs_n),
+        .ddr_addr   (ddr_addr),
+        .ddr_bank   (ddr_bank),
+        .ddr_cs     (ddr_cs),
+        .ddr_ras    (ddr_ras),
+        .ddr_cas    (ddr_cas),
+        .ddr_we     (ddr_we),
+        .ddr_ck     (ddr_ck),
+        .ddr_ck_n   (ddr_ck_n),
+        .ddr_cke    (ddr_cke),
+        .ddr_odt    (ddr_odt),
+        .ddr_reset_n(ddr_reset_n),
+        .ddr_dm     (ddr_dm),
+        .ddr_dq     (ddr_dq),
+        .ddr_dqs    (ddr_dqs),
+        .ddr_dqs_n  (ddr_dqs_n),
         // HDMI interface
-        .tmds_clk_n_0    (tmds_clk_n_0),
-        .tmds_clk_p_0    (tmds_clk_p_0),
-        .tmds_d_n_0      (tmds_d_n_0),
-        .tmds_d_p_0      (tmds_d_p_0)
+        .tmds_clk_n_0(tmds_clk_n_0),
+        .tmds_clk_p_0(tmds_clk_p_0),
+        .tmds_d_n_0  (tmds_d_n_0),
+        .tmds_d_p_0  (tmds_d_p_0)
     );
     Apb3Bridge Apb3Bridge (
         .io_pipelinedMemoryBus_cmd_valid           (system_apbBridge_io_pipelinedMemoryBus_cmd_valid                     ), // i
