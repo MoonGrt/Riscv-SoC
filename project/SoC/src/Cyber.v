@@ -2,15 +2,49 @@
  `define SYNTHESIS
 
 module Cyber (
+    // Clock and Reset
     input  wire clk,
     input  wire rst_n,
+    // JTAG
     input  wire io_jtag_tms,
     input  wire io_jtag_tdi,
     output wire io_jtag_tdo,
     input  wire io_jtag_tck,
-
+    // GPIO
     inout wire [15:0] GPIOA,  // GPIO
-    inout wire [15:0] GPIOB   // GPIO
+    inout wire [15:0] GPIOB,  // GPIO
+    // CAM interface
+    output [2:0] i2c_sel,
+    inout        cmos_scl,    // cmos i2c clock
+    inout        cmos_sda,    // cmos i2c data
+    input        cmos_vsync,  // cmos vsync
+    input        cmos_href,   // cmos hsync refrence,data valid
+    input        cmos_pclk,   // cmos pxiel clock
+    output       cmos_xclk,   // cmos externl clock
+    input  [7:0] cmos_db,     // cmos data
+    output       cmos_rst_n,  // cmos reset
+    output       cmos_pwdn,   // cmos power down
+    // DDR3 interface
+    output [16-1:0] ddr_addr,  // ROW_WIDTH=16
+    output [ 3-1:0] ddr_bank,  // BANK_WIDTH=3
+    output          ddr_cs,
+    output          ddr_ras,
+    output          ddr_cas,
+    output          ddr_we,
+    output          ddr_ck,
+    output          ddr_ck_n,
+    output          ddr_cke,
+    output          ddr_odt,
+    output          ddr_reset_n,
+    output [ 4-1:0] ddr_dm,       // DM_WIDTH=4
+    inout  [32-1:0] ddr_dq,       // DQ_WIDTH=32
+    inout  [ 4-1:0] ddr_dqs,      // DQS_WIDTH=4
+    inout  [ 4-1:0] ddr_dqs_n,    // DQS_WIDTH=4
+    // HDMI interface
+    output       tmds_clk_n_0,
+    output       tmds_clk_p_0,
+    output [2:0] tmds_d_n_0,    // {r,g,b}
+    output [2:0] tmds_d_p_0
 );
 
     wire io_mainClk = clk;
@@ -462,6 +496,55 @@ module Cyber (
         .TIM_rst          (TIM_rst),                                    // o
         .WDG_clk          (WDG_clk),                                    // o
         .WDG_rst          (WDG_rst)                                     // o
+    );
+    AhbDVP #(
+        // .USE_TPG("true"),
+        .USE_TPG("false"),
+        .H_DISP (12'd1280),
+        .V_DISP (12'd720)
+    ) AhbDVP (
+        .io_ahb_PCLK     (io_mainClk),
+        .io_ahb_PRESET   (resetCtrl_systemReset),
+        .io_ahb_PADDR    (system_dvpCtrl_io_ahb_PADDR),
+        .io_ahb_PSEL     (ahbRouter_1_io_outputs_2_PSEL),
+        .io_ahb_PENABLE  (ahbRouter_1_io_outputs_2_PENABLE),
+        .io_ahb_PREADY   (system_dvpCtrl_io_ahb_PREADY),
+        .io_ahb_PWRITE   (ahbRouter_1_io_outputs_2_PWRITE),
+        .io_ahb_PWDATA   (ahbRouter_1_io_outputs_2_PWDATA),
+        .io_ahb_PRDATA   (system_dvpCtrl_io_ahb_PRDATA),
+        .io_ahb_PSLVERROR(system_dvpCtrl_io_ahb_PSLVERROR),
+        // CAM interface
+        .i2c_sel         (i2c_sel),
+        .cmos_scl        (cmos_scl),
+        .cmos_sda        (cmos_sda),
+        .cmos_vsync      (cmos_vsync),
+        .cmos_href       (cmos_href),
+        .cmos_pclk       (cmos_pclk),
+        .cmos_xclk       (cmos_xclk),
+        .cmos_db         (cmos_db),
+        .cmos_rst_n      (cmos_rst_n),
+        .cmos_pwdn       (cmos_pwdn),
+        // DDR3 interface
+        .ddr_addr        (ddr_addr),
+        .ddr_bank        (ddr_bank),
+        .ddr_cs          (ddr_cs),
+        .ddr_ras         (ddr_ras),
+        .ddr_cas         (ddr_cas),
+        .ddr_we          (ddr_we),
+        .ddr_ck          (ddr_ck),
+        .ddr_ck_n        (ddr_ck_n),
+        .ddr_cke         (ddr_cke),
+        .ddr_odt         (ddr_odt),
+        .ddr_reset_n     (ddr_reset_n),
+        .ddr_dm          (ddr_dm),
+        .ddr_dq          (ddr_dq),
+        .ddr_dqs         (ddr_dqs),
+        .ddr_dqs_n       (ddr_dqs_n),
+        // HDMI interface
+        .tmds_clk_n_0    (tmds_clk_n_0),
+        .tmds_clk_p_0    (tmds_clk_p_0),
+        .tmds_d_n_0      (tmds_d_n_0),
+        .tmds_d_p_0      (tmds_d_p_0)
     );
     Apb3Bridge Apb3Bridge (
         .io_pipelinedMemoryBus_cmd_valid           (system_apbBridge_io_pipelinedMemoryBus_cmd_valid                     ), // i
