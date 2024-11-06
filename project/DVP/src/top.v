@@ -43,7 +43,7 @@ module top #(
     output [2:0] tmds_d_p_0
 );
 
-    reg [31:0] VP_CR = {2'b00, 30'b0};
+    reg [31:0] VP_CR = {2'b01, 30'b0};
     reg [31:0] VP_SR = 32'h00000000;
     reg [31:0] VP_START = 32'h00000000;
     reg [31:0] VP_END = 32'h00000000;
@@ -150,7 +150,8 @@ module top #(
     );
 
 generate
-if (USE_TPG == "false") begin
+if (USE_TPG == "true")begin
+end else begin
     // 视频存储模块
     AHBDMA AHBDMA (
         .clk         (clk),

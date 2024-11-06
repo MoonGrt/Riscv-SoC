@@ -29,15 +29,22 @@ module AHBVP #(
     output [15:0] vp_data
 );
 
+    // Constants
+    localparam BLACK = 24'h000000;
+    localparam WHITE = 24'hffffff;
+
     // VP parameters
     wire       cuter_en = 1'b1;
     wire [1:0] filter_mode = 2'b01;
     wire       scaler_en = 1'b1;
-    wire       color_en = 1'b0;
-    wire       edge_en = 1'b0;
-    wire       binarizer_en = 1'b0;
-    // wire [1:0] filler_mode = 2'b00;  // 00: scaler, 01: edge, 10: binarizer, 11: bypass
-    wire [1:0] filler_mode = VP_CR[31:30];  // 00: scaler, 01: edge, 10: binarizer, 11: bypass
+    wire       color_en = 1'b1;
+    wire       edger_en = 1'b1;
+    wire       binarizer_en = 1'b1;
+    // wire [1:0] vp_mode = 2'b00;  // 00: scaler, 01: edge, 10: binarizer, 11: bypass
+    wire [1:0] vp_mode = VP_CR[31:30];  // 00: scaler, 01: edge, 10: binarizer, 11: bypass
+    wire [7:0] edger_th = 8'h40;
+    wire [7:0] binarizer_th = 8'h80;
+
     // wire [ INPUT_X_RES_WIDTH-1:0] START_X = VP_START[INPUT_X_RES_WIDTH-1:0];
     // wire [ INPUT_Y_RES_WIDTH-1:0] START_Y = VP_START[INPUT_X_RES_WIDTH-1+16:0+16];
     // wire [OUTPUT_X_RES_WIDTH-1:0] END_X = VP_END[OUTPUT_X_RES_WIDTH-1:0];
@@ -54,19 +61,19 @@ module AHBVP #(
     // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP;
     // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP;
     // 原图
-    // reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0;
-    // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP;
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP;
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP;
-    // 缩小
     reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0;
     reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0;
     reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP;
     reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP;
-    reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP / 2;
-    reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP / 2;
+    reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP;
+    reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP;
+    // 缩小
+    // reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0;
+    // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0;
+    // reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP;
+    // reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP;
+    // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP / 2;
+    // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP / 2;
 
     //--------------------------------------------------------------------------
     // Scaler
@@ -180,79 +187,86 @@ module AHBVP #(
     //--------------------------------------------------------------------------
     // Edge Detector
     //--------------------------------------------------------------------------
-    wire        edge_post_vs;  // Processed Image data vs valid signal
-    wire        edge_post_de;  // Processed Image data output/capture enable clock
-    wire [23:0] edge_post_data;  // Processed Image output
-    edge_detector #(
+    wire edger_post_vs;  // Processed Image data vs valid signal
+    wire edger_post_de;  // Processed Image data output/capture enable clock
+    wire edger_post_bit;  // Processed Image output
+    edger #(
         .IMG_HDISP(H_DISP),
         .IMG_VDISP(V_DISP)
-    ) edge_detector (
+    ) edger (
         .clk      (vi_clk),
         .rst_n    (rst_n),
-        .EN       (edge_en),
-        .threshold(8'd0),
+        .EN       (edger_en),
+        .threshold(edger_th),
 
         .pre_vs  (color_post_vs),
         .pre_de  (color_post_de),
-        .pre_img (color_post_y),
-        .post_vs (edge_post_vs),
-        .post_de (edge_post_de),
-        .post_img(edge_post_data)
+        .pre_data(color_post_y),
+        .post_vs (edger_post_vs),
+        .post_de (edger_post_de),
+        .post_bit(edger_post_bit)
     );
 
     //--------------------------------------------------------------------------
     // Binarization
     //--------------------------------------------------------------------------
-    wire        binarizer_post_vs;  // Processed Image data vs valid signal
-    wire        binarizer_post_de;  // Processed Image data output/capture enable clock
-    wire [23:0] binarizer_post_data;  // Processed Image output
+    wire binarizer_post_vs;  // Processed Image data vs valid signal
+    wire binarizer_post_de;  // Processed Image data output/capture enable clock
+    wire binarizer_post_bit;  // Processed Image output
     binarizer binarizer (
         .clk      (vi_clk),
         .rst_n    (rst_n),
         .EN       (binarizer_en),
-        .threshold(8'd0),
+        .threshold(binarizer_th),
 
         .pre_vs  (color_post_vs),
         .pre_de  (color_post_de),
         .pre_data(color_post_y),
         .post_vs (binarizer_post_vs),
         .post_de (binarizer_post_de),
-        .post_bit(binarizer_post_data)
+        .post_bit(binarizer_post_bit)
     );
 
     //--------------------------------------------------------------------------
     // Fill Brank
     //--------------------------------------------------------------------------
+    reg         filler_pre_clk;  // Prepared Image data clock
     reg         filler_pre_vs;  // Prepared Image data vs valid signal
     reg         filler_pre_de;  // Prepared Image data output/capture enable clock
     reg  [23:0] filler_pre_data;  // Prepared Image output
+    wire        filler_post_clk;  // Prepared Image data clock
     wire        filler_post_vs;  // Processed Image data vs valid signal
     wire        filler_post_de;  // Processed Image data output/capture enable clock
     wire [23:0] filler_post_data;  // Processed Image output
-    wire        filler_en = (filler_mode == 2'b00) & (OUTPUT_X_RES < H_DISP);
+    wire        filler_en = (vp_mode == 2'b00) & (OUTPUT_X_RES < H_DISP);
     always @ (*) begin
         if (~rst_n) begin
+            filler_pre_clk  = 1'b0;
             filler_pre_vs   = 1'b0;
             filler_pre_de   = 1'b0;
             filler_pre_data = 24'd0;
         end else begin
-            case (filler_mode)
+            case (vp_mode)
                 2'b00: begin
+                    filler_pre_clk  = clk_vp;
                     filler_pre_vs   = scaler_post_vs;
                     filler_pre_de   = scaler_post_de;
                     filler_pre_data = scaler_post_data;
                 end
                 2'b01: begin
-                    filler_pre_vs   = edge_post_vs;
-                    filler_pre_de   = edge_post_de;
-                    filler_pre_data = edge_post_data;
+                    filler_pre_clk  = vi_clk;
+                    filler_pre_vs   = edger_post_vs;
+                    filler_pre_de   = edger_post_de;
+                    filler_pre_data = edger_post_bit ? WHITE : BLACK;
                 end
                 2'b10: begin
+                    filler_pre_clk  = vi_clk;
                     filler_pre_vs   = binarizer_post_vs;
                     filler_pre_de   = binarizer_post_de;
-                    filler_pre_data = binarizer_post_data;
+                    filler_pre_data = binarizer_post_bit ? WHITE : BLACK;
                 end
                 2'b11: begin
+                    filler_pre_clk  = vi_clk;
                     filler_pre_vs   = vs_i;
                     filler_pre_de   = de_i;
                     filler_pre_data = rgb_i;
@@ -263,15 +277,16 @@ module AHBVP #(
     filler #(
         .H_DISP(H_DISP)
     ) filler (
-        .clk      (clk_vp),
         .rst_n    (rst_n),
         .EN       (filler_en),
         // .pre_vs   (scaler_post_vs),
         // .pre_de   (scaler_post_de),
         // .pre_data (scaler_post_data),
+        .pre_clk  (filler_pre_clk),
         .pre_vs   (filler_pre_vs),
         .pre_de   (filler_pre_de),
         .pre_data (filler_pre_data),
+        .post_clk (filler_post_clk),
         .post_vs  (filler_post_vs),
         .post_de  (filler_post_de),
         .post_data(filler_post_data)
@@ -295,7 +310,7 @@ module AHBVP #(
     //--------------------------------------------------------------------------
     // Output
     //--------------------------------------------------------------------------
-    assign vp_clk  = clk_vp;
+    assign vp_clk  = filler_post_clk;
     assign vp_vs   = filler_post_vs;
     assign vp_de   = filler_post_de;
     assign vp_data = {filler_post_data[23:19], filler_post_data[15:10], filler_post_data[7:3]};
@@ -310,11 +325,10 @@ module AHBVP #(
     //     // .de (filler_post_de)
     // );
     // pixel_cnt pixel_cnt2(
-    //     .clk(clk_vp),
+    //     .clk(vp_clk),
     //     // .rst(filler_post_vs),
     //     // .de (fill_dataValid)
     //     .de (filler_post_de)
     // );
 
 endmodule
-

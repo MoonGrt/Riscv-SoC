@@ -1,4 +1,4 @@
-module edge_detector #(
+module edger #(
     parameter IMG_HDISP = 11'd1280,  // 1280*720
     parameter IMG_VDISP = 11'd720
 ) (
@@ -7,21 +7,18 @@ module edge_detector #(
     input wire rst_n, // global reset
     input wire EN,    // enable signal for edge detector
 
-    // user interface
     input wire [7:0] threshold,  // Sobel Threshold for image edge detect
 
     // Image data prepred to be processd
     input wire       pre_vs,  // Prepared Image data vs valid signal
     input wire       pre_de,  // Prepared Image data output/capture enable clock
-    input wire [7:0] pre_img,          // Prepared Image input
+    input wire [7:0] pre_data,  // Prepared Image input
 
     // Image data has been processd
-    output wire        post_vs,  // Processed Image data vs valid signal
-    output wire        post_de,  // Processed Image data output/capture enable clock
-    // output wire		   post_img_bit  // Processed Image Bit flag outout(1: Value, 0:inValid)
-    output wire [15:0] post_img
+    output wire post_vs,  // Processed Image data vs valid signal
+    output wire post_de,  // Processed Image data output/capture enable clock
+    output wire post_bit  // Processed Image Bit flag outout(1: Value, 0:inValid)
 );
-    wire post_img_bit;
 
     //----------------------------------------------------
     // Generate 8Bit 3X3 Matrix for Video Image Processor.
@@ -39,12 +36,12 @@ module edge_detector #(
         .rst_n      (rst_n),
         .pre_vs     (pre_vs),
         .pre_de     (pre_de),
-        .pre_data   (pre_img),
+        .pre_data   (pre_data),
         .matrix_vs  (matrix_vs),
         .matrix_de  (matrix_de),
-        .matrix_p11 (matrix_p11_r), .matrix_p12(matrix_p12_r), .matrix_p13(matrix_p13_r),
-        .matrix_p21 (matrix_p21_r), .matrix_p22(matrix_p22_r), .matrix_p23(matrix_p23_r),
-        .matrix_p31 (matrix_p31_r), .matrix_p32(matrix_p32_r), .matrix_p33(matrix_p33_r)
+        .matrix_p11 (matrix_p11), .matrix_p12(matrix_p12), .matrix_p13(matrix_p13),
+        .matrix_p21 (matrix_p21), .matrix_p22(matrix_p22), .matrix_p23(matrix_p23),
+        .matrix_p31 (matrix_p31), .matrix_p32(matrix_p32), .matrix_p33(matrix_p33)
     );
 
     //------------------------------------------------------
@@ -64,9 +61,8 @@ module edge_detector #(
     reg [9:0] Gx_temp1;  // positive result
     reg [9:0] Gx_temp2;  // negetive result
     reg [9:0] Gx_data;  // Horizontal grade data
-
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+        if (~rst_n) begin
             Gx_temp1 <= 0;
             Gx_temp2 <= 0;
             Gx_data  <= 0;
@@ -82,9 +78,8 @@ module edge_detector #(
     reg [9:0] Gy_temp1;  // positive result
     reg [9:0] Gy_temp2;  // negetive result
     reg [9:0] Gy_data;  // Vertical grade data
-
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+        if (~rst_n) begin
             Gy_temp1 <= 0;
             Gy_temp2 <= 0;
             Gy_data  <= 0;
@@ -98,20 +93,18 @@ module edge_detector #(
     //---------------------------------------
     // Caculate the square of distance = (Gx^2 + Gy^2)
     reg [31:0] Gxy_square = 0;
-
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) Gxy_square <= 0;
+        if (~rst_n | pre_vs) Gxy_square <= 0;
         else Gxy_square <= Gx_data * Gx_data + Gy_data * Gy_data;
     end
 
     //---------------------------------------
     // Caculate the distance of P5 = (Gx^2 + Gy^2)^0.5
-    wire [10:0] Dim;
-    reg         post_img_bit_r;
+    reg post_bit_r;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) post_img_bit_r <= 1'b0;  // Default None
-        else if (Gxy_square >= threshold) post_img_bit_r <= 1'b1;  // Edge Flag
-        else post_img_bit_r <= 1'b0;  // Not Edge
+        if (~rst_n | pre_vs) post_bit_r <= 1'b0;  // Default None
+        else if (Gxy_square >= threshold * threshold) post_bit_r <= 1'b1;  // Edge Flag
+        else post_bit_r <= 1'b0;  // Not Edge
     end
 
     //------------------------------------------
@@ -119,7 +112,7 @@ module edge_detector #(
     reg [4:0] pre_vs_r;
     reg [4:0] pre_de_r;
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+        if (~rst_n) begin
             pre_vs_r <= 0;
             pre_de_r <= 0;
         end else begin
@@ -130,7 +123,6 @@ module edge_detector #(
 
     assign post_vs = pre_vs_r[4];
     assign post_de = pre_de_r[4];
-    assign post_img_bit    = post_de ? post_img_bit_r : 1'b0;
-    assign post_img        = post_img_bit ? 16'hFFFF : 16'h0000;
+    assign post_bit = post_bit_r;
 
 endmodule

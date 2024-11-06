@@ -19,14 +19,9 @@
         <File path="src/VP/FIFO.v" type="file.verilog" enable="1"/>
         <File path="src/VP/binarizer.v" type="file.verilog" enable="1"/>
         <File path="src/VP/cutter.v" type="file.verilog" enable="1"/>
-        <File path="src/VP/edge_detector.v" type="file.verilog" enable="1"/>
+        <File path="src/VP/edger.v" type="file.verilog" enable="1"/>
         <File path="src/VP/filler.v" type="file.verilog" enable="1"/>
         <File path="src/VP/filter.v" type="file.verilog" enable="1"/>
-        <File path="src/VP/gaussian.v" type="file.verilog" enable="1"/>
-        <File path="src/VP/line_shift_ram.v" type="file.verilog" enable="1"/>
-        <File path="src/VP/matrix3x3.v" type="file.verilog" enable="1"/>
-        <File path="src/VP/mean.v" type="file.verilog" enable="1"/>
-        <File path="src/VP/median.v" type="file.verilog" enable="1"/>
         <File path="src/VP/pixel_cnt.v" type="file.verilog" enable="1"/>
         <File path="src/VP/rgb2ycbcr.v" type="file.verilog" enable="1"/>
         <File path="src/VP/scaler.v" type="file.verilog" enable="1"/>

@@ -57,7 +57,7 @@ module rgb2ycbcr (
 
     // step1 pipeline mult
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+        if (~rst_n | pre_vs) begin
             rgb_r_m0 <= 16'd0;
             rgb_r_m1 <= 16'd0;
             rgb_r_m2 <= 16'd0;
@@ -82,7 +82,7 @@ module rgb2ycbcr (
 
     // step2 pipeline add
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+        if (~rst_n | pre_vs) begin
             img_y0  <= 16'd0;
             img_cb0 <= 16'd0;
             img_cr0 <= 16'd0;
@@ -95,7 +95,7 @@ module rgb2ycbcr (
 
     // step3 pipeline div
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+        if (~rst_n | pre_vs) begin
             img_y1  <= 8'd0;
             img_cb1 <= 8'd0;
             img_cr1 <= 8'd0;
@@ -108,7 +108,7 @@ module rgb2ycbcr (
 
     // 延时3拍以同步数据信号
     always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+        if (~rst_n) begin
             pre_vs_d <= 2'd0;
             pre_de_d <= 2'd0;
         end else begin
