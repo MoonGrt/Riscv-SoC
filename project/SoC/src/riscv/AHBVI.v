@@ -1,28 +1,65 @@
-module AHBVI #(
-    parameter USE_TPG = "false"
-) (
-    input clk,        // system clock
-    input cmos_clk,   // cmos pixel clock
-    input video_clk,  // video clock
-    input rst_n,      // system reset
+module AHBVI (
+    input wire       clk,        // system clock
+    input wire       cmos_clk,   // cmos pixel clock
+    input wire       video_clk,  // video clock
+    input wire       rst_n,      // system reset
+    input wire [1:0] mode,       // data select
 
-    output [2:0] i2c_sel,
-    inout        cmos_scl,    // cmos i2c clock
-    inout        cmos_sda,    // cmos i2c data
-    input        cmos_vsync,  // cmos vsync
-    input        cmos_href,   // cmos hsync refrence,data valid
-    input        cmos_pclk,   // cmos pxiel clock
-    output       cmos_xclk,   // cmos externl clock
-    input  [7:0] cmos_db,     // cmos data
-    output       cmos_rst_n,  // cmos reset
-    output       cmos_pwdn,   // cmos power down
+    // cam interface
+    output wire [2:0] i2c_sel,
+    inout  wire       cmos_scl,    // cmos i2c clock
+    inout  wire       cmos_sda,    // cmos i2c data
+    input  wire       cmos_vsync,  // cmos vsync
+    input  wire       cmos_href,   // cmos hsync refrence,data valid
+    input  wire       cmos_pclk,   // cmos pxiel clock
+    output wire       cmos_xclk,   // cmos externl clock
+    input  wire [7:0] cmos_db,     // cmos data
+    output wire       cmos_rst_n,  // cmos reset
+    output wire       cmos_pwdn,   // cmos power down
 
-    output        vi_clk,
-    output        vi_vs,
-    output [15:0] vi_data,
-    output        vi_de
+    // output video interface
+    output reg        vi_clk,
+    output reg        vi_vs,
+    output reg [15:0] vi_data,
+    output reg        vi_de
 );
 
+    // 输入测试图
+    wire       tp0_vs_in;
+    wire       tp0_hs_in;
+    wire       tp0_de_in;
+    wire [7:0] tp0_data_r;
+    wire [7:0] tp0_data_g;
+    wire [7:0] tp0_data_b;
+    testpattern testpattern (
+        // .I_pxl_clk(video_clk),  // pixel clock
+        .I_pxl_clk (cmos_clk),
+        .I_rst_n   (rst_n),  // low active
+        .I_mode    (3'b000),  // data select
+        .I_single_r(8'd255),
+        .I_single_g(8'd255),
+        .I_single_b(8'd255),  
+                                                   // 800x600   // 1024x768  // 1280x720  // 1920x1080
+        .I_h_total (12'd1650),  // hor total time  // 12'd1056  // 12'd1344  // 12'd1650  // 12'd2200
+        .I_h_sync  (12'd40),    // hor sync time   // 12'd128   // 12'd136   // 12'd40    // 12'd44
+        .I_h_bporch(12'd220),   // hor back porch  // 12'd88    // 12'd160   // 12'd220   // 12'd148
+        .I_h_res   (12'd1280),  // hor resolution  // 12'd800   // 12'd1024  // 12'd1280  // 12'd1920
+        .I_v_total (12'd750),   // ver total time  // 12'd628   // 12'd806   // 12'd750   // 12'd1125
+        .I_v_sync  (12'd5),     // ver sync time   // 12'd4     // 12'd6     // 12'd5     // 12'd5
+        .I_v_bporch(12'd20),    // ver back porch  // 12'd23    // 12'd29    // 12'd20    // 12'd36
+        .I_v_res   (12'd720),   // ver resolution  // 12'd600   // 12'd768   // 12'd720   // 12'd1080
+        .I_hs_pol  (1'b1),  // 0,负极性;1,正极性
+        .I_vs_pol  (1'b1),  // 0,负极性;1,正极性
+        
+        .O_de(tp0_de_in),
+        .O_hs(tp0_hs_in),
+        .O_vs(tp0_vs_in),
+        .O_data_r(tp0_data_r),
+        .O_data_g(tp0_data_g),
+        .O_data_b(tp0_data_b)
+    );
+
+    // camera interface
     wire cmos_16bit_clk, cmos_16bit_wr;
     wire [15:0] write_data;
     CAM CAM (
@@ -46,55 +83,38 @@ module AHBVI #(
         .cmos_16bit_clk(cmos_16bit_clk)
     );
 
+    always @(*) begin
+        if(~rst_n) begin
+            vi_clk  = 1'b0;
+            vi_vs   = 1'b0;
+            vi_data = 16'b0;
+            vi_de   = 1'b0;
+        end else begin
+            case(mode)  // data select
+                2'b01: begin  // test pattern
+                    vi_clk  = cmos_clk;
+                    vi_vs   = tp0_vs_in;
+                    vi_data = {tp0_data_r[7:3], tp0_data_g[7:2], tp0_data_b[7:3]};
+                    vi_de   = tp0_de_in;
+                end
+                2'b10: begin  // cmos data
+                    vi_clk  = cmos_16bit_clk;
+                    vi_vs   = cmos_vsync;
+                    vi_data = write_data;
+                    vi_de   = cmos_16bit_wr;
+                end
+                // 2'b11: begin  // HDMI data
 
-    // 输入测试图
-    //--------------------------
-    wire       tp0_vs_in;
-    wire       tp0_hs_in;
-    wire       tp0_de_in;
-    wire [7:0] tp0_data_r;
-    wire [7:0] tp0_data_g;
-    wire [7:0] tp0_data_b;
-    testpattern testpattern (
-        // .I_pxl_clk(video_clk),  // pixel clock
-        .I_pxl_clk(cmos_clk),
-        .I_rst_n(rst_n),  // low active
-        .I_mode(3'b000),  // data select
-        .I_single_r(8'd255),
-        .I_single_g(8'd255),
-        .I_single_b(8'd255),  // 800x600    // 1024x768   // 1280x720   // 1920x1080
-        .I_h_total(12'd1650),  // hor total time  // 12'd1056  // 12'd1344  // 12'd1650  // 12'd2200
-        .I_h_sync(12'd40),  // hor sync time   // 12'd128   // 12'd136   // 12'd40    // 12'd44
-        .I_h_bporch(12'd220),  // hor back porch  // 12'd88    // 12'd160   // 12'd220   // 12'd148
-        .I_h_res(12'd1280),  // hor resolution  // 12'd800   // 12'd1024  // 12'd1280  // 12'd1920
-        .I_v_total(12'd750),  // ver total time  // 12'd628   // 12'd806   // 12'd750   // 12'd1125
-        .I_v_sync(12'd5),  // ver sync time   // 12'd4     // 12'd6     // 12'd5     // 12'd5
-        .I_v_bporch(12'd20),  // ver back porch  // 12'd23    // 12'd29    // 12'd20    // 12'd36
-        .I_v_res(12'd720),  // ver resolution  // 12'd600   // 12'd768   // 12'd720   // 12'd1080
-        .I_hs_pol(1'b1),  // 0,负极性;1,正极性
-        .I_vs_pol(1'b1),  // 0,负极性;1,正极性
-        .O_de(tp0_de_in),
-        .O_hs(tp0_hs_in),
-        .O_vs(tp0_vs_in),
-        .O_data_r(tp0_data_r),
-        .O_data_g(tp0_data_g),
-        .O_data_b(tp0_data_b)
-    );
-
-    generate
-        if (USE_TPG == "true") begin
-            // assign vi_clk  = video_clk;
-            assign vi_clk  = cmos_clk;
-            assign vi_vs   = tp0_vs_in;
-            assign vi_data = {tp0_data_r[7:3], tp0_data_g[7:2], tp0_data_b[7:3]};
-            assign vi_de   = tp0_de_in;
-        end else begin  // CMOS DATA
-            assign vi_clk  = cmos_16bit_clk;
-            assign vi_vs   = cmos_vsync;
-            assign vi_data = write_data;
-            assign vi_de   = cmos_16bit_wr;
+                // end
+                default: begin
+                    vi_clk  = 1'b0;
+                    vi_vs   = 1'b0;
+                    vi_data = 16'b0;
+                    vi_de   = 1'b0;
+                end
+            endcase
         end
-    endgenerate
+    end
 
 endmodule
 

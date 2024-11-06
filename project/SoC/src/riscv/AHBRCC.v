@@ -116,19 +116,12 @@ module AhbRCC (
     end
 
     // PLL
-    // wire serial_clk;
-    // wire video_clk;  // video pixel clock
-    // wire memory_clk;
-    // wire clk_vp;
-    // wire DDR_pll_lock;
-    // wire TMDS_DDR_pll_lock;
     HDMI_PLL HDMI_PLL (
         .clkin  (io_ahb_PCLK),       // input clk
         .clkout0(serial_clk),        // output clk x5
         .clkout1(video_clk),         // output clk x1
         .lock   (TMDS_DDR_pll_lock)  // output lock
     );
-    // generate the CMOS sensor clock and the SDRAM controller, I2C controller clock
     SYS_PLL SYS_PLL (
         .clkin  (io_ahb_PCLK),
         .clkout0(cmos_clk),
@@ -139,7 +132,6 @@ module AhbRCC (
         .enclk0 (1'b1),
         .enclk1 (1'b1),
         .enclk2 (pll_stop)
-        // .enclk2 (1'b1)
     );
 
 endmodule

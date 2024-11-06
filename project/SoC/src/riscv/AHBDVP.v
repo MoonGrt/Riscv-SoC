@@ -75,7 +75,8 @@ module AhbDVP #(
     // DVP Config 接口定义
     // VI
     wire       VI_EN = VI_CR[0];  // VI使能
-    wire [1:0] VI_MODE = VI_CR[2:1];  // VI模式 00: test模式 01: camera模式 10: hdmi模式 11: 未定义
+    // wire [1:0] VI_MODE = VI_CR[2:1];  // VI模式 00: test模式 01: camera模式 10: hdmi模式 11: 未定义
+    wire [1:0] VI_MODE = 2'b10;  // VI模式 00: test模式 01: camera模式 10: hdmi模式 11: 未定义
     wire       VI_CUT = VI_CR[3];  // 图像裁剪使能
     // VP
     wire       VP_EN = VP_CR[0];  // VP使能
@@ -147,40 +148,13 @@ module AhbDVP #(
     wire        video_de;
     wire [15:0] video_data;
 
-    // HDMI clock generation
-    // wire serial_clk;
-    // wire video_clk;  // video pixel clock
-    // wire memory_clk;
-    // wire clk_vp;
-    // wire DDR_pll_lock;
-    // wire TMDS_DDR_pll_lock;
-    // HDMI_PLL HDMI_PLL (
-    //     .clkin  (clk),               // input clk
-    //     .clkout0(serial_clk),        // output clk x5
-    //     .clkout1(video_clk),         // output clk x1
-    //     .lock   (TMDS_DDR_pll_lock)  // output lock
-    // );
-    // // generate the CMOS sensor clock and the SDRAM controller, I2C controller clock
-    // SYS_PLL SYS_PLL (
-    //     .clkin  (clk),
-    //     .clkout0(cmos_clk),
-    //     .clkout1(clk_vp),
-    //     .clkout2(memory_clk),
-    //     .lock   (DDR_pll_lock),
-    //     .reset  (1'b0),
-    //     .enclk0 (1'b1),
-    //     .enclk1 (1'b1),
-    //     .enclk2 (pll_stop)
-    // );
-
     // 视频输入模块
-    AHBVI #(
-        .USE_TPG(USE_TPG)
-    ) AHBVI (
+    AHBVI BVI (
         .clk      (clk),
         .cmos_clk (cmos_clk),
         .video_clk(video_clk),
         .rst_n    (rst_n),
+        .mode     (VI_MODE),
 
         .i2c_sel (i2c_sel),
         .cmos_scl(cmos_scl),
