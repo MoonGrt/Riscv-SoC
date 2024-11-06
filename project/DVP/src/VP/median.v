@@ -1,18 +1,18 @@
 module median #(
-    parameter [8:0] IMG_HDISP = 9'd1280,  // 1280*720
-    parameter [7:0] IMG_VDISP = 8'd720
+    parameter IMG_HDISP = 9'd1280,  // 1280*720
+    parameter IMG_VDISP = 8'd720
 ) (
-    //global clock
+    // global clock
     input wire clk,   // cmos video pixel clock
     input wire rst_n, // global reset
     input wire EN,    // enable signal for image processing
 
-    //Image data prepred to be processd
+    // Image data prepred to be processd
     input wire        pre_vs,    // Prepared Image data vs valid signal
     input wire        pre_de,    // Prepared Image data output/capture enable clock
     input wire [23:0] pre_data,  // Prepared Image input
 
-    //Image data has been processd
+    // Image data has been processd
     output wire        post_vs,  // Processed Image data vs valid signal
     output wire        post_de,  // Processed Image data output/capture enable clock
     output wire [23:0] post_data
@@ -73,7 +73,7 @@ module median #(
         .rst_n(rst_n),  // global reset
 
         // Image data prepred to be processd
-        .pre_de  (pre_de),  // Prepared Image data output/capture enable clock
+        .pre_de (matrix_de),  // Prepared Image data output/capture enable clock
 
         // Image data has been processd
         .matrix_p11(matrix_p11_r), .matrix_p12(matrix_p12_r), .matrix_p13(matrix_p13_r),  // 3X3 Matrix output
@@ -110,7 +110,7 @@ module median #(
         .rst_n(rst_n),  // global reset
 
         // Image data prepred to be processd
-        .pre_de  (pre_de),  // Prepared Image data output/capture enable clock
+        .pre_de (matrix_de),  // Prepared Image data output/capture enable clock
 
         // Image data has been processd
         .matrix_p11(matrix_p11_g), .matrix_p12(matrix_p12_g), .matrix_p13(matrix_p13_g),  // 3X3 Matrix output
@@ -147,7 +147,7 @@ module median #(
         .rst_n(rst_n),  // global reset
 
         // Image data prepred to be processd
-        .pre_de  (pre_de),  // Prepared Image data output/capture enable clock
+        .pre_de (matrix_de),  // Prepared Image data output/capture enable clock
 
         // Image data has been processd
         .matrix_p11(matrix_p11_b), .matrix_p12(matrix_p12_b), .matrix_p13(matrix_p13_b),  // 3X3 Matrix output
@@ -159,17 +159,17 @@ module median #(
     );
 
     //---------------------------------------
-    // lag 3 clocks signal sync  
-    reg [2:0] pre_vs_r;
-    reg [2:0] pre_de_r;
+    // lag 4 clocks signal sync  
+    reg [3:0] pre_vs_r;
+    reg [3:0] pre_de_r;
 
     always @(posedge clk or negedge rst_n) begin
         if (~rst_n) begin
             pre_vs_r <= 0;
             pre_de_r <= 0;
         end else begin
-            pre_vs_r <= {pre_vs_r[1:0], matrix_vs};
-            pre_de_r <= {pre_de_r[1:0], matrix_de};
+            pre_vs_r <= {pre_vs_r[2:0], matrix_vs};
+            pre_de_r <= {pre_de_r[2:0], matrix_de};
         end
     end
 
@@ -190,10 +190,10 @@ module Matrix3x3Median(
     output reg [7:0] post_data
 );
 
-	reg	[7:0]   matrix_p1_max,matrix_p1_mid,matrix_p1_min;
-    reg	[7:0]   matrix_p2_max,matrix_p2_mid,matrix_p2_min;
-    reg	[7:0]   matrix_p3_max,matrix_p3_mid,matrix_p3_min;	
-	reg	[7:0]   max_min,mid_mid,min_max,mid;	
+	reg	[7:0] matrix_p1_max, matrix_p1_mid, matrix_p1_min;
+    reg	[7:0] matrix_p2_max, matrix_p2_mid, matrix_p2_min;
+    reg	[7:0] matrix_p3_max, matrix_p3_mid, matrix_p3_min;	
+	reg	[7:0] max_min, mid_mid, min_max;	
 
     // step1  分别求出 3 行中同一行的最大值、 最小值、 中间值
     //--------------------------------------------------------------------------

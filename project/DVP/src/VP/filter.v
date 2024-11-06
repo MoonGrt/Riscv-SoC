@@ -19,8 +19,8 @@ module filter #(
 );
 
     wire gaussian_en = (mode == 2'b01);  // enable gaussian filter
-    wire median_en = (mode == 2'b10);  // enable median filter
-    wire mean_en = (mode == 2'b11);  // enable mean filter
+    wire mean_en = (mode == 2'b10);  // enable mean filter
+    wire median_en = (mode == 2'b11);  // enable median filter
 
     wire        gaussian_post_vs;  // Processed Image data vs valid signal
     wire        gaussian_post_de;  // Processed Image data output/capture enable clock

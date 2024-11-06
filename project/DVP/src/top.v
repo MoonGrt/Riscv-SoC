@@ -20,8 +20,8 @@ module top #(
     output [2:0] i2c_sel,
 
     // DDR3 interface
-    output [16-1:0] ddr_addr,     // ROW_WIDTH=16
-    output [ 3-1:0] ddr_bank,     // BANK_WIDTH=3
+    output [16-1:0] ddr_addr,  // ROW_WIDTH=16
+    output [ 3-1:0] ddr_bank,  // BANK_WIDTH=3
     output          ddr_cs,
     output          ddr_ras,
     output          ddr_cas,
@@ -43,7 +43,7 @@ module top #(
     output [2:0] tmds_d_p_0
 );
 
-    reg [31:0] VP_CR = 32'h00000000;
+    reg [31:0] VP_CR = {2'b00, 30'b0};
     reg [31:0] VP_SR = 32'h00000000;
     reg [31:0] VP_START = 32'h00000000;
     reg [31:0] VP_END = 32'h00000000;

@@ -11,6 +11,7 @@ module AHBVP #(
 
     // VP parameters
     input [31:0] VP_CR,
+    input [31:0] VP_SR,
     input [31:0] VP_START,
     input [31:0] VP_END,
     input [31:0] VP_SCALER,
@@ -29,14 +30,14 @@ module AHBVP #(
 );
 
     // VP parameters
-    wire       cuter_en = 1'b1;
-    wire [1:0] filter_mode = 2'b01;
+    wire       cuter_en = 1'b0;
+    wire [1:0] filter_mode = 2'b00;
     wire       scaler_en = 1'b1;
     wire       color_en = 1'b0;
     wire       edge_en = 1'b0;
     wire       binarizer_en = 1'b0;
-    wire       filler_en = 1'b1;
-    wire [1:0] filler_mode = 2'b00;  // 00: scaler, 01: edge, 10: binarizer, 11: bypass
+    // wire [1:0] filler_mode = 2'b00;  // 00: scaler, 01: edge, 10: binarizer, 11: bypass
+    wire [1:0] filler_mode = VP_CR[31:30];  // 00: scaler, 01: edge, 10: binarizer, 11: bypass
     // wire [ INPUT_X_RES_WIDTH-1:0] START_X = VP_START[INPUT_X_RES_WIDTH-1:0];
     // wire [ INPUT_Y_RES_WIDTH-1:0] START_Y = VP_START[INPUT_X_RES_WIDTH-1+16:0+16];
     // wire [OUTPUT_X_RES_WIDTH-1:0] END_X = VP_END[OUTPUT_X_RES_WIDTH-1:0];
@@ -46,26 +47,26 @@ module AHBVP #(
 
     // Video Parameters
     // 放大
-    // reg [ INPUT_X_RES_WIDTH-1:0] START_X = H_DISP / 10 * 1 /*synthesis preserve*/;
-    // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = V_DISP / 10 * 1 /*synthesis preserve*/;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP / 10 * 1 + H_DISP / 2 /*synthesis preserve*/;
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP / 10 * 1 + V_DISP / 2 /*synthesis preserve*/;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
+    // reg [ INPUT_X_RES_WIDTH-1:0] START_X = H_DISP / 10 * 1;
+    // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = V_DISP / 10 * 1;
+    // reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP / 10 * 1 + H_DISP / 2;
+    // reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP / 10 * 1 + V_DISP / 2;
+    // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP;
+    // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP;
     // 原图
-    reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0 /*synthesis preserve*/;
-    reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0 /*synthesis preserve*/;
-    reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP /*synthesis preserve*/;
-    reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP /*synthesis preserve*/;
-    reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
-    reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
+    // reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0;
+    // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0;
+    // reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP;
+    // reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP;
+    // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP;
+    // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP;
     // 缩小
-    // reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0 /*synthesis preserve*/;
-    // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0 /*synthesis preserve*/;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP /*synthesis preserve*/;
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP /*synthesis preserve*/;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP / 2 - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP / 2 - 1 /*synthesis preserve*/;  // Resolution of output data minus 1
+    reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0;
+    reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0;
+    reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP;
+    reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP;
+    reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP / 2;
+    reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP / 2;
 
     //--------------------------------------------------------------------------
     // Scaler
@@ -130,8 +131,8 @@ module AHBVP #(
     wire [23:0] scaler_post_data;  // Processed Image output
     wire [ INPUT_X_RES_WIDTH-1:0] inputXRes = END_X - START_X - 1;  // Resolution of input data minus 1
     wire [ INPUT_Y_RES_WIDTH-1:0] inputYRes = END_Y - START_Y - 1;
-    wire [OUTPUT_X_RES_WIDTH-1:0] outputXRes = OUTPUT_X_RES;  // Resolution of input data minus 1
-    wire [OUTPUT_Y_RES_WIDTH-1:0] outputYRes = OUTPUT_Y_RES;
+    wire [OUTPUT_X_RES_WIDTH-1:0] outputXRes = OUTPUT_X_RES - 1;  // Resolution of input data minus 1
+    wire [OUTPUT_Y_RES_WIDTH-1:0] outputYRes = OUTPUT_Y_RES - 1;
     scaler #(
         .INPUT_X_RES_WIDTH (INPUT_X_RES_WIDTH),
         .INPUT_Y_RES_WIDTH (INPUT_Y_RES_WIDTH),
@@ -228,6 +229,7 @@ module AHBVP #(
     wire        filler_post_vs;  // Processed Image data vs valid signal
     wire        filler_post_de;  // Processed Image data output/capture enable clock
     wire [23:0] filler_post_data;  // Processed Image output
+    wire        filler_en = (filler_mode == 2'b00) & (OUTPUT_X_RES < H_DISP);
     always @ (*) begin
         if (~rst_n) begin
             filler_pre_vs   = 1'b0;
@@ -263,17 +265,32 @@ module AHBVP #(
     ) filler (
         .clk      (clk_vp),
         .rst_n    (rst_n),
-        .EN       (filler_en),
-        .pre_vs   (scaler_post_vs),
-        .pre_de   (scaler_post_de),
-        .pre_data (scaler_post_data),
-        // .pre_vs   (filler_pre_vs),
-        // .pre_de   (filler_pre_de),
-        // .pre_data (filler_pre_data),
+        .EN       (1),
+        // .pre_vs   (scaler_post_vs),
+        // .pre_de   (scaler_post_de),
+        // .pre_data (scaler_post_data),
+        .pre_vs   (filler_pre_vs),
+        .pre_de   (filler_pre_de),
+        .pre_data (filler_pre_data),
         .post_vs  (filler_post_vs),
         .post_de  (filler_post_de),
         .post_data(filler_post_data)
     );
+    // wire [23:0] fill_data;
+    // wire        fill_dataValid;
+    // assign algorithm_data      = fill_data;
+    // assign algorithm_dataValid = fill_dataValid;
+    // fill_brank #(
+    //     .H_DISP(H_DISP)
+    // ) fill_brank (
+    //     .clk        (clk_vp),
+    //     .data_i     (scaler_post_data),
+    //     .dataValid_i(scaler_post_de),
+    //     // .data_i     (filler_pre_data),
+    //     // .dataValid_i(filler_pre_de),
+    //     .data_o     (fill_data),
+    //     .dataValid_o(fill_dataValid)
+    // );
 
     //--------------------------------------------------------------------------
     // Output
@@ -282,10 +299,19 @@ module AHBVP #(
     assign vp_vs   = filler_post_vs;
     assign vp_de   = filler_post_de;
     assign vp_data = {filler_post_data[23:19], filler_post_data[15:10], filler_post_data[7:3]};
+    // assign vp_vs   = scaler_post_vs;
+    // assign vp_de   = fill_dataValid;
+    // assign vp_data = {fill_data[23:19], fill_data[15:10], fill_data[7:3]};
 
     // pixel_cnt pixel_cnt1(
     //     .clk(clk_vp),
-    //     .rst(filler_post_vs),
+    //     // .rst(filler_post_vs),
+    //     .de (fill_dataValid)
+    //     // .de (filler_post_de)
+    // );
+    // pixel_cnt pixel_cnt2(
+    //     .clk(clk_vp),
+    //     // .rst(filler_post_vs),
     //     // .de (fill_dataValid)
     //     .de (filler_post_de)
     // );
