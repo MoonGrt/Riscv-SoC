@@ -49,28 +49,19 @@ module AhbDVP #(
     output          ddr_cke,
     output          ddr_odt,
     output          ddr_reset_n,
-    output [ 4-1:0] ddr_dm,       // DM_WIDTH=4
-    inout  [32-1:0] ddr_dq,       // DQ_WIDTH=32
-    inout  [ 4-1:0] ddr_dqs,      // DQS_WIDTH=4
-    inout  [ 4-1:0] ddr_dqs_n,    // DQS_WIDTH=4
+    output [ 4-1:0] ddr_dm,     // DM_WIDTH=4
+    inout  [32-1:0] ddr_dq,     // DQ_WIDTH=32
+    inout  [ 4-1:0] ddr_dqs,    // DQS_WIDTH=4
+    inout  [ 4-1:0] ddr_dqs_n,  // DQS_WIDTH=4
 
     // HDMI interface
     output       tmds_clk_n_0,
     output       tmds_clk_p_0,
-    output [2:0] tmds_d_n_0,    // {r,g,b}
+    output [2:0] tmds_d_n_0,  // {r,g,b}
     output [2:0] tmds_d_p_0
 );
 
     // DVP寄存器定义
-    // reg [31:0] VI_CR;
-    // reg [31:0] VI_SR;
-    // reg [31:0] VP_CR;
-    // reg [31:0] VP_SR;
-    // reg [31:0] VP_START;
-    // reg [31:0] VP_END;
-    // reg [31:0] VP_SCALER;
-    // reg [31:0] VO_CR;
-    // reg [31:0] VO_SR;
     reg [31:0] VI_CR = {29'h0, 2'b10, 1'b1};  // VI 默认使能，camera模式
     reg [31:0] VI_SR;
     reg [31:0] VP_CR = {21'h0, 1'b1, 1'b1, 1'b1, 1'b1, 2'b01, 1'b1, 1'b1, 2'b01, 1'b1};  // VP 默认使能
@@ -86,7 +77,6 @@ module AhbDVP #(
     // VI
     wire       VI_EN = VI_CR[0];  // VI使能
     wire [1:0] VI_MODE = VI_CR[2:1];  // VI模式 00: test模式 01: camera模式 10: hdmi模式 11: 未定义
-    // wire [1:0] VI_MODE = 2'b10;  // VI模式 00: test模式 01: camera模式 10: hdmi模式 11: 未定义
     // VP
     wire       VP_EN = VP_CR[0];  // VP使能
     // VO
@@ -98,11 +88,6 @@ module AhbDVP #(
     assign io_ahb_PSLVERROR = 1'b0;  // AHB 错误信号始终为低，表示无错误
     always @(posedge io_ahb_PCLK or posedge io_ahb_PRESET) begin
         if (io_ahb_PRESET) begin
-            // VI_CR <= 32'h00000000;
-            // VP_CR <= 32'h00000000;
-            // VP_START <= 32'h00000000;
-            // VP_END <= 32'h00000000;
-            // VO_CR <= 32'h00000000;
             VI_CR <= {29'h0, 2'b10, 1'b1};  // VI 默认使能，camera模式
             VP_CR <= {21'h0, 1'b1, 1'b1, 1'b1, 1'b1, 2'b01, 1'b1, 1'b1, 2'b01, 1'b1};  // VP 默认使能
             VP_START <= {16'd0, 16'd0};
@@ -114,11 +99,6 @@ module AhbDVP #(
             if (io_ahb_PSEL && io_ahb_PENABLE && io_ahb_PWRITE) begin
                 // 写寄存器
                 case (io_ahb_PADDR)  // 假设基地址为0x00，寄存器偏移4字节
-                    // 3'd0:  VI_CR <= io_ahb_PWDATA;
-                    // 3'd2:  VP_CR <= io_ahb_PWDATA;
-                    // 3'd4:  VP_START <= io_ahb_PWDATA;
-                    // 3'd5:  VP_END <= io_ahb_PWDATA;
-                    // 3'd6:  VO_CR <= io_ahb_PWDATA;
                     4'd0:  VI_CR <= io_ahb_PWDATA;
                     4'd2:  VP_CR <= io_ahb_PWDATA;
                     4'd4:  VP_START <= io_ahb_PWDATA;
@@ -136,14 +116,6 @@ module AhbDVP #(
         if (io_ahb_PRESET) io_ahb_PRDATA = 32'h00000000;
         else if (io_ahb_PSEL && io_ahb_PENABLE && ~io_ahb_PWRITE) begin
             case (io_ahb_PADDR)
-                // 3'd0:  io_ahb_PRDATA = VI_CR;
-                // 3'd1:  io_ahb_PRDATA = VI_SR;
-                // 3'd2:  io_ahb_PRDATA = VP_CR;
-                // 3'd3:  io_ahb_PRDATA = VP_SR;
-                // 3'd4:  io_ahb_PRDATA = VP_START;
-                // 3'd5:  io_ahb_PRDATA = VP_END;
-                // 3'd6:  io_ahb_PRDATA = VO_CR;
-                // 3'd7:  io_ahb_PRDATA = VO_SR;
                 4'd0: io_ahb_PRDATA = VI_CR;
                 4'd1: io_ahb_PRDATA = VI_SR;
                 4'd2: io_ahb_PRDATA = VP_CR;

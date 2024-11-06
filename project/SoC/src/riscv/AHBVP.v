@@ -35,33 +35,25 @@ module AHBVP #(
     localparam WHITE = 24'hffffff;
 
     // VP parameters
-    wire       cuter_en = 1'b1;
-    wire [1:0] filter_mode = 2'b01;
-    wire       scaler_en = 1'b1;
-    wire       color_en = 1'b1;
-    wire       edger_en = 1'b1;
-    wire       binarizer_en = 1'b1;
-    wire [1:0] vp_mode = 2'b01;  // 00: scaler, 01: edge, 10: binarizer, 11: bypass
-    // wire [1:0] vp_mode = VP_CR[31:30];  // 00: scaler, 01: edge, 10: binarizer, 11: bypass
-    wire [7:0] edger_th = 8'h40;
-    wire [7:0] binarizer_th = 8'h80;
-    // wire [1:0] vp_mode = VP_CR[2:1];  // 2'b01  // 00: , 01: scaler, 10: edge, 11: binarizer
-    // wire       cuter_en = VP_CR[3];
-    // wire       filter_en = VP_CR[4];
-    // wire [1:0] filter_mode = VP_CR[6:5];  // 2'b01  // 00: , 01: gaussian, 10: mean, 11: median
-    // wire       scaler_en = VP_CR[7];
-    // wire       color_en = VP_CR[8];
-    // wire       edger_en = VP_CR[9];
-    // wire       binarizer_en = VP_CR[10];
+    // wire [7:0] edger_th = 8'h40;
+    // wire [7:0] binarizer_th = 8'h80;
+    wire [1:0] vp_mode = VP_CR[2:1];  // 2'b01  // 00: , 01: scaler, 10: edge, 11: binarizer
+    wire       cuter_en = VP_CR[3];
+    wire       filter_en = VP_CR[4];
+    wire [1:0] filter_mode = VP_CR[6:5];  // 2'b01  // 00: , 01: gaussian, 10: mean, 11: median
+    wire       scaler_en = VP_CR[7];
+    wire       color_en = VP_CR[8];
+    wire       edger_en = VP_CR[9];
+    wire       binarizer_en = VP_CR[10];
 
-    // wire [7:0] edger_th = VP_THRESHOLD[7:0];  // 8'h40
-    // wire [7:0] binarizer_th = VP_THRESHOLD[15:8];  // 8'h80
-    // wire [ INPUT_X_RES_WIDTH-1:0] START_X = VP_START[INPUT_X_RES_WIDTH-1:0];
-    // wire [ INPUT_Y_RES_WIDTH-1:0] START_Y = VP_START[INPUT_X_RES_WIDTH-1+16:0+16];
-    // wire [OUTPUT_X_RES_WIDTH-1:0] END_X = VP_END[OUTPUT_X_RES_WIDTH-1:0];
-    // wire [OUTPUT_Y_RES_WIDTH-1:0] END_Y = VP_END[OUTPUT_X_RES_WIDTH-1+16:0+16];
-    // wire [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = VP_SCALER[INPUT_X_RES_WIDTH-1:0];
-    // wire [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = VP_SCALER[INPUT_X_RES_WIDTH-1+16:0+16];
+    wire [7:0] edger_th = VP_THRESHOLD[7:0];  // 8'h40
+    wire [7:0] binarizer_th = VP_THRESHOLD[15:8];  // 8'h80
+    wire [ INPUT_X_RES_WIDTH-1:0] START_X = VP_START[INPUT_X_RES_WIDTH-1:0];
+    wire [ INPUT_Y_RES_WIDTH-1:0] START_Y = VP_START[INPUT_X_RES_WIDTH-1+16:0+16];
+    wire [OUTPUT_X_RES_WIDTH-1:0] END_X = VP_END[OUTPUT_X_RES_WIDTH-1:0];
+    wire [OUTPUT_Y_RES_WIDTH-1:0] END_Y = VP_END[OUTPUT_X_RES_WIDTH-1+16:0+16];
+    wire [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = VP_SCALER[INPUT_X_RES_WIDTH-1:0];
+    wire [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = VP_SCALER[INPUT_X_RES_WIDTH-1+16:0+16];
 
     // Video Parameters
     // 放大
@@ -72,12 +64,12 @@ module AHBVP #(
     // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP;
     // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP;
     // 原图
-    reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0;
-    reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0;
-    reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP;
-    reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP;
-    reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP;
-    reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP;
+    // reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0;
+    // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0;
+    // reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP;
+    // reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP;
+    // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP;
+    // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP;
     // 缩小
     // reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0;
     // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0;
