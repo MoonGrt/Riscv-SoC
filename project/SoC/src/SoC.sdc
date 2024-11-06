@@ -16,7 +16,7 @@ create_generated_clock -name clk_x1 -source [get_nets {Cyber/AhbDVP/memory_clk}]
 // camera pclk
 //create_clock -name cmos_pclk -period 5.88 -waveform {0 2.94} [get_ports {cmos_pclk}]
 create_clock -name cmos_pclk -period 23.81 -waveform {0 11.9} [get_ports {cmos_pclk}]
-create_generated_clock -name cmos_pclk_div2 -source [get_ports {cmos_pclk}] -master_clock cmos_pclk -divide_by 2 -multiply_by 1 [get_nets {Cyber/AhbDVP/vi_clk}]
+create_generated_clock -name cmos_pclk_div2 -source [get_ports {cmos_pclk}] -master_clock cmos_pclk -divide_by 2 -multiply_by 1 [get_nets {Cyber/AhbDVP/vi_clk_Z}]
 create_clock -name cmos_vsync -period 10000 -waveform {0 5000} [get_ports {cmos_vsync}]
 
 set_clock_groups -asynchronous

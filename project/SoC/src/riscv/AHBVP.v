@@ -15,6 +15,7 @@ module AHBVP #(
     input [31:0] VP_START,
     input [31:0] VP_END,
     input [31:0] VP_SCALER,
+    input [31:0] VP_THRESHOLD,
 
     // video input
     input        vi_clk,
@@ -40,17 +41,27 @@ module AHBVP #(
     wire       color_en = 1'b1;
     wire       edger_en = 1'b1;
     wire       binarizer_en = 1'b1;
-    // wire [1:0] vp_mode = 2'b00;  // 00: scaler, 01: edge, 10: binarizer, 11: bypass
-    wire [1:0] vp_mode = VP_CR[31:30];  // 00: scaler, 01: edge, 10: binarizer, 11: bypass
+    wire [1:0] vp_mode = 2'b01;  // 00: scaler, 01: edge, 10: binarizer, 11: bypass
+    // wire [1:0] vp_mode = VP_CR[31:30];  // 00: scaler, 01: edge, 10: binarizer, 11: bypass
     wire [7:0] edger_th = 8'h40;
     wire [7:0] binarizer_th = 8'h80;
+    // wire [1:0] vp_mode = VP_CR[2:1];  // 2'b01  // 00: , 01: scaler, 10: edge, 11: binarizer
+    // wire       cuter_en = VP_CR[3];
+    // wire       filter_en = VP_CR[4];
+    // wire [1:0] filter_mode = VP_CR[6:5];  // 2'b01  // 00: , 01: gaussian, 10: mean, 11: median
+    // wire       scaler_en = VP_CR[7];
+    // wire       color_en = VP_CR[8];
+    // wire       edger_en = VP_CR[9];
+    // wire       binarizer_en = VP_CR[10];
 
+    // wire [7:0] edger_th = VP_THRESHOLD[7:0];  // 8'h40
+    // wire [7:0] binarizer_th = VP_THRESHOLD[15:8];  // 8'h80
     // wire [ INPUT_X_RES_WIDTH-1:0] START_X = VP_START[INPUT_X_RES_WIDTH-1:0];
     // wire [ INPUT_Y_RES_WIDTH-1:0] START_Y = VP_START[INPUT_X_RES_WIDTH-1+16:0+16];
     // wire [OUTPUT_X_RES_WIDTH-1:0] END_X = VP_END[OUTPUT_X_RES_WIDTH-1:0];
     // wire [OUTPUT_Y_RES_WIDTH-1:0] END_Y = VP_END[OUTPUT_X_RES_WIDTH-1+16:0+16];
-    // wire [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = VP_SCALER[INPUT_X_RES_WIDTH-1:0];  // Resolution of output data minus 1
-    // wire [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = VP_SCALER[INPUT_X_RES_WIDTH-1+16:0+16];  // Resolution of output data minus 1
+    // wire [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = VP_SCALER[INPUT_X_RES_WIDTH-1:0];
+    // wire [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = VP_SCALER[INPUT_X_RES_WIDTH-1+16:0+16];
 
     // Video Parameters
     // 放大
@@ -247,29 +258,29 @@ module AHBVP #(
             filler_pre_data = 24'd0;
         end else begin
             case (vp_mode)
-                2'b00: begin
+                2'b01: begin
                     filler_pre_clk  = clk_vp;
                     filler_pre_vs   = scaler_post_vs;
                     filler_pre_de   = scaler_post_de;
                     filler_pre_data = scaler_post_data;
                 end
-                2'b01: begin
+                2'b10: begin
                     filler_pre_clk  = vi_clk;
                     filler_pre_vs   = edger_post_vs;
                     filler_pre_de   = edger_post_de;
                     filler_pre_data = edger_post_bit ? WHITE : BLACK;
                 end
-                2'b10: begin
+                2'b11: begin
                     filler_pre_clk  = vi_clk;
                     filler_pre_vs   = binarizer_post_vs;
                     filler_pre_de   = binarizer_post_de;
                     filler_pre_data = binarizer_post_bit ? WHITE : BLACK;
                 end
-                2'b11: begin
-                    filler_pre_clk  = vi_clk;
-                    filler_pre_vs   = vs_i;
-                    filler_pre_de   = de_i;
-                    filler_pre_data = rgb_i;
+                default: begin
+                    filler_pre_clk  = 1'b0;
+                    filler_pre_vs   = 1'b0;
+                    filler_pre_de   = 1'b0;
+                    filler_pre_data = 24'd0;
                 end
             endcase
         end
