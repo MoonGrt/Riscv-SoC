@@ -492,31 +492,29 @@ module Cyber (
         .io_ahb_PRDATA    (system_rccCtrl_io_ahb_PRDATA),      // o
         .io_ahb_PSLVERROR (system_rccCtrl_io_ahb_PSLVERROR),   // o
         // AHB clk and reset
-        .pll_stop         (pll_stop),
-        .cmos_clk         (cmos_clk),
-        .serial_clk       (serial_clk),
-        .video_clk        (video_clk),
-        .memory_clk       (memory_clk),
-        .clk_vp           (clk_vp),
-        .DDR_pll_lock     (DDR_pll_lock),
-        .TMDS_DDR_pll_lock(TMDS_DDR_pll_lock),
+        .pll_stop         (pll_stop),           // o
+        .cmos_clk         (cmos_clk),           // o
+        .serial_clk       (serial_clk),         // o
+        .video_clk        (video_clk),          // o
+        .memory_clk       (memory_clk),         // o
+        .clk_vp           (clk_vp),             // o
+        .DDR_pll_lock     (DDR_pll_lock),       // o
+        .TMDS_DDR_pll_lock(TMDS_DDR_pll_lock),  // o
         // APB clk and reset
-        .GPIO_clk         (GPIO_clk),                          // o
-        .GPIO_rst         (GPIO_rst),                          // o
-        .USART_clk        (USART_clk),                         // o
-        .USART_rst        (USART_rst),                         // o
-        .SPI_clk          (SPI_clk),                           // o
-        .SPI_rst          (SPI_rst),                           // o
-        .I2C_clk          (I2C_clk),                           // o
-        .I2C_rst          (I2C_rst),                           // o
-        .TIM_clk          (TIM_clk),                           // o
-        .TIM_rst          (TIM_rst),                           // o
-        .WDG_clk          (WDG_clk),                           // o
-        .WDG_rst          (WDG_rst)                            // o
+        .GPIO_clk         (GPIO_clk),   // o
+        .GPIO_rst         (GPIO_rst),   // o
+        .USART_clk        (USART_clk),  // o
+        .USART_rst        (USART_rst),  // o
+        .SPI_clk          (SPI_clk),    // o
+        .SPI_rst          (SPI_rst),    // o
+        .I2C_clk          (I2C_clk),    // o
+        .I2C_rst          (I2C_rst),    // o
+        .TIM_clk          (TIM_clk),    // o
+        .TIM_rst          (TIM_rst),    // o
+        .WDG_clk          (WDG_clk),    // o
+        .WDG_rst          (WDG_rst)     // o
     );
     AhbDVP #(
-        .USE_TPG("true"),
-        // .USE_TPG("false"),
         .H_DISP (12'd1280),
         .V_DISP (12'd720)
     ) AhbDVP (

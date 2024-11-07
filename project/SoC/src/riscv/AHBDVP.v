@@ -1,4 +1,5 @@
 module AhbDVP #(
+    // parameter USE_TPG = "true",
     parameter USE_TPG = "false",
     parameter H_DISP = 12'd1280,
     parameter V_DISP = 12'd720
@@ -62,15 +63,15 @@ module AhbDVP #(
 );
 
     // DVP寄存器定义
-    reg [31:0] VI_CR = {29'h0, 2'b10, 1'b1};  // VI 默认使能，camera模式
+    reg [31:0] VI_CR;
     reg [31:0] VI_SR;
-    reg [31:0] VP_CR = {21'h0, 1'b1, 1'b1, 1'b1, 1'b1, 2'b01, 1'b1, 1'b1, 2'b01, 1'b1};  // VP 默认使能
+    reg [31:0] VP_CR;
     reg [31:0] VP_SR;
-    reg [31:0] VP_START = {16'd0, 16'd0};
-    reg [31:0] VP_END = {16'd720, 16'd1280};
-    reg [31:0] VP_SCALER = {16'd720, 16'd1280};
-    reg [31:0] VP_THRESHOLD = {16'h0, 8'h80, 8'h40};
-    reg [31:0] VO_CR = {29'h0, 2'b01, 1'b1};  // VI 默认使能，HDMI模式
+    reg [31:0] VP_START;
+    reg [31:0] VP_END;
+    reg [31:0] VP_SCALER;
+    reg [31:0] VP_THRESHOLD;
+    reg [31:0] VO_CR;
     reg [31:0] VO_SR;
 
     // DVP Config 接口定义
@@ -88,14 +89,13 @@ module AhbDVP #(
     assign io_ahb_PSLVERROR = 1'b0;  // AHB 错误信号始终为低，表示无错误
     always @(posedge io_ahb_PCLK or posedge io_ahb_PRESET) begin
         if (io_ahb_PRESET) begin
-            VI_CR <= {29'h0, 2'b10, 1'b1};  // VI 默认使能，camera模式
-            // VP_CR <= {21'h0, 1'b1, 1'b1, 1'b1, 1'b1, 2'b01, 1'b1, 1'b1, 2'b01, 1'b1};
-            VP_CR <= {8'h0, 3'b001, 3'b001, 3'b001, 3'b001, 3'b001, 3'b001, 3'b001, 3'b011};
-            VP_START <= {16'd0, 16'd0};
-            VP_END <= {16'd720, 16'd1280};
-            VP_SCALER <= {16'd720, 16'd1280};
-            VP_THRESHOLD <= {16'h0, 8'h80, 8'h40};
-            VO_CR <= {29'h0, 2'b01, 1'b1};  // VI 默认使能，HDMI模式
+            VI_CR <= 32'h00000000;
+            VP_CR <= 32'h00000000;
+            VP_START <= 32'h00000000;
+            VP_END <= 32'h00000000;
+            VP_SCALER <= 32'h00000000;
+            VP_THRESHOLD <= 32'h00000000;
+            VO_CR <= 32'h00000000;
         end else begin
             if (io_ahb_PSEL && io_ahb_PENABLE && io_ahb_PWRITE) begin
                 // 写寄存器

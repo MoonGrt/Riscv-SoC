@@ -100,38 +100,38 @@ module AhbRCC (
         if (io_ahb_PRESET) io_ahb_PRDATA = 32'h00000000;
         else if (io_ahb_PSEL && io_ahb_PENABLE && ~io_ahb_PWRITE) begin
             case (io_ahb_PADDR)
-                4'd00:   io_ahb_PRDATA = CR;  // 控制寄存器
-                4'd01:   io_ahb_PRDATA = CFGR;  // 配置寄存器
-                4'd02:   io_ahb_PRDATA = CIR;  // 中断寄存器
-                4'd03:   io_ahb_PRDATA = AHBRSTR;  // AHB复位寄存器
-                4'd04:   io_ahb_PRDATA = AHBENR;  // AHB使能寄存器
-                4'd05:   io_ahb_PRDATA = APBENR;  // APB使能寄存器
-                4'd06:   io_ahb_PRDATA = BDCR;  // 回退控制寄存器
-                4'd07:   io_ahb_PRDATA = CSR;  // 控制和状态寄存器
-                4'd08:   io_ahb_PRDATA = APBRSTR;  // APB复位寄存器
-                4'd09:   io_ahb_PRDATA = CFGR2;  // 配置寄存器2
+                4'd00: io_ahb_PRDATA = CR;  // 控制寄存器
+                4'd01: io_ahb_PRDATA = CFGR;  // 配置寄存器
+                4'd02: io_ahb_PRDATA = CIR;  // 中断寄存器
+                4'd03: io_ahb_PRDATA = AHBRSTR;  // AHB复位寄存器
+                4'd04: io_ahb_PRDATA = AHBENR;  // AHB使能寄存器
+                4'd05: io_ahb_PRDATA = APBENR;  // APB使能寄存器
+                4'd06: io_ahb_PRDATA = BDCR;  // 回退控制寄存器
+                4'd07: io_ahb_PRDATA = CSR;  // 控制和状态寄存器
+                4'd08: io_ahb_PRDATA = APBRSTR;  // APB复位寄存器
+                4'd09: io_ahb_PRDATA = CFGR2;  // 配置寄存器2
                 default: io_ahb_PRDATA = 32'h00000000;  // 默认返回0
             endcase
         end
     end
 
     // PLL
-    // HDMI_PLL HDMI_PLL (
-    //     .clkin  (io_ahb_PCLK),       // input clk
-    //     .clkout0(serial_clk),        // output clk x5
-    //     .clkout1(video_clk),         // output clk x1
-    //     .lock   (TMDS_DDR_pll_lock)  // output lock
-    // );
-    // SYS_PLL SYS_PLL (
-    //     .clkin  (io_ahb_PCLK),
-    //     .clkout0(cmos_clk),
-    //     .clkout1(clk_vp),
-    //     .clkout2(memory_clk),
-    //     .lock   (DDR_pll_lock),
-    //     .reset  (1'b0),
-    //     .enclk0 (1'b1),
-    //     .enclk1 (1'b1),
-    //     .enclk2 (pll_stop)
-    // );
+    HDMI_PLL HDMI_PLL (
+        .clkin  (io_ahb_PCLK),       // input clk
+        .clkout0(serial_clk),        // output clk x5
+        .clkout1(video_clk),         // output clk x1
+        .lock   (TMDS_DDR_pll_lock)  // output lock
+    );
+    SYS_PLL SYS_PLL (
+        .clkin  (io_ahb_PCLK),
+        .clkout0(cmos_clk),
+        .clkout1(clk_vp),
+        .clkout2(memory_clk),
+        .lock   (DDR_pll_lock),
+        .reset  (1'b0),
+        .enclk0 (1'b1),
+        .enclk1 (1'b1),
+        .enclk2 (pll_stop)
+    );
 
 endmodule

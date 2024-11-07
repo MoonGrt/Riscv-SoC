@@ -34,54 +34,39 @@ module AHBVP #(
     localparam BLACK = 24'h000000;
     localparam WHITE = 24'hffffff;
 
-    // VP parameters
-    wire [1:0] vp_mode = VP_CR[2:1];  // 2'b01  // 00: , 01: scaler, 10: edge, 11: binarizer
+    // VP funtions
+    // VP 模式 (2位模式: 01: scale, 10: edge, 11: binarize)
+    wire [1:0] vp_mode = VP_CR[2:1];
+    // Cutter 模式 (2位模式: | 1位使能: 0: 禁用, 1: 使能)
     wire       cutter_en = VP_CR[3];
     wire [1:0] cutter_mode = VP_CR[5:4];
+    // Filter 模式 (2位模式: 01: gaussian, 10: mean, 11: median | 1位使能: 0: 禁用, 1: 使能)
     wire       filter_en = VP_CR[6];
-    wire [1:0] filter_mode = VP_CR[8:7];  // 2'b01  // 00: , 01: gaussian, 10: mean, 11: median
+    wire [1:0] filter_mode = VP_CR[8:7];
+    // Scaler 模式 (2位模式: 01: neighbor, 10: bilinear, 11: | 1位使能: 0: 禁用, 1: 使能)
     wire       scaler_en = VP_CR[9];
-    wire [1:0] scaler_mode = VP_CR[11:10];  // 2'b01  // 00: , 01: neighbor, 10: bilinear, 11: bicubic
+    wire [1:0] scaler_mode = VP_CR[11:10];
+    // Color 模式 (2位模式: | 1位使能: 0: 禁用, 1: 使能)
     wire       color_en = VP_CR[12];
     wire [1:0] color_mode = VP_CR[14:13];
+    // Edger 模式 (2位模式: 01: sobel, 10: prewitt, 11: | 1位使能: 0: 禁用, 1: 使能)
     wire       edger_en = VP_CR[15];
-    wire [1:0] edger_mode = VP_CR[17:16];  // 2'b01  // 00: , 01: sobel, 10: prewitt, 11: 
+    wire [1:0] edger_mode = VP_CR[17:16];
+    // Binarizer 模式 (2位模式: 01: 反相模式, 10: 镜像模式, 11: 反镜像模式 | 1位使能: 0: 禁用, 1: 使能)
     wire       binarizer_en = VP_CR[18];
     wire [1:0] binarizer_mode = VP_CR[20:19];
+    // Fill 模式 (2位模式: 01: 黑色, 10: 白色, 11: 自定义 | 1位使能: 0: 禁用, 1: 使能)
     wire       fill_en = VP_CR[21];
     wire [1:0] fill_mode = VP_CR[23:22];
 
-    wire [7:0] edger_th = VP_THRESHOLD[7:0];  // 8'h40
-    wire [7:0] binarizer_th = VP_THRESHOLD[15:8];  // 8'h80
     wire [ INPUT_X_RES_WIDTH-1:0] START_X = VP_START[INPUT_X_RES_WIDTH-1:0];
     wire [ INPUT_Y_RES_WIDTH-1:0] START_Y = VP_START[INPUT_X_RES_WIDTH-1+16:0+16];
     wire [OUTPUT_X_RES_WIDTH-1:0] END_X = VP_END[OUTPUT_X_RES_WIDTH-1:0];
     wire [OUTPUT_Y_RES_WIDTH-1:0] END_Y = VP_END[OUTPUT_X_RES_WIDTH-1+16:0+16];
     wire [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = VP_SCALER[INPUT_X_RES_WIDTH-1:0];
     wire [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = VP_SCALER[INPUT_X_RES_WIDTH-1+16:0+16];
-
-    // Video Parameters
-    // 放大
-    // reg [ INPUT_X_RES_WIDTH-1:0] START_X = H_DISP / 10 * 1;
-    // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = V_DISP / 10 * 1;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP / 10 * 1 + H_DISP / 2;
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP / 10 * 1 + V_DISP / 2;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP;
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP;
-    // 原图
-    // reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0;
-    // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP;
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP;
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP;
-    // 缩小
-    // reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0;
-    // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP;
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP / 2;
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP / 2;
+    wire [7:0] edger_th = VP_THRESHOLD[7:0];
+    wire [7:0] binarizer_th = VP_THRESHOLD[15:8];
 
     //--------------------------------------------------------------------------
     // Scaler
@@ -250,7 +235,7 @@ module AHBVP #(
     wire        filler_post_vs;  // Processed Image data vs valid signal
     wire        filler_post_de;  // Processed Image data output/capture enable clock
     wire [23:0] filler_post_data;  // Processed Image output
-    wire        filler_en = (vp_mode == 2'b00) & (OUTPUT_X_RES < H_DISP);
+    wire        filler_en = (vp_mode == 2'b01) & (OUTPUT_X_RES < H_DISP);
     always @ (*) begin
         if (~rst_n) begin
             filler_pre_clk  = 1'b0;
