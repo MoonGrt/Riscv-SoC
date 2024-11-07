@@ -68,6 +68,11 @@ module AHBVP #(
     wire [7:0] edger_th = VP_THRESHOLD[7:0];
     wire [7:0] binarizer_th = VP_THRESHOLD[15:8];
 
+    wire [ INPUT_X_RES_WIDTH-1:0] inputXRes = END_X - START_X - 1;  // Resolution of input data minus 1
+    wire [ INPUT_Y_RES_WIDTH-1:0] inputYRes = END_Y - START_Y - 1;
+    wire [OUTPUT_X_RES_WIDTH-1:0] outputXRes = OUTPUT_X_RES - 1;  // Resolution of input data minus 1
+    wire [OUTPUT_Y_RES_WIDTH-1:0] outputYRes = OUTPUT_Y_RES - 1;
+
     //--------------------------------------------------------------------------
     // Scaler
     //--------------------------------------------------------------------------
@@ -107,13 +112,13 @@ module AHBVP #(
     wire        filter_post_vs;  // Processed Image data vs valid signal
     wire        filter_post_de;  // Processed Image data output/capture enable clock
     wire [23:0] filter_post_data;  // Processed Image output
-    filter #(
-        .IMG_HDISP(H_DISP),  // 1280*720
-        .IMG_VDISP(V_DISP)
-    ) filter (
+    filter filter (
         .clk      (vi_clk),
         .rst_n    (rst_n),
         .mode     (filter_mode),  // 00: bypass, 01: gaussian, 10: median, 11: mean
+
+        .IMG_HDISP(inputXRes),
+        .IMG_VDISP(inputYRes),
 
         .pre_vs   (cutter_post_vs),
         .pre_de   (cutter_post_de),
@@ -129,23 +134,19 @@ module AHBVP #(
     wire        scaler_post_vs;  // Processed Image data vs valid signal
     wire        scaler_post_de;  // Processed Image data output/capture enable clock
     wire [23:0] scaler_post_data;  // Processed Image output
-    wire [ INPUT_X_RES_WIDTH-1:0] inputXRes = END_X - START_X - 1;  // Resolution of input data minus 1
-    wire [ INPUT_Y_RES_WIDTH-1:0] inputYRes = END_Y - START_Y - 1;
-    wire [OUTPUT_X_RES_WIDTH-1:0] outputXRes = OUTPUT_X_RES - 1;  // Resolution of input data minus 1
-    wire [OUTPUT_Y_RES_WIDTH-1:0] outputYRes = OUTPUT_Y_RES - 1;
     scaler #(
         .INPUT_X_RES_WIDTH (INPUT_X_RES_WIDTH),
         .INPUT_Y_RES_WIDTH (INPUT_Y_RES_WIDTH),
         .OUTPUT_X_RES_WIDTH(OUTPUT_X_RES_WIDTH),
         .OUTPUT_Y_RES_WIDTH(OUTPUT_Y_RES_WIDTH)
     ) scaler (
-        .EN   (scaler_en),
-        .mode (scaler_mode),
+        .EN  (scaler_en),
+        .mode(scaler_mode),
 
-        .inputXRes  (inputXRes),
-        .inputYRes  (inputYRes),
-        .outputXRes (outputXRes),
-        .outputYRes (outputYRes),
+        .inputXRes (inputXRes),
+        .inputYRes (inputYRes),
+        .outputXRes(outputXRes),
+        .outputYRes(outputYRes),
 
         .pre_clk  (vi_clk),
         .pre_vs   (filter_post_vs),
@@ -185,14 +186,14 @@ module AHBVP #(
     wire edger_post_vs;  // Processed Image data vs valid signal
     wire edger_post_de;  // Processed Image data output/capture enable clock
     wire edger_post_bit;  // Processed Image output
-    edger #(
-        .IMG_HDISP(H_DISP),
-        .IMG_VDISP(V_DISP)
-    ) edger (
+    edger edger (
         .clk      (vi_clk),
         .rst_n    (rst_n),
         .EN       (edger_en),
         .mode     (edger_mode),
+
+        .IMG_HDISP(inputXRes),
+        .IMG_VDISP(inputYRes),
         .threshold(edger_th),
 
         .pre_vs  (color_post_vs),
@@ -235,7 +236,8 @@ module AHBVP #(
     wire        filler_post_vs;  // Processed Image data vs valid signal
     wire        filler_post_de;  // Processed Image data output/capture enable clock
     wire [23:0] filler_post_data;  // Processed Image output
-    wire        filler_en = (vp_mode == 2'b01) & (OUTPUT_X_RES < H_DISP);
+    // wire        filler_en = (vp_mode == 2'b01) & (OUTPUT_X_RES < H_DISP);
+    wire        filler_en = (OUTPUT_X_RES < H_DISP);
     always @ (*) begin
         if (~rst_n) begin
             filler_pre_clk  = 1'b0;
