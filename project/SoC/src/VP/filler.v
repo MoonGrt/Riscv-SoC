@@ -16,6 +16,7 @@ module filler #(
     output reg  [23:0] post_data
 );
 
+    // mode 01: 黑色, 10: 白色, 11: 自定义
     localparam BLACK = 24'h000000;
     localparam WHITE = 24'hffffff;
     reg [23:0] fill_color;

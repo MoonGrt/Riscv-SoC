@@ -43,6 +43,7 @@ module scaler #(
     wire        scaler_re;
 
     reg         algorithm_sel = 1'b1;
+    // reg         algorithm_sel = (mode == 2'b01) ? 1'b1 : 1'b0;  // 0: Bilinear, 1: Nearest Neighbor
     wire [23:0] scaler_data;
     wire        scaler_dataValid;
     FIFO #(

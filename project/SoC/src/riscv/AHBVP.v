@@ -52,7 +52,7 @@ module AHBVP #(
     // Edger 模式 (2位模式: 01: sobel, 10: prewitt, 11: | 1位使能: 0: 禁用, 1: 使能)
     wire       edger_en = VP_CR[15];
     wire [1:0] edger_mode = VP_CR[17:16];
-    // Binarizer 模式 (2位模式: 01: 反相模式, 10: 镜像模式, 11: 反镜像模式 | 1位使能: 0: 禁用, 1: 使能)
+    // Binarizer 模式 (2位模式: 01: 正向模式, 10: 反相模式 | 1位使能: 0: 禁用, 1: 使能)
     wire       binarizer_en = VP_CR[18];
     wire [1:0] binarizer_mode = VP_CR[20:19];
     // Fill 模式 (2位模式: 01: 黑色, 10: 白色, 11: 自定义 | 1位使能: 0: 禁用, 1: 使能)
