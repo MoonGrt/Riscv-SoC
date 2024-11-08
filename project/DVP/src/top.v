@@ -1,6 +1,6 @@
 module top #(
-    // parameter USE_TPG = "true",
-    parameter USE_TPG = "false",
+    parameter USE_TPG = "true",
+    // parameter USE_TPG = "false",
     parameter H_DISP = 12'd1280,
     parameter V_DISP = 12'd720
 ) (
@@ -43,7 +43,7 @@ module top #(
     output [2:0] tmds_d_p_0
 );
 
-    reg [31:0] VP_CR = {2'b01, 30'b0};
+    reg [31:0] VP_CR = {2'b00, 30'b0};
     reg [31:0] VP_SR = 32'h00000000;
     reg [31:0] VP_START = 32'h00000000;
     reg [31:0] VP_END = 32'h00000000;
@@ -54,7 +54,7 @@ module top #(
     // assign state_led[3] = ~cmos_vs_cnt[4];
     // assign state_led[2] = ~TMDS_DDR_pll_lock;
     // assign state_led[1] = ~DDR_pll_lock;
-    // assign state_led[0] = ~init_calib_complete;  //DDR3初始化指示灯
+    // assign state_led[0] = ~init_calib_complete;  // DDR3初始化指示灯
 
     // video interface
     wire        vi_clk;

@@ -1,3 +1,5 @@
+`timescale 1ns/1ps
+
 module scaler #(
     parameter INPUT_X_RES_WIDTH = 11,  // Widths of input/output resolution control signals
     parameter INPUT_Y_RES_WIDTH = 11,
