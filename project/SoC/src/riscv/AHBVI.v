@@ -17,6 +17,11 @@ module AHBVI (
     output wire       cmos_rst_n,  // cmos reset
     output wire       cmos_pwdn,   // cmos power down
 
+    // HDMI interface
+    input  wire       tmds_clk_n_1,
+    input  wire       tmds_clk_p_1,
+    input  wire [2:0] tmds_d_n_1,    // {r,g,b}
+    input  wire [2:0] tmds_d_p_1,
     // output video interface
     output reg        vi_clk,
     output reg        vi_vs,
@@ -83,6 +88,27 @@ module AHBVI (
         .cmos_16bit_clk(cmos_16bit_clk)
     );
 
+    wire HDMI_clk, HDMI_vs, HDMI_hs, HDMI_de;
+    wire [7:0] HDMI_r, HDMI_g, HDMI_b;
+    DVI_RX DVI_RX (
+        .I_serial_clk (I_serial_clk),  // input I_serial_clk
+        .I_rst_n      (rst_n),         // input I_rst_n
+
+        .I_tmds_clk_p (tmds_clk_p_1),  // input I_tmds_clk_p
+        .I_tmds_clk_n (tmds_clk_n_1),  // input I_tmds_clk_n
+        .I_tmds_data_p(tmds_d_p_1),    // input [2:0] I_tmds_data_p
+        .I_tmds_data_n(tmds_d_n_1),    // input [2:0] I_tmds_data_n
+        .O_tmds_clk   (),              // output O_tmds_clk
+
+        .O_rgb_clk    (HDMI_clk),  // output O_rgb_clk
+        .O_rgb_vs     (HDMI_vs),   // output O_rgb_vs
+        .O_rgb_hs     (HDMI_hs),   // output O_rgb_hs
+        .O_rgb_de     (HDMI_de),   // output O_rgb_de
+        .O_rgb_r      (HDMI_r),    // output [7:0] O_rgb_r
+        .O_rgb_g      (HDMI_g),    // output [7:0] O_rgb_g
+        .O_rgb_b      (HDMI_b)     // output [7:0] O_rgb_b
+    );
+
     always @(*) begin
         if(~rst_n) begin
             vi_clk  = 1'b0;
@@ -103,9 +129,12 @@ module AHBVI (
                     vi_data = write_data;
                     vi_de   = cmos_16bit_wr;
                 end
-                // 2'b11: begin  // HDMI data
-
-                // end
+                2'b11: begin  // HDMI data
+                    // vi_clk  = HDMI_clk;
+                    // vi_vs   = HDMI_vs;
+                    // vi_data = {HDMI_r[7:3], HDMI_g[7:2], HDMI_b[7:3]};
+                    // vi_de   = HDMI_de;
+                end
                 default: begin
                     vi_clk  = 1'b0;
                     vi_vs   = 1'b0;

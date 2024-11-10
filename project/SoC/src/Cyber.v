@@ -45,6 +45,10 @@ module Cyber (
     output       tmds_clk_p_0,
     output [2:0] tmds_d_n_0,    // {r,g,b}
     output [2:0] tmds_d_p_0,
+    input        tmds_clk_n_1,
+    input        tmds_clk_p_1,
+    input  [2:0] tmds_d_n_1,    // {r,g,b}
+    input  [2:0] tmds_d_p_1,
     // LCD interface
     output       lcd_clk,
     output       lcd_en,
@@ -102,6 +106,17 @@ module Cyber (
     wire I2C_clk, I2C_rst;
     wire TIM_clk, TIM_rst;
     wire WDG_clk, WDG_rst;
+
+    // DMA
+    wire        vp_clk;
+    wire        vp_vs;
+    wire        vp_de;
+    wire [15:0] vp_data;
+    // Video input interface
+    wire        vo_de;
+    wire        vo_vs;
+    wire        video_de;
+    wire [15:0] video_data;
 
     // AHB
     reg         system_ahbBridge_io_pipelinedMemoryBus_cmd_valid;
@@ -329,9 +344,9 @@ module Cyber (
     wire        when_MuraxUtiles_l133;
 
     (* keep_hierarchy = "TRUE" *) BufferCC_RST BufferCC_RST (
-        .io_dataIn  (io_asyncReset                    ), //i
-        .io_dataOut (io_asyncReset_buffercc_io_dataOut), //o
-        .io_mainClk (io_mainClk                       )  //i
+        .io_dataIn  (io_asyncReset                    ), // i
+        .io_dataOut (io_asyncReset_buffercc_io_dataOut), // o
+        .io_mainClk (io_mainClk                       )  // i
     );
     JtagBridge JtagBridge (
         .io_jtag_tms                    (io_jtag_tms                                      ), // i
@@ -520,41 +535,18 @@ module Cyber (
         .WDG_clk          (WDG_clk),    // o
         .WDG_rst          (WDG_rst)     // o
     );
-    AhbDVP #(
-        .H_DISP (12'd1280),
-        .V_DISP (12'd720)
-    ) AhbDVP (
-        .io_ahb_PCLK     (io_mainClk),
-        .io_ahb_PRESET   (resetCtrl_systemReset),
-        .io_ahb_PADDR    (system_dvpCtrl_io_ahb_PADDR),
-        .io_ahb_PSEL     (ahbRouter_1_io_outputs_2_PSEL),
-        .io_ahb_PENABLE  (ahbRouter_1_io_outputs_2_PENABLE),
-        .io_ahb_PREADY   (system_dvpCtrl_io_ahb_PREADY),
-        .io_ahb_PWRITE   (ahbRouter_1_io_outputs_2_PWRITE),
-        .io_ahb_PWDATA   (ahbRouter_1_io_outputs_2_PWDATA),
-        .io_ahb_PRDATA   (system_dvpCtrl_io_ahb_PRDATA),
-        .io_ahb_PSLVERROR(system_dvpCtrl_io_ahb_PSLVERROR),
-        // clk
-        .pll_stop         (pll_stop),
-        .cmos_clk         (cmos_clk),
-        .serial_clk       (serial_clk),
-        .video_clk        (video_clk),
-        .memory_clk       (memory_clk),
-        .clk_vp           (clk_vp),
-        .DDR_pll_lock     (DDR_pll_lock),
-        .TMDS_DDR_pll_lock(TMDS_DDR_pll_lock),
-        // CAM interface
-        .i2c_sel   (i2c_sel),
-        .cmos_scl  (cmos_scl),
-        .cmos_sda  (cmos_sda),
-        .cmos_vsync(cmos_vsync),
-        .cmos_href (cmos_href),
-        .cmos_pclk (cmos_pclk),
-        .cmos_xclk (cmos_xclk),
-        .cmos_db   (cmos_db),
-        .cmos_rst_n(cmos_rst_n),
-        .cmos_pwdn (cmos_pwdn),
-        // DDR3 interface
+    AHBDMA AHBDMA (
+        .clk         (io_mainClk),
+        .memory_clk  (memory_clk),
+        .rst_n       (~resetCtrl_systemReset),
+        .DDR_pll_lock(DDR_pll_lock),
+        .pll_stop    (pll_stop),
+
+        .vi_clk (vp_clk),
+        .vi_vs  (vp_vs),
+        .vi_de  (vp_de),
+        .vi_data(vp_data),
+
         .ddr_addr   (ddr_addr),
         .ddr_bank   (ddr_bank),
         .ddr_cs     (ddr_cs),
@@ -570,11 +562,63 @@ module Cyber (
         .ddr_dq     (ddr_dq),
         .ddr_dqs    (ddr_dqs),
         .ddr_dqs_n  (ddr_dqs_n),
+
+        .video_clk (video_clk),
+        .vo_vs     (vo_vs),
+        .vo_de     (vo_de),
+        .video_de  (video_de),
+        .video_data(video_data)
+    );
+    AhbDVP #(
+        .H_DISP (12'd1280),
+        .V_DISP (12'd720)
+    ) AhbDVP (
+        .io_ahb_PCLK     (io_mainClk),
+        .io_ahb_PRESET   (resetCtrl_systemReset),
+        .io_ahb_PADDR    (system_dvpCtrl_io_ahb_PADDR),
+        .io_ahb_PSEL     (ahbRouter_1_io_outputs_2_PSEL),
+        .io_ahb_PENABLE  (ahbRouter_1_io_outputs_2_PENABLE),
+        .io_ahb_PREADY   (system_dvpCtrl_io_ahb_PREADY),
+        .io_ahb_PWRITE   (ahbRouter_1_io_outputs_2_PWRITE),
+        .io_ahb_PWDATA   (ahbRouter_1_io_outputs_2_PWDATA),
+        .io_ahb_PRDATA   (system_dvpCtrl_io_ahb_PRDATA),
+        .io_ahb_PSLVERROR(system_dvpCtrl_io_ahb_PSLVERROR),
+        // clk
+        .cmos_clk         (cmos_clk),
+        .serial_clk       (serial_clk),
+        .video_clk        (video_clk),
+        .clk_vp           (clk_vp),
+        .TMDS_DDR_pll_lock(TMDS_DDR_pll_lock),
+        // CAM interface
+        .i2c_sel   (i2c_sel),
+        .cmos_scl  (cmos_scl),
+        .cmos_sda  (cmos_sda),
+        .cmos_vsync(cmos_vsync),
+        .cmos_href (cmos_href),
+        .cmos_pclk (cmos_pclk),
+        .cmos_xclk (cmos_xclk),
+        .cmos_db   (cmos_db),
+        .cmos_rst_n(cmos_rst_n),
+        .cmos_pwdn (cmos_pwdn),
+        // Video output
+        .vp_clk (vp_clk),
+        .vp_vs  (vp_vs),
+        .vp_de  (vp_de),
+        .vp_data(vp_data),
+        // Video input
+        .vo_vs     (vo_vs),
+        .vo_de     (vo_de),
+        .video_de  (video_de),
+        .video_data(video_data),
         // HDMI interface
         .tmds_clk_n_0(tmds_clk_n_0),
         .tmds_clk_p_0(tmds_clk_p_0),
         .tmds_d_n_0  (tmds_d_n_0),
         .tmds_d_p_0  (tmds_d_p_0),
+        .tmds_clk_n_1(tmds_clk_n_1),
+        .tmds_clk_p_1(tmds_clk_p_1),
+        .tmds_d_n_1  (tmds_d_n_1),
+        .tmds_d_p_1  (tmds_d_p_1),
         // LCD interface
         .lcd_clk     (lcd_clk),
         .lcd_en      (lcd_en),

@@ -133,6 +133,16 @@ IO_PORT "tmds_d_p_0[2]" PULL_MODE=NONE DRIVE=3.5;
 IO_LOC "tmds_clk_p_0" Y22,Y23;
 IO_PORT "tmds_clk_p_0" PULL_MODE=NONE DRIVE=3.5;
 
+IO_LOC "tmds_d_p_1[0]" D19,C19;
+IO_PORT "tmds_d_p_1[0]" PULL_MODE=NONE;
+IO_LOC "tmds_d_p_1[1]" M15,L15;
+IO_PORT "tmds_d_p_1[1]" PULL_MODE=NONE;
+IO_LOC "tmds_d_p_1[2]" J25,J26;
+IO_PORT "tmds_d_p_1[2]" PULL_MODE=NONE;
+IO_LOC "tmds_clk_p_1" K20,J20;
+IO_PORT "tmds_clk_p_1" PULL_MODE=NONE;
+
+
 //============ LCD ===============
 IO_LOC "lcd_en" A24;
 IO_LOC "lcd_clk" H21;
@@ -311,9 +321,9 @@ IO_PORT "ddr_dqs[1]" IO_TYPE=SSTL15D PULL_MODE=NONE DRIVE=8 BANK_VCCIO=1.5;
 IO_LOC "ddr_dqs[0]" J4,H4;
 IO_PORT "ddr_dqs[0]" IO_TYPE=SSTL15D PULL_MODE=NONE DRIVE=8 BANK_VCCIO=1.5;
 
-INS_LOC "Cyber/AhbDVP/AHBDMA/DDR3MI/gw3_top/u_ddr_phy_top/u_dll" DDRDLLM_BL;
-INS_LOC "Cyber/AhbDVP/AHBDMA/DDR3MI/gw3_top/u_ddr_phy_top/fclkdiv" LEFTSIDE[4];
+INS_LOC "Cyber/AHBDMA/DDR3MI/gw3_top/u_ddr_phy_top/u_dll" DDRDLLM_BL;
+INS_LOC "Cyber/AHBDMA/DDR3MI/gw3_top/u_ddr_phy_top/fclkdiv" LEFTSIDE[4];
 INS_LOC "Cyber/AhbRCC/SYS_PLL/PLL_inst" PLL_L[0];
-SET_PARAM "Cyber/AhbDVP/AHBDMA/DDR3MI/gw3_top/u_ddr_phy_top/u_dll" CLKIN_SEL=CLKIN5;
+SET_PARAM "Cyber/AHBDMA/DDR3MI/gw3_top/u_ddr_phy_top/u_dll" CLKIN_SEL=CLKIN5;
 
 

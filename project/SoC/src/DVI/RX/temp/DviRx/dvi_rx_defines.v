@@ -1,0 +1,1 @@
+`define RX_USE_EXTERNAL_CLK

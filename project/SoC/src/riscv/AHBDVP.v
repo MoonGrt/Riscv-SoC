@@ -1,6 +1,4 @@
 module AhbDVP #(
-    // parameter USE_TPG = "true",
-    parameter USE_TPG = "false",
     parameter H_DISP = 12'd1280,
     parameter V_DISP = 12'd720
 ) (
@@ -17,13 +15,10 @@ module AhbDVP #(
     output wire        io_ahb_PSLVERROR,
 
     // Clock
-    output wire pll_stop,
     input  wire cmos_clk,
     input  wire serial_clk,
     input  wire video_clk,
-    input  wire memory_clk,
     input  wire clk_vp,
-    input  wire DDR_pll_lock,
     input  wire TMDS_DDR_pll_lock,
 
     // CAM interface
@@ -38,28 +33,25 @@ module AhbDVP #(
     output       cmos_rst_n,  // cmos reset
     output       cmos_pwdn,   // cmos power down
 
-    // DDR3 interface
-    output [16-1:0] ddr_addr,  // ROW_WIDTH=16
-    output [ 3-1:0] ddr_bank,  // BANK_WIDTH=3
-    output          ddr_cs,
-    output          ddr_ras,
-    output          ddr_cas,
-    output          ddr_we,
-    output          ddr_ck,
-    output          ddr_ck_n,
-    output          ddr_cke,
-    output          ddr_odt,
-    output          ddr_reset_n,
-    output [ 4-1:0] ddr_dm,     // DM_WIDTH=4
-    inout  [32-1:0] ddr_dq,     // DQ_WIDTH=32
-    inout  [ 4-1:0] ddr_dqs,    // DQS_WIDTH=4
-    inout  [ 4-1:0] ddr_dqs_n,  // DQS_WIDTH=4
-
+    // Video output interface
+    output wire        vp_clk,
+    output wire        vp_vs,
+    output wire        vp_de,
+    output wire [15:0] vp_data,
+    // Video input interface
+    output wire        vo_de,
+    output wire        vo_vs,
+    input  wire        video_de,
+    input  wire [15:0] video_data,
     // HDMI interface
     output       tmds_clk_n_0,
     output       tmds_clk_p_0,
     output [2:0] tmds_d_n_0,  // {r,g,b}
     output [2:0] tmds_d_p_0,
+    input        tmds_clk_n_1,
+    input        tmds_clk_p_1,
+    input  [2:0] tmds_d_n_1,    // {r,g,b}
+    input  [2:0] tmds_d_p_1,
     // LCD interface
     output       lcd_clk,
     output       lcd_en,
@@ -148,24 +140,14 @@ module AhbDVP #(
     wire [15:0] vi_data;
     wire        vi_de;
 
-    wire        vp_clk;
-    wire        vp_vs;
-    wire        vp_de;
-    wire [15:0] vp_data;
-
-    wire        vo_de;
-    wire        vo_vs;
-    wire        video_de;
-    wire [15:0] video_data;
-
     // 视频输入模块
-    AHBVI BVI (
+    AHBVI AHBVI (
         .clk      (clk),
         .cmos_clk (cmos_clk),
         .video_clk(video_clk),
         .rst_n    (rst_n),
         .mode     (VI_MODE),
-
+        // Camera interface
         .i2c_sel (i2c_sel),
         .cmos_scl(cmos_scl),
         .cmos_sda(cmos_sda),
@@ -176,7 +158,12 @@ module AhbDVP #(
         .cmos_xclk (cmos_xclk),
         .cmos_rst_n(cmos_rst_n),
         .cmos_pwdn (cmos_pwdn),
-
+        // HDMI interface
+        .tmds_clk_n_1(tmds_clk_n_1),
+        .tmds_clk_p_1(tmds_clk_p_1),
+        .tmds_d_n_1  (tmds_d_n_1),
+        .tmds_d_p_1  (tmds_d_p_1),
+        // Video interface
         .vi_clk (vi_clk),
         .vi_vs  (vi_vs),
         .vi_data(vi_data),
@@ -191,64 +178,21 @@ module AhbDVP #(
         .clk_vp(clk_vp),
         .rst_n (rst_n),
 
+        .vi_clk (vi_clk),
+        .vi_vs  (vi_vs),
+        .vi_de  (vi_de),
+        .vi_data(vi_data),
+
         .VP_CR       (VP_CR),
         .VP_START    (VP_START),
         .VP_END      (VP_END),
         .VP_SCALER   (VP_SCALER),
         .VP_THRESHOLD(VP_THRESHOLD),
 
-        .vi_clk (vi_clk),
-        .vi_vs  (vi_vs),
-        .vi_de  (vi_de),
-        .vi_data(vi_data),
-
         .vp_clk (vp_clk),
         .vp_vs  (vp_vs),
         .vp_de  (vp_de),
         .vp_data(vp_data)
-    );
-
-generate
-if (USE_TPG == "true")begin
-end else begin
-    // 视频存储模块
-    AHBDMA AHBDMA (
-        .clk         (clk),
-        .memory_clk  (memory_clk),
-        .rst_n       (rst_n),
-        .DDR_pll_lock(DDR_pll_lock),
-        .pll_stop    (pll_stop),
-
-        // .vi_clk (vi_clk),
-        // .vi_vs  (vi_vs),
-        // .vi_de  (vi_de),
-        // .vi_data(vi_data),
-        .vi_clk (vp_clk),
-        .vi_vs  (vp_vs),
-        .vi_de  (vp_de),
-        .vi_data(vp_data),
-
-        .ddr_addr   (ddr_addr),
-        .ddr_bank   (ddr_bank),
-        .ddr_cs     (ddr_cs),
-        .ddr_ras    (ddr_ras),
-        .ddr_cas    (ddr_cas),
-        .ddr_we     (ddr_we),
-        .ddr_ck     (ddr_ck),
-        .ddr_ck_n   (ddr_ck_n),
-        .ddr_cke    (ddr_cke),
-        .ddr_odt    (ddr_odt),
-        .ddr_reset_n(ddr_reset_n),
-        .ddr_dm     (ddr_dm),
-        .ddr_dq     (ddr_dq),
-        .ddr_dqs    (ddr_dqs),
-        .ddr_dqs_n  (ddr_dqs_n),
-
-        .video_clk (video_clk),
-        .vo_vs     (vo_vs),
-        .vo_de     (vo_de),
-        .video_de  (video_de),
-        .video_data(video_data)
     );
 
     // 视频输出模块
@@ -276,7 +220,5 @@ end else begin
         .lcd_b       (lcd_b),
         .lcd_g       (lcd_)
     );
-end
-endgenerate
 
 endmodule

@@ -7,7 +7,8 @@
     <FileList>
         <File path="src/Cyber.v" type="file.verilog" enable="1"/>
         <File path="src/DDR3MI/DDR3MI.v" type="file.verilog" enable="1"/>
-        <File path="src/DVI_TX/DVI_TX.v" type="file.verilog" enable="1"/>
+        <File path="src/DVI/RX/DVI_RX.v" type="file.verilog" enable="1"/>
+        <File path="src/DVI/TX/DVI_TX.v" type="file.verilog" enable="1"/>
         <File path="src/Frame_Buffer/Frame_Buffer.v" type="file.verilog" enable="1"/>
         <File path="src/PLL/HDMI_PLL.v" type="file.verilog" enable="1"/>
         <File path="src/PLL/SYS_PLL.v" type="file.verilog" enable="1"/>

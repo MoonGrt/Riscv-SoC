@@ -9,15 +9,15 @@ create_generated_clock -name clk_74_25 -source [get_ports {clk}] -master_clock c
 //create_generated_clock -name clk_vp -source [get_ports {clk}] -master_clock clk -divide_by 1 -multiply_by 2 [get_nets {vp_clk}]
 
 // SYS_PLL PLL2
-create_generated_clock -name mem_clk -source [get_ports {clk}] -master_clock clk -divide_by 1 -multiply_by 8 [get_nets {Cyber/AhbDVP/memory_clk}]
+create_generated_clock -name mem_clk -source [get_ports {clk}] -master_clock clk -divide_by 1 -multiply_by 8 [get_nets {Cyber/memory_clk}]
 
 // ddr pll
-create_generated_clock -name clk_x1 -source [get_nets {Cyber/AhbDVP/memory_clk}] -master_clock mem_clk -divide_by 4 -multiply_by 1 [get_pins {Cyber/AhbDVP/AHBDMA/DDR3MI/gw3_top/u_ddr_phy_top/fclkdiv/CLKOUT}]
+create_generated_clock -name clk_x1 -source [get_nets {Cyber/memory_clk}] -master_clock mem_clk -divide_by 4 -multiply_by 1 [get_pins {Cyber/AHBDMA/DDR3MI/gw3_top/u_ddr_phy_top/fclkdiv/CLKOUT}]
 
 // camera pclk
 //create_clock -name cmos_pclk -period 5.88 -waveform {0 2.94} [get_ports {cmos_pclk}]
 create_clock -name cmos_pclk -period 23.81 -waveform {0 11.9} [get_ports {cmos_pclk}]
-create_generated_clock -name cmos_pclk_div2 -source [get_ports {cmos_pclk}] -master_clock cmos_pclk -divide_by 2 -multiply_by 1 [get_nets {Cyber/AhbDVP/vi_clk}]
+create_generated_clock -name cmos_pclk_div2 -source [get_ports {cmos_pclk}] -master_clock cmos_pclk -divide_by 2 -multiply_by 1 [get_nets {Cyber/AhbDVP/vi_clk_Z}]
 create_clock -name cmos_vsync -period 10000 -waveform {0 5000} [get_ports {cmos_vsync}]
 
 set_clock_groups -asynchronous
