@@ -130,10 +130,10 @@ module AHBVI (
                     vi_de   = cmos_16bit_wr;
                 end
                 2'b11: begin  // HDMI data
-                    // vi_clk  = HDMI_clk;
-                    // vi_vs   = HDMI_vs;
-                    // vi_data = {HDMI_r[7:3], HDMI_g[7:2], HDMI_b[7:3]};
-                    // vi_de   = HDMI_de;
+                    vi_clk  = HDMI_clk;
+                    vi_vs   = HDMI_vs;
+                    vi_data = {HDMI_r[7:3], HDMI_g[7:2], HDMI_b[7:3]};
+                    vi_de   = HDMI_de;
                 end
                 default: begin
                     vi_clk  = 1'b0;
