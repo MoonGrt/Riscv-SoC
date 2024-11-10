@@ -1,12 +1,13 @@
 module AHBVO (
-    input video_clk,         // video clock
-    input serial_clk,        // serial clock
-    input rst_n,             // system reset
-    input TMDS_DDR_pll_lock,
+    input wire       video_clk,          // video clock
+    input wire       serial_clk,         // serial clock
+    input wire       rst_n,              // system reset
+    input wire       TMDS_DDR_pll_lock,
+    input wire [1:0] mode,               // data select
 
     // video interface
-    output        vo_vs,     // hdmi reset
-    output        vo_de,     // hdmi de
+    output        vo_vs,       // hdmi reset
+    output        vo_de,       // hdmi de
     input  [15:0] video_data,  // hdmi data
     input         video_de,    // hdmi de
 
@@ -14,14 +15,24 @@ module AHBVO (
     output       tmds_clk_n_0,
     output       tmds_clk_p_0,
     output [2:0] tmds_d_n_0,    // {r,g,b}
-    output [2:0] tmds_d_p_0
+    output [2:0] tmds_d_p_0,
+    // LCD interface
+    output       lcd_clk,
+    output       lcd_en,
+    output [5:0] lcd_r,
+    output [5:0] lcd_b,
+    output [5:0] lcd_g
 );
 
-    wire [4:0] lcd_r, lcd_b;
-    wire [5:0] lcd_g;
+    assign lcd_clk = video_clk;
+    assign lcd_en  = 1'b1;
+
+    // wire [4:0] lcd_r, lcd_b;
+    // wire [5:0] lcd_g;
     wire lcd_vs, lcd_de, lcd_hs, lcd_dclk;
 
-    assign {lcd_r, lcd_g, lcd_b} = video_de ? video_data[15:0] : 16'h0000;  // {r,g,b}
+    // assign {lcd_r, lcd_g, lcd_b} = video_de ? video_data[15:0] : 16'h0000;  // {r,g,b}
+    assign {lcd_r, lcd_g, lcd_b} = video_de ? {video_data[15:11], 1'b0, video_data[10:5], video_data[4:0], 1'b0} : 16'h0000;  // {r,g,b}
     assign lcd_vs                = Pout_vs_dn[1];  // vo_vs;
     assign lcd_hs                = Pout_hs_dn[1];  // vo_hs;
     assign lcd_de                = Pout_de_dn[1];  // video_de;
@@ -58,9 +69,9 @@ module AHBVO (
     assign dvi0_rgb_vs  = lcd_vs;
     assign dvi0_rgb_hs  = lcd_hs;
     assign dvi0_rgb_de  = lcd_de;
-    assign dvi0_rgb_r   = {lcd_r, 3'd0};
+    assign dvi0_rgb_r   = {lcd_r, 2'd0};
     assign dvi0_rgb_g   = {lcd_g, 2'd0};
-    assign dvi0_rgb_b   = {lcd_b, 3'd0};
+    assign dvi0_rgb_b   = {lcd_b, 2'd0};
 
     // The video output timing generator and generate a frame read data request
     vga_timing #(

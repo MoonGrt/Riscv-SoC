@@ -59,7 +59,13 @@ module AhbDVP #(
     output       tmds_clk_n_0,
     output       tmds_clk_p_0,
     output [2:0] tmds_d_n_0,  // {r,g,b}
-    output [2:0] tmds_d_p_0
+    output [2:0] tmds_d_p_0,
+    // LCD interface
+    output       lcd_clk,
+    output       lcd_en,
+    output [5:0] lcd_r,
+    output [5:0] lcd_b,
+    output [5:0] lcd_g
 );
 
     // DVP寄存器定义
@@ -258,11 +264,17 @@ end else begin
         // ddr 输出数据
         .video_data(video_data),
         .video_de  (video_de),
-
+        // TMDS 输出接口
         .tmds_clk_n_0(tmds_clk_n_0),
         .tmds_clk_p_0(tmds_clk_p_0),
         .tmds_d_n_0  (tmds_d_n_0),
-        .tmds_d_p_0  (tmds_d_p_0)
+        .tmds_d_p_0  (tmds_d_p_0),
+        // LCD interface
+        .lcd_clk     (lcd_clk),
+        .lcd_en      (lcd_en),
+        .lcd_r       (lcd_r),
+        .lcd_b       (lcd_b),
+        .lcd_g       (lcd_)
     );
 end
 endgenerate

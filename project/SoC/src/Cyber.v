@@ -44,7 +44,13 @@ module Cyber (
     output       tmds_clk_n_0,
     output       tmds_clk_p_0,
     output [2:0] tmds_d_n_0,    // {r,g,b}
-    output [2:0] tmds_d_p_0
+    output [2:0] tmds_d_p_0,
+    // LCD interface
+    output       lcd_clk,
+    output       lcd_en,
+    output [5:0] lcd_r,
+    output [5:0] lcd_b,
+    output [5:0] lcd_g
 );
 
     wire io_mainClk = clk;
@@ -568,7 +574,13 @@ module Cyber (
         .tmds_clk_n_0(tmds_clk_n_0),
         .tmds_clk_p_0(tmds_clk_p_0),
         .tmds_d_n_0  (tmds_d_n_0),
-        .tmds_d_p_0  (tmds_d_p_0)
+        .tmds_d_p_0  (tmds_d_p_0),
+        // LCD interface
+        .lcd_clk     (lcd_clk),
+        .lcd_en      (lcd_en),
+        .lcd_r       (lcd_r),
+        .lcd_b       (lcd_b),
+        .lcd_g       (lcd_)
     );
     Apb3Bridge Apb3Bridge (
         .io_pipelinedMemoryBus_cmd_valid           (system_apbBridge_io_pipelinedMemoryBus_cmd_valid                     ), // i

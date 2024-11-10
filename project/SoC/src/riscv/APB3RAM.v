@@ -1,7 +1,6 @@
 module Apb3RAM #(
-    parameter INIT_FILE = "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram_.bin",
-    parameter ADDR_DEPTH = 65536
-    // parameter ADDR_DEPTH = 8192
+    // parameter ADDR_DEPTH = 65536
+    parameter ADDR_DEPTH = 8192
 )(
     input  wire        io_bus_cmd_valid,
     output wire        io_bus_cmd_ready,

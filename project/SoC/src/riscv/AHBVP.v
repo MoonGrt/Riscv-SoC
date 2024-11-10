@@ -112,13 +112,13 @@ module AHBVP #(
     wire        filter_post_vs;  // Processed Image data vs valid signal
     wire        filter_post_de;  // Processed Image data output/capture enable clock
     wire [23:0] filter_post_data;  // Processed Image output
-    filter filter (
+    filter #(
+        .IMG_HDISP(H_DISP),  // 1280*720
+        .IMG_VDISP(V_DISP)
+    ) filter (
         .clk      (vi_clk),
         .rst_n    (rst_n),
         .mode     (filter_mode),  // 00: bypass, 01: gaussian, 10: median, 11: mean
-
-        .IMG_HDISP(inputXRes),
-        .IMG_VDISP(inputYRes),
 
         .pre_vs   (cutter_post_vs),
         .pre_de   (cutter_post_de),
@@ -186,14 +186,14 @@ module AHBVP #(
     wire edger_post_vs;  // Processed Image data vs valid signal
     wire edger_post_de;  // Processed Image data output/capture enable clock
     wire edger_post_bit;  // Processed Image output
-    edger edger (
+    edger #(
+        .IMG_HDISP(H_DISP),
+        .IMG_VDISP(V_DISP)
+    ) edger (
         .clk      (vi_clk),
         .rst_n    (rst_n),
         .EN       (edger_en),
         .mode     (edger_mode),
-
-        .IMG_HDISP(inputXRes),
-        .IMG_VDISP(inputYRes),
         .threshold(edger_th),
 
         .pre_vs  (color_post_vs),
@@ -236,8 +236,8 @@ module AHBVP #(
     wire        filler_post_vs;  // Processed Image data vs valid signal
     wire        filler_post_de;  // Processed Image data output/capture enable clock
     wire [23:0] filler_post_data;  // Processed Image output
-    // wire        filler_en = (vp_mode == 2'b01) & (OUTPUT_X_RES < H_DISP);
-    wire        filler_en = (OUTPUT_X_RES < H_DISP);
+    wire        filler_en = (vp_mode == 2'b01) & (OUTPUT_X_RES < H_DISP);
+    // wire        filler_en = (OUTPUT_X_RES < H_DISP);
     always @ (*) begin
         if (~rst_n) begin
             filler_pre_clk  = 1'b0;

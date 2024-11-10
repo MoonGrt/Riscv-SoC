@@ -1,12 +1,11 @@
-module filter (
+module filter #(
+    parameter IMG_HDISP = 12'd1280,  // 1280*720
+    parameter IMG_VDISP = 12'd720
+) (
     // global clock
     input wire       clk,   // cmos video pixel clock
     input wire       rst_n, // global reset
     input wire [1:0] mode,  // enable
-
-    // Image data parameters
-    input [10:0] IMG_HDISP,
-    input [10:0] IMG_VDISP,
 
     // Image data prepred to be processed
     input wire        pre_vs,   // Prepared Image data vs valid signal
@@ -26,15 +25,14 @@ module filter (
     wire        gaussian_post_vs;  // Processed Image data vs valid signal
     wire        gaussian_post_de;  // Processed Image data output/capture enable clock
     wire [23:0] gaussian_post_data;  // Processed Image output
-    gaussian gaussian (
+    gaussian #(
+        .IMG_HDISP(IMG_HDISP),  // 1280*720
+        .IMG_VDISP(IMG_VDISP)
+    ) gaussian (
         // global clock
         .clk  (clk),  // cmos video pixel clock
         .rst_n(rst_n),  // global reset
         .EN   (gaussian_en),  // enable
-
-        // Image data parameters
-        .IMG_HDISP(IMG_HDISP),
-        .IMG_VDISP(IMG_VDISP),
 
         // Image data prepred to be processd
         .pre_vs  (pre_vs),  // Prepared Image data vs valid signal
@@ -50,16 +48,14 @@ module filter (
     wire        mean_post_vs;  // Processed Image data vs valid signal
     wire        mean_post_de;  // Processed Image data output/capture enable clock
     wire [23:0] mean_post_data;  // Processed Image output
-    mean mean (
+    mean #(
+        .IMG_HDISP(IMG_HDISP),  // 1280*720
+        .IMG_VDISP(IMG_VDISP)
+    ) mean (
         // global clock
         .clk  (clk),  // cmos video pixel clock
         .rst_n(rst_n),  // global reset
         .EN   (mean_en),  // enable
-
-
-        // Image data parameters
-        .IMG_HDISP(IMG_HDISP),
-        .IMG_VDISP(IMG_VDISP),
 
         // Image data prepred to be processd
         .pre_vs  (pre_vs),  // Prepared Image data vs valid signal
@@ -75,15 +71,14 @@ module filter (
     wire        median_post_vs;  // Processed Image data vs valid signal
     wire        median_post_de;  // Processed Image data output/capture enable clock
     wire [23:0] median_post_data;  // Processed Image output
-    median median (
+    median #(
+        .IMG_HDISP(IMG_HDISP),  // 1280*720
+        .IMG_VDISP(IMG_VDISP)
+    ) median (
         // global clock
         .clk  (clk),  // cmos video pixel clock
         .rst_n(rst_n),  // global reset
         .EN   (median_en),  // enable
-
-        // Image data parameters
-        .IMG_HDISP(IMG_HDISP),
-        .IMG_VDISP(IMG_VDISP),
 
         // Image data prepred to be processd
         .pre_vs  (pre_vs),  // Prepared Image data vs valid signal
@@ -130,15 +125,14 @@ module filter (
 endmodule
 
 
-module gaussian (
+module gaussian #(
+    parameter IMG_HDISP = 12'd1280,  // 1280*720
+    parameter IMG_VDISP = 12'd720
+) (
     // global clock
     input wire clk,   // cmos video pixel clock
     input wire rst_n, // global reset
     input wire EN,    // enable
-
-    // Image data parameters
-    input [10:0] IMG_HDISP,
-    input [10:0] IMG_VDISP,
 
     // Image data prepred to be processed
     input wire        pre_vs,   // Prepared Image data vs valid signal
@@ -179,14 +173,13 @@ module gaussian (
     wire [7:0] matrix_p31_b, matrix_p32_b, matrix_p33_b;
 
     // Instantiate 3x3 matrix generator for each channel
-    matrix3x3 matrix3x3_r (
+    matrix3x3 #(
+        .IMG_HDISP(IMG_HDISP),
+        .IMG_VDISP(IMG_VDISP)
+    ) matrix3x3_r (
         // global clock
         .clk  (clk),    // cmos video pixel clock
         .rst_n(rst_n),  // global reset
-
-        // Image data parameters
-        .IMG_HDISP(IMG_HDISP),
-        .IMG_VDISP(IMG_VDISP),
 
         // Image data prepred to be processd
         .pre_vs  (pre_vs),  // Prepared Image data vs valid signal
@@ -201,14 +194,13 @@ module gaussian (
         .matrix_p31(matrix_p31_r), .matrix_p32(matrix_p32_r), .matrix_p33(matrix_p33_r)
     );
 
-    matrix3x3 matrix3x3_g (
+    matrix3x3 #(
+        .IMG_HDISP(IMG_HDISP),
+        .IMG_VDISP(IMG_VDISP)
+    ) matrix3x3_g (
         // global clock
         .clk  (clk),    // cmos video pixel clock
         .rst_n(rst_n),  // global reset
-
-        // Image data parameters
-        .IMG_HDISP(IMG_HDISP),
-        .IMG_VDISP(IMG_VDISP),
 
         // Image data prepred to be processd
         .pre_vs  (pre_vs),  // Prepared Image data vs valid signal
@@ -223,14 +215,13 @@ module gaussian (
         .matrix_p31(matrix_p31_g), .matrix_p32(matrix_p32_g), .matrix_p33(matrix_p33_g)
     );
 
-    matrix3x3 matrix3x3_b (
+    matrix3x3 #(
+        .IMG_HDISP(IMG_HDISP),
+        .IMG_VDISP(IMG_VDISP)
+    ) matrix3x3_ (
         // global clock
         .clk  (clk),    // cmos video pixel clock
         .rst_n(rst_n),  // global reset
-
-        // Image data parameters
-        .IMG_HDISP(IMG_HDISP),
-        .IMG_VDISP(IMG_VDISP),
 
         // Image data prepred to be processd
         .pre_vs  (pre_vs),  // Prepared Image data vs valid signal
@@ -287,15 +278,14 @@ module gaussian (
 endmodule
 
 
-module mean (
+module mean #(
+    parameter IMG_HDISP = 12'd1280,  // 1280*720
+    parameter IMG_VDISP = 12'd720
+) (
     // global clock
     input wire clk,   // cmos video pixel clock
     input wire rst_n, // global reset
     input wire EN,    // enable
-
-    // Image data parameters
-    input [10:0] IMG_HDISP,
-    input [10:0] IMG_VDISP,
 
     // Image data prepred to be processed
     input wire        pre_vs,   // Prepared Image data vs valid signal
@@ -336,14 +326,13 @@ module mean (
     wire [7:0] matrix_p31_b, matrix_p32_b, matrix_p33_b;
 
     // Instantiate 3x3 matrix generator for each channel
-    matrix3x3 matrix3x3_r (
+    matrix3x3 #(
+        .IMG_HDISP(IMG_HDISP),
+        .IMG_VDISP(IMG_VDISP)
+    ) matrix3x3_r (
         // global clock
         .clk  (clk),    // cmos video pixel clock
         .rst_n(rst_n),  // global reset
-
-        // Image data parameters
-        .IMG_HDISP(IMG_HDISP),
-        .IMG_VDISP(IMG_VDISP),
 
         // Image data prepred to be processd
         .pre_vs  (pre_vs),  // Prepared Image data vs valid signal
@@ -358,14 +347,13 @@ module mean (
         .matrix_p31(matrix_p31_r), .matrix_p32(matrix_p32_r), .matrix_p33(matrix_p33_r)
     );
 
-    matrix3x3 matrix3x3_g (
+    matrix3x3 #(
+        .IMG_HDISP(IMG_HDISP),
+        .IMG_VDISP(IMG_VDISP)
+    ) matrix3x3_g (
         // global clock
         .clk  (clk),    // cmos video pixel clock
         .rst_n(rst_n),  // global reset
-
-        // Image data parameters
-        .IMG_HDISP(IMG_HDISP),
-        .IMG_VDISP(IMG_VDISP),
 
         // Image data prepred to be processd
         .pre_vs  (pre_vs),  // Prepared Image data vs valid signal
@@ -380,14 +368,13 @@ module mean (
         .matrix_p31(matrix_p31_g), .matrix_p32(matrix_p32_g), .matrix_p33(matrix_p33_g)
     );
 
-    matrix3x3 matrix3x3_b (
+    matrix3x3 #(
+        .IMG_HDISP(IMG_HDISP),
+        .IMG_VDISP(IMG_VDISP)
+    ) matrix3x3_ (
         // global clock
         .clk  (clk),    // cmos video pixel clock
         .rst_n(rst_n),  // global reset
-
-        // Image data parameters
-        .IMG_HDISP(IMG_HDISP),
-        .IMG_VDISP(IMG_VDISP),
 
         // Image data prepred to be processd
         .pre_vs  (pre_vs),  // Prepared Image data vs valid signal
@@ -444,15 +431,14 @@ module mean (
 endmodule
 
 
-module median (
+module median #(
+    parameter IMG_HDISP = 9'd1280,  // 1280*720
+    parameter IMG_VDISP = 8'd720
+) (
     // global clock
     input wire clk,   // cmos video pixel clock
     input wire rst_n, // global reset
     input wire EN,    // enable signal for image processing
-
-    // Image data parameters
-    input [10:0] IMG_HDISP,
-    input [10:0] IMG_VDISP,
 
     // Image data prepred to be processd
     input wire        pre_vs,    // Prepared Image data vs valid signal
@@ -493,14 +479,13 @@ module median (
     wire [7:0] matrix_p31_b, matrix_p32_b, matrix_p33_b;
 
     // Instantiate 3x3 matrix generator for each channel
-    matrix3x3 matrix3x3_r (
+    matrix3x3 #(
+        .IMG_HDISP(IMG_HDISP),
+        .IMG_VDISP(IMG_VDISP)
+    ) matrix3x3_r (
         // global clock
         .clk  (clk),    // cmos video pixel clock
         .rst_n(rst_n),  // global reset
-
-        // Image data parameters
-        .IMG_HDISP(IMG_HDISP),
-        .IMG_VDISP(IMG_VDISP),
 
         // Image data prepred to be processd
         .pre_vs  (pre_vs),  // Prepared Image data vs valid signal
@@ -532,14 +517,13 @@ module median (
         .post_data(post_r)  // Processed Image output
     );
 
-    matrix3x3 matrix3x3_g (
+    matrix3x3 #(
+        .IMG_HDISP(IMG_HDISP),
+        .IMG_VDISP(IMG_VDISP)
+    ) matrix3x3_g (
         // global clock
         .clk  (clk),    // cmos video pixel clock
         .rst_n(rst_n),  // global reset
-
-        // Image data parameters
-        .IMG_HDISP(IMG_HDISP),
-        .IMG_VDISP(IMG_VDISP),
 
         // Image data prepred to be processd
         .pre_vs  (pre_vs),  // Prepared Image data vs valid signal
@@ -570,14 +554,13 @@ module median (
         .post_data(post_g)  // Processed Image output
     );
 
-    matrix3x3 matrix3x3_b (
+    matrix3x3 #(
+        .IMG_HDISP(IMG_HDISP),
+        .IMG_VDISP(IMG_VDISP)
+    ) matrix3x3_b (
         // global clock
         .clk  (clk),    // cmos video pixel clock
         .rst_n(rst_n),  // global reset
-
-        // Image data parameters
-        .IMG_HDISP(IMG_HDISP),
-        .IMG_VDISP(IMG_VDISP),
 
         // Image data prepred to be processd
         .pre_vs  (pre_vs),  // Prepared Image data vs valid signal
@@ -841,14 +824,13 @@ module Matrix3x3Median(
 endmodule
 
 
-module matrix3x3 (
+module matrix3x3 #(
+    parameter IMG_HDISP = 12'd1280,  // 1280*720
+    parameter IMG_VDISP = 12'd720
+) (
     // global clock
     input wire clk,   // cmos video pixel clock
     input wire rst_n, // global reset
-
-    // Image data parameters
-    input [10:0] IMG_HDISP,
-    input [10:0] IMG_VDISP,
 
     // Image data prepred to be processd
     input wire       pre_vs,   // Prepared Image data vs valid signal
@@ -883,21 +865,21 @@ module matrix3x3 (
     // module of shift ram for raw data
     wire shift_en = pre_de;
     line_shift_ram #(
-        .DATA_WIDTH (8)
+        .DATA_WIDTH (8),
+        .LINE_LENGTH(IMG_HDISP)
     ) line_shift_ram0 (
         .clk  (clk),        // input wire CLK
         .rst_n(rst_n),      // input wire RST_N
-        .LINE_LENGTH(IMG_HDISP),
         .CE   (shift_en),   // input wire CE
         .D    (row3_data),  // input wire [7:0] D
         .Q    (row2_data)   // output wire [7:0] Q
     );
     line_shift_ram #(
-        .DATA_WIDTH (8)
+        .DATA_WIDTH (8),
+        .LINE_LENGTH(IMG_HDISP)
     ) line_shift_ram1 (
         .clk  (clk),        // input wire CLK
         .rst_n(rst_n),      // input wire RST_N
-        .LINE_LENGTH(IMG_HDISP),
         .CE   (shift_en),   // input wire CE
         .D    (row2_data),  // input wire [7:0] D
         .Q    (row1_data)   // output wire [7:0] Q
@@ -959,18 +941,18 @@ endmodule
 
 
 module line_shift_ram #(
-    parameter DATA_WIDTH = 8  // 数据宽度，默认为8位
+    parameter DATA_WIDTH  = 8,    // 数据宽度，默认为8位
+    parameter LINE_LENGTH = 1280  // 行长度，默认为1280个像素
 ) (
-    input  wire                  clk,          // 时钟信号
-    input  wire                  rst_n,        // 复位信号
-    input  wire [          10:0] LINE_LENGTH,  // 行长度
-    input  wire                  CE,           // 使能信号
-    input  wire [DATA_WIDTH-1:0] D,            // 输入数据
-    output reg  [DATA_WIDTH-1:0] Q             // 输出数据
+    input  wire                  clk,    // 时钟信号
+    input  wire                  rst_n,  // 复位信号
+    input  wire                  CE,     // 使能信号
+    input  wire [DATA_WIDTH-1:0] D,      // 输入数据
+    output reg  [DATA_WIDTH-1:0] Q       // 输出数据
 );
 
     // 内部存储器，存储一整行像素数据
-    reg [DATA_WIDTH-1:0] line_ram[12'd1280-1:0];
+    reg [DATA_WIDTH-1:0] line_ram[LINE_LENGTH-1:0];
     integer i;
     initial begin
         for (i = 0; i < LINE_LENGTH; i = i + 1)
@@ -978,8 +960,8 @@ module line_shift_ram #(
     end
 
     // 读写指针，用来指示当前操作的地址
-    reg [$clog2(12'd1280)-1:0] wr_ptr = 0;
-    reg [$clog2(12'd1280)-1:0] rd_ptr = 0;  // 开始时，读指针与写指针相同
+    reg [$clog2(LINE_LENGTH)-1:0] wr_ptr = 0;
+    reg [$clog2(LINE_LENGTH)-1:0] rd_ptr = 0;  // 开始时，读指针与写指针相同
 
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin

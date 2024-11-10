@@ -2,7 +2,8 @@
 create_clock -name clk -period 20 -waveform {0 10} [get_ports {clk}] -add
 
 // HDMI_PLL video_clk
-create_generated_clock -name clk_74_25 -source [get_ports {clk}] -master_clock clk -divide_by 200 -multiply_by 297 [get_nets {Cyber/AhbDVP/video_clk}]
+//create_generated_clock -name clk_74_25 -source [get_ports {clk}] -master_clock clk -divide_by 200 -multiply_by 297 [get_nets {Cyber/AhbDVP/video_clk}]
+create_generated_clock -name clk_74_25 -source [get_ports {clk}] -master_clock clk -divide_by 200 -multiply_by 297 [get_nets {lcd_clk}]
 
 // SYS_PLL PLL1
 //create_generated_clock -name clk_vp -source [get_ports {clk}] -master_clock clk -divide_by 1 -multiply_by 2 [get_nets {vp_clk}]
@@ -16,7 +17,7 @@ create_generated_clock -name clk_x1 -source [get_nets {Cyber/AhbDVP/memory_clk}]
 // camera pclk
 //create_clock -name cmos_pclk -period 5.88 -waveform {0 2.94} [get_ports {cmos_pclk}]
 create_clock -name cmos_pclk -period 23.81 -waveform {0 11.9} [get_ports {cmos_pclk}]
-create_generated_clock -name cmos_pclk_div2 -source [get_ports {cmos_pclk}] -master_clock cmos_pclk -divide_by 2 -multiply_by 1 [get_nets {Cyber/AhbDVP/vi_clk_Z}]
+create_generated_clock -name cmos_pclk_div2 -source [get_ports {cmos_pclk}] -master_clock cmos_pclk -divide_by 2 -multiply_by 1 [get_nets {Cyber/AhbDVP/vi_clk}]
 create_clock -name cmos_vsync -period 10000 -waveform {0 5000} [get_ports {cmos_vsync}]
 
 set_clock_groups -asynchronous
