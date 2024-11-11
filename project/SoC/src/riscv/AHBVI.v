@@ -2150,7 +2150,7 @@ module lut_ov5640_rgb565 #(
                 else lut_data <= {8'h78, 24'h3036_69};  //PLL倍频 , 1280x720(0x69)
                 10'd204: lut_data <= {8'h78, 24'h3c07_08};
                 10'd205: lut_data <= {8'h78, 24'h3820_41};  //Sensor vflip, 47=N, 41=T
-                10'd206: lut_data <= {8'h78, 24'h3821_01};  //Sensor mirror, 01=N, 07=T
+                10'd206: lut_data <= {8'h78, 24'h3821_07};  //Sensor mirror, 01=N, 07=T
                 10'd207: lut_data <= {8'h78, 24'h3814_31};  // timing X inc
                 10'd208: lut_data <= {8'h78, 24'h3815_31};  // timing Y inc
                 10'd209: lut_data <= {8'h78, 24'h3800_00};  //TIMING HS start
