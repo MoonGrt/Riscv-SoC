@@ -1,6 +1,5 @@
-module filler #(
-    parameter H_DISP = 12'd1280,
-    parameter V_DISP = 12'd720
+module filler2 #(
+    parameter H_DISP = 12'd1280
 ) (
     input wire        rst_n,
     input wire        EN,
@@ -85,10 +84,11 @@ module filler #(
             case (state)
                 IDLE: if (EN_pedge) state <= BLANK;  // 边沿触发，进入空白帧状态
                 BLANK: begin
-                    post_de <= 1'b1;
+                    post_vs <= BLANK_CNT[2];
+                    post_de <= pre_de;
                     post_data <= fill_color;
                     if (pre_vs_pedge) BLANK_CNT <= BLANK_CNT + 1;
-                    if (BLANK_CNT == 4'b0111) begin
+                    if (BLANK_CNT == 4'b1111) begin
                         state <= RECV;
                         BLANK_CNT <= 4'b0;
                     end
@@ -101,7 +101,7 @@ module filler #(
                         h_cnt <= 12'd0;
                     end
                     if (pre_de_nedge && (h_cnt < H_DISP)) state <= FILL;
-                    if (~EN) state <= IDLE;  // 负沿触发，进入空闲状态
+                    if (EN_nedge) state <= IDLE;  // 负沿触发，进入空闲状态
                 end
                 FILL: begin
                     post_de <= recv_start;
@@ -111,18 +111,18 @@ module filler #(
                         state <= RECV;  // 达到H_DISP后回到RECV状态
                         recv_start <= 1'b0;
                     end
-                    if (~EN) state <= IDLE;  // 负沿触发，进入空闲状态
+                    if (EN_nedge) state <= IDLE;  // 负沿触发，进入空闲状态
                 end
             endcase
         end
     end
 
-    // // pixel 计数器
-    // reg [25:0] pixel_cnt = 0;
-    // always @(posedge pre_clk or negedge rst_n) begin
-    //     if (~rst_n | pre_vs) pixel_cnt <= 0;
-    //     else if (post_de) pixel_cnt <= pixel_cnt + 1;
-    //     else pixel_cnt <= pixel_cnt;
-    // end
+    // pixel 计数器
+    reg [25:0] pixel_cnt = 0;
+    always @(posedge pre_clk or negedge rst_n) begin
+        if (~rst_n | pre_vs) pixel_cnt <= 0;
+        else if (post_de) pixel_cnt <= pixel_cnt + 1;
+        else pixel_cnt <= pixel_cnt;
+    end
 
 endmodule

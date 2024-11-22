@@ -81,17 +81,17 @@ module Cyber (
     wire SPI2_MISO = GPIOB[14];
     wire SPI2_CS;
     // TIM
+    wire [3:0] TIM1_CH;
     wire [3:0] TIM2_CH;
-    wire [3:0] TIM3_CH;
     // AFIO Contection
-    wire [15:0] AFIOA = {TIM3_CH, TIM2_CH, 8'bz};
+    wire [15:0] AFIOA = {TIM2_CH, TIM1_CH, 8'bz};
     wire [15:0] AFIOB = {SPI2_CS, 1'bz, SPI2_MOSI, SPI2_SCK, SPI1_CS, 1'bz, SPI1_MOSI, SPI1_SCK,
                          I2C2_SDA, I2C2_SCL, I2C1_SDA, I2C1_SCL, 1'bz, USART2_TX, 1'bz, USART1_TX};
     // Interrupt
     reg system_externalInterrupt, system_timerInterrupt;
     wire timer_interrupt, uart_interrupt;
     wire USART1_interrupt, USART2_interrupt;
-    wire TIM2_interrupt, TIM3_interrupt;
+    wire TIM1_interrupt, TIM2_interrupt;
 
     // RCC
     wire pll_stop;
@@ -535,97 +535,97 @@ module Cyber (
         .WDG_clk          (WDG_clk),    // o
         .WDG_rst          (WDG_rst)     // o
     );
-    // AHBDMA AHBDMA (
-    //     .clk         (io_mainClk),
-    //     .memory_clk  (memory_clk),
-    //     .rst_n       (~resetCtrl_systemReset),
-    //     .DDR_pll_lock(DDR_pll_lock),
-    //     .pll_stop    (pll_stop),
+    AHBDMA AHBDMA (
+        .clk         (io_mainClk),
+        .memory_clk  (memory_clk),
+        .rst_n       (~resetCtrl_systemReset),
+        .DDR_pll_lock(DDR_pll_lock),
+        .pll_stop    (pll_stop),
 
-    //     .vi_clk (vp_clk),
-    //     .vi_vs  (vp_vs),
-    //     .vi_de  (vp_de),
-    //     .vi_data(vp_data),
+        .vi_clk (vp_clk),
+        .vi_vs  (vp_vs),
+        .vi_de  (vp_de),
+        .vi_data(vp_data),
 
-    //     .ddr_addr   (ddr_addr),
-    //     .ddr_bank   (ddr_bank),
-    //     .ddr_cs     (ddr_cs),
-    //     .ddr_ras    (ddr_ras),
-    //     .ddr_cas    (ddr_cas),
-    //     .ddr_we     (ddr_we),
-    //     .ddr_ck     (ddr_ck),
-    //     .ddr_ck_n   (ddr_ck_n),
-    //     .ddr_cke    (ddr_cke),
-    //     .ddr_odt    (ddr_odt),
-    //     .ddr_reset_n(ddr_reset_n),
-    //     .ddr_dm     (ddr_dm),
-    //     .ddr_dq     (ddr_dq),
-    //     .ddr_dqs    (ddr_dqs),
-    //     .ddr_dqs_n  (ddr_dqs_n),
+        .ddr_addr   (ddr_addr),
+        .ddr_bank   (ddr_bank),
+        .ddr_cs     (ddr_cs),
+        .ddr_ras    (ddr_ras),
+        .ddr_cas    (ddr_cas),
+        .ddr_we     (ddr_we),
+        .ddr_ck     (ddr_ck),
+        .ddr_ck_n   (ddr_ck_n),
+        .ddr_cke    (ddr_cke),
+        .ddr_odt    (ddr_odt),
+        .ddr_reset_n(ddr_reset_n),
+        .ddr_dm     (ddr_dm),
+        .ddr_dq     (ddr_dq),
+        .ddr_dqs    (ddr_dqs),
+        .ddr_dqs_n  (ddr_dqs_n),
 
-    //     .video_clk (video_clk),
-    //     .vo_vs     (vo_vs),
-    //     .vo_de     (vo_de),
-    //     .video_de  (video_de),
-    //     .video_data(video_data)
-    // );
-    // AhbDVP #(
-    //     .H_DISP (12'd1280),
-    //     .V_DISP (12'd720)
-    // ) AhbDVP (
-    //     .io_ahb_PCLK     (io_mainClk),
-    //     .io_ahb_PRESET   (resetCtrl_systemReset),
-    //     .io_ahb_PADDR    (system_dvpCtrl_io_ahb_PADDR),
-    //     .io_ahb_PSEL     (ahbRouter_1_io_outputs_2_PSEL),
-    //     .io_ahb_PENABLE  (ahbRouter_1_io_outputs_2_PENABLE),
-    //     .io_ahb_PREADY   (system_dvpCtrl_io_ahb_PREADY),
-    //     .io_ahb_PWRITE   (ahbRouter_1_io_outputs_2_PWRITE),
-    //     .io_ahb_PWDATA   (ahbRouter_1_io_outputs_2_PWDATA),
-    //     .io_ahb_PRDATA   (system_dvpCtrl_io_ahb_PRDATA),
-    //     .io_ahb_PSLVERROR(system_dvpCtrl_io_ahb_PSLVERROR),
-    //     // clk
-    //     .cmos_clk         (cmos_clk),
-    //     .serial_clk       (serial_clk),
-    //     .video_clk        (video_clk),
-    //     .clk_vp           (clk_vp),
-    //     .TMDS_DDR_pll_lock(TMDS_DDR_pll_lock),
-    //     // CAM interface
-    //     .i2c_sel   (i2c_sel),
-    //     .cmos_scl  (cmos_scl),
-    //     .cmos_sda  (cmos_sda),
-    //     .cmos_vsync(cmos_vsync),
-    //     .cmos_href (cmos_href),
-    //     .cmos_pclk (cmos_pclk),
-    //     .cmos_xclk (cmos_xclk),
-    //     .cmos_db   (cmos_db),
-    //     .cmos_rst_n(cmos_rst_n),
-    //     .cmos_pwdn (cmos_pwdn),
-    //     // Video output
-    //     .vp_clk (vp_clk),
-    //     .vp_vs  (vp_vs),
-    //     .vp_de  (vp_de),
-    //     .vp_data(vp_data),
-    //     // Video input
-    //     .vo_vs     (vo_vs),
-    //     .vo_de     (vo_de),
-    //     .video_de  (video_de),
-    //     .video_data(video_data),
-    //     // HDMI interface
-    //     .tmds_clk_n_0(tmds_clk_n_0),
-    //     .tmds_clk_p_0(tmds_clk_p_0),
-    //     .tmds_d_n_0  (tmds_d_n_0),
-    //     .tmds_d_p_0  (tmds_d_p_0),
-    //     .tmds_clk_n_1(tmds_clk_n_1),
-    //     .tmds_clk_p_1(tmds_clk_p_1),
-    //     .tmds_d_n_1  (tmds_d_n_1),
-    //     .tmds_d_p_1  (tmds_d_p_1),
-    //     // LCD interface
-    //     .lcd_clk     (lcd_clk),
-    //     .lcd_en      (lcd_en),
-    //     .lcd_r       (lcd_r),
-    //     .lcd_b       (lcd_b),
-    //     .lcd_g       (lcd_)
-    // );
+        .video_clk (video_clk),
+        .vo_vs     (vo_vs),
+        .vo_de     (vo_de),
+        .video_de  (video_de),
+        .video_data(video_data)
+    );
+    AhbDVP #(
+        .H_DISP (12'd1280),
+        .V_DISP (12'd720)
+    ) AhbDVP (
+        .io_ahb_PCLK     (io_mainClk),
+        .io_ahb_PRESET   (resetCtrl_systemReset),
+        .io_ahb_PADDR    (system_dvpCtrl_io_ahb_PADDR),
+        .io_ahb_PSEL     (ahbRouter_1_io_outputs_2_PSEL),
+        .io_ahb_PENABLE  (ahbRouter_1_io_outputs_2_PENABLE),
+        .io_ahb_PREADY   (system_dvpCtrl_io_ahb_PREADY),
+        .io_ahb_PWRITE   (ahbRouter_1_io_outputs_2_PWRITE),
+        .io_ahb_PWDATA   (ahbRouter_1_io_outputs_2_PWDATA),
+        .io_ahb_PRDATA   (system_dvpCtrl_io_ahb_PRDATA),
+        .io_ahb_PSLVERROR(system_dvpCtrl_io_ahb_PSLVERROR),
+        // clk
+        .cmos_clk         (cmos_clk),
+        .serial_clk       (serial_clk),
+        .video_clk        (video_clk),
+        .clk_vp           (clk_vp),
+        .TMDS_DDR_pll_lock(TMDS_DDR_pll_lock),
+        // CAM interface
+        .i2c_sel   (i2c_sel),
+        .cmos_scl  (cmos_scl),
+        .cmos_sda  (cmos_sda),
+        .cmos_vsync(cmos_vsync),
+        .cmos_href (cmos_href),
+        .cmos_pclk (cmos_pclk),
+        .cmos_xclk (cmos_xclk),
+        .cmos_db   (cmos_db),
+        .cmos_rst_n(cmos_rst_n),
+        .cmos_pwdn (cmos_pwdn),
+        // Video output
+        .vp_clk (vp_clk),
+        .vp_vs  (vp_vs),
+        .vp_de  (vp_de),
+        .vp_data(vp_data),
+        // Video input
+        .vo_vs     (vo_vs),
+        .vo_de     (vo_de),
+        .video_de  (video_de),
+        .video_data(video_data),
+        // HDMI interface
+        .tmds_clk_n_0(tmds_clk_n_0),
+        .tmds_clk_p_0(tmds_clk_p_0),
+        .tmds_d_n_0  (tmds_d_n_0),
+        .tmds_d_p_0  (tmds_d_p_0),
+        .tmds_clk_n_1(tmds_clk_n_1),
+        .tmds_clk_p_1(tmds_clk_p_1),
+        .tmds_d_n_1  (tmds_d_n_1),
+        .tmds_d_p_1  (tmds_d_p_1),
+        // LCD interface
+        .lcd_clk     (lcd_clk),
+        .lcd_en      (lcd_en),
+        .lcd_r       (lcd_r),
+        .lcd_b       (lcd_b),
+        .lcd_g       (lcd_)
+    );
     Apb3Bridge Apb3Bridge (
         .io_pipelinedMemoryBus_cmd_valid           (system_apbBridge_io_pipelinedMemoryBus_cmd_valid                     ), // i
         .io_pipelinedMemoryBus_cmd_ready           (system_apbBridge_io_pipelinedMemoryBus_cmd_ready                     ), // o
@@ -805,10 +805,10 @@ module Cyber (
         .io_apb_PWDATA        (apb3Router_1_io_outputs_4_PWDATA),            // i
         .io_apb_PRDATA        (system_timCtrl_io_apb_PRDATA),                // o
         .io_apb_PSLVERROR     (system_timCtrl_io_apb_PSLVERROR),             // o
+        .TIM1_CH              (TIM1_CH),                                     // o
+        .TIM1_interrupt       (TIM1_interrupt),                              // o  // TIM interrupt
         .TIM2_CH              (TIM2_CH),                                     // o
-        .TIM2_interrupt       (TIM2_interrupt),                              // o  // TIM interrupt
-        .TIM3_CH              (TIM3_CH),                                     // o
-        .TIM3_interrupt       (TIM3_interrupt)                               // o
+        .TIM2_interrupt       (TIM2_interrupt)                               // o
     );
     Apb3WDGRouter Apb3WDGRouter (
         .io_apb_PCLK          (WDG_clk),                                     // i
@@ -850,7 +850,7 @@ module Cyber (
     assign when_Murax_l192 = io_asyncReset_buffercc_io_dataOut;
     always @(*) begin
         system_timerInterrupt = 1'b0;
-        if (TIM2_interrupt | TIM3_interrupt) begin
+        if (TIM1_interrupt | TIM2_interrupt) begin
             system_timerInterrupt = 1'b1;
         end
     end

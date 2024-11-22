@@ -1,6 +1,5 @@
 module top #(
-    parameter USE_TPG = "true",
-    // parameter USE_TPG = "false",
+    parameter USE_TPG = "false",
     parameter H_DISP = 12'd1280,
     parameter V_DISP = 12'd720
 ) (

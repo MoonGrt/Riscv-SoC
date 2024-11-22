@@ -90,4 +90,12 @@ module filler #(
         end
     end
 
+    // pixel 计数器
+    reg [25:0] pixel_cnt = 0;
+    always @(posedge pre_clk or negedge rst_n) begin
+        if (~rst_n | pre_vs) pixel_cnt <= 0;
+        else if (post_de) pixel_cnt <= pixel_cnt + 1;
+        else pixel_cnt <= pixel_cnt;
+    end
+
 endmodule

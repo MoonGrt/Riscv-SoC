@@ -54,19 +54,19 @@ module AHBVP #(
 
     // Video Parameters
     // 放大
-    // reg [ INPUT_X_RES_WIDTH-1:0] START_X = H_DISP / 10 * 1;
-    // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = V_DISP / 10 * 1;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP / 10 * 1 + H_DISP / 2;
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP / 10 * 1 + V_DISP / 2;
-    // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP;
-    // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP;
-    // 原图
-    reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0;
+    reg [ INPUT_X_RES_WIDTH-1:0] START_X = H_DISP / 10 * 3;
     reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0;
-    reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP;
-    reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP;
+    reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP / 10 * 1 + H_DISP / 2;
+    reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = 0 + V_DISP / 2;
     reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP;
     reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP;
+    // 原图
+    // reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0;
+    // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0;
+    // reg [OUTPUT_X_RES_WIDTH-1:0] END_X = H_DISP;
+    // reg [OUTPUT_Y_RES_WIDTH-1:0] END_Y = V_DISP;
+    // reg [OUTPUT_X_RES_WIDTH-1:0] OUTPUT_X_RES = H_DISP;
+    // reg [OUTPUT_Y_RES_WIDTH-1:0] OUTPUT_Y_RES = V_DISP;
     // 缩小
     // reg [ INPUT_X_RES_WIDTH-1:0] START_X = 0;
     // reg [ INPUT_Y_RES_WIDTH-1:0] START_Y = 0;
@@ -287,6 +287,20 @@ module AHBVP #(
         .post_vs  (filler_post_vs),
         .post_de  (filler_post_de),
         .post_data(filler_post_data)
+    );
+    filler2 #(
+        .H_DISP(H_DISP)
+    ) filler2 (
+        .rst_n    (rst_n),
+        .EN       (filler_en),
+        .pre_clk  (filler_pre_clk),
+        .pre_vs   (filler_pre_vs),
+        .pre_de   (filler_pre_de),
+        .pre_data (filler_pre_data),
+        .post_clk (),
+        .post_vs  (),
+        .post_de  (),
+        .post_data()
     );
 
     //--------------------------------------------------------------------------
