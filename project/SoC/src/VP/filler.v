@@ -12,7 +12,7 @@ module filler #(
     input  wire        pre_de,
     input  wire [23:0] pre_data,
     output wire        post_clk,
-    output reg         post_vs,
+    output wire        post_vs,
     output reg         post_de,
     output reg  [23:0] post_data
 );
@@ -68,7 +68,7 @@ module filler #(
     reg [11:0] h_cnt;  // 行内像素计数器
     reg recv_start = 1'b0;  // 接收开始标志
     assign post_clk = pre_clk;
-    // assign post_vs = pre_vs;
+    assign post_vs = pre_vs;
     always @(posedge pre_clk or negedge rst_n) begin
         if (~rst_n) begin
             // 复位所有信号
@@ -79,7 +79,6 @@ module filler #(
             BLANK_CNT <= 4'b0;
             recv_start <= 1'b0;
         end else begin
-            post_vs <= pre_vs;
             post_de <= pre_de;
             post_data <= pre_data;
             case (state)
@@ -88,7 +87,7 @@ module filler #(
                     post_de <= 1'b1;
                     post_data <= fill_color;
                     if (pre_vs_pedge) BLANK_CNT <= BLANK_CNT + 1;
-                    if (BLANK_CNT == 4'b0111) begin
+                    if (BLANK_CNT == 4'b0100) begin
                         state <= RECV;
                         BLANK_CNT <= 4'b0;
                     end
