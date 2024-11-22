@@ -1,12 +1,13 @@
-module edger #(
-    parameter IMG_HDISP = 11'd1280,  // 1280*720
-    parameter IMG_VDISP = 11'd720
-) (
+module edger (
     // global clock
     input wire       clk,   // cmos video pixel clock
     input wire       rst_n, // global reset
     input wire       EN,    // enable signal for edge detector
     input wire [1:0] mode,  // edge detect mode(0: Sobel, 1: Prewitt)
+
+    // Image data parameters
+    input [10:0] IMG_HDISP,
+    input [10:0] IMG_VDISP,
 
     input wire [7:0] threshold,  // Sobel Threshold for image edge detect
 
@@ -29,12 +30,11 @@ module edger #(
     wire [7:0] matrix_p11, matrix_p12, matrix_p13;  // 3X3 Matrix output
     wire [7:0] matrix_p21, matrix_p22, matrix_p23;
     wire [7:0] matrix_p31, matrix_p32, matrix_p33;
-    matrix3x3 #(
-        .IMG_HDISP(IMG_HDISP),
-        .IMG_VDISP(IMG_VDISP)
-    ) matrix3x3 (
+    matrix3x3 matrix3x3 (
         .clk        (clk),
         .rst_n      (rst_n),
+        .IMG_HDISP  (IMG_HDISP),
+        .IMG_VDISP  (IMG_VDISP),
         .pre_vs     (pre_vs),
         .pre_de     (pre_de),
         .pre_data   (pre_data),
