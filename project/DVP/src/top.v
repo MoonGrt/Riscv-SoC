@@ -5,7 +5,9 @@ module top #(
 ) (
     input clk,
     input rst_n,
-    
+
+    input        bottom,
+    output [4:0] state_led,
 
     // CAM interface
     input        cmos_scl,    // cmos i2c clock
@@ -48,7 +50,46 @@ module top #(
     input [2:0] tmds_d_p_1
 );
 
-    assign i2c_sel = 3'b100;
+    wire [3:0] O_pll_phase;
+    assign state_led = {func, O_pll_phase}; // 状态指示灯
+
+    reg bottom_d; // 保存 bottom 的前一个状态
+    reg func;     // 翻转信号
+    // 使用复位逻辑初始化 func
+    always @(posedge clk or negedge rst_n) begin
+        if (~rst_n) begin
+            func <= 1'b0; // 初始值
+            bottom_d <= 1'b0;
+        end else begin
+            bottom_d <= bottom; // 保存前一个状态
+            if (~bottom && bottom_d) begin
+                func <= ~func; // 检测下降沿并翻转 func
+            end
+        end
+    end
+
+    // 输出选择逻辑
+    localparam HDMI_SEL = 3'b100;
+    localparam CMOS_SEL = 3'b101;
+    assign i2c_sel = func ? CMOS_SEL : HDMI_SEL;
+    // // 双向 I2C 信号处理
+    // wire i2c_scl_in, i2c_sda_in;   // 输入路径
+    // wire i2c_scl_out, i2c_sda_out; // 输出路径
+    // wire i2c_scl_oe, i2c_sda_oe;   // 输出使能
+    // // 根据 `func` 控制 I2C 信号来源
+    // assign i2c_scl_out = func ? cmos_scl : hdmi_scl;
+    // assign i2c_sda_out = func ? cmos_sda : hdmi_sda;
+    // // 默认输出方向高阻态（I2C 总线需要上拉）
+    // assign i2c_scl_oe = 1'b0; // 这里假设 i2c_scl 不需要主动驱动
+    // assign i2c_sda_oe = 1'b0; // 这里假设 i2c_sda 不需要主动驱动
+    // // 双向信号连接
+    // assign i2c_scl = i2c_scl_oe ? i2c_scl_out : 1'bz;
+    // assign i2c_sda = i2c_sda_oe ? i2c_sda_out : 1'bz;
+    // // 读取 I2C 信号
+    // assign i2c_scl_in = i2c_scl;
+    // assign i2c_sda_in = i2c_sda;
+
+
 
 
     reg  [31:0] VP_CR = {2'b00, 30'b0};
@@ -56,13 +97,6 @@ module top #(
     reg  [31:0] VP_START = 32'h00000000;
     reg  [31:0] VP_END = 32'h00000000;
     reg  [31:0] VP_SCALER = 32'h00000000;
-
-    // 状态指示灯
-    // assign state_led[4] = ~i2c_done;
-    // assign state_led[3] = ~cmos_vs_cnt[4];
-    // assign state_led[2] = ~TMDS_DDR_pll_lock;
-    // assign state_led[1] = ~DDR_pll_lock;
-    // assign state_led[0] = ~init_calib_complete;  // DDR3初始化指示灯
 
     // video interface
     wire        vi_clk;
@@ -113,7 +147,7 @@ module top #(
     //===========================================================================
     EDID_PROM_Top EDID_PROM_Top (
         .I_clk  (clk),    //>= 5MHz, <=200MHz 
-        .I_rst_n(rst_n),
+        .I_rst_n(rst_n | ~func),
         .I_scl  (cmos_scl),
         .IO_sda (cmos_sda)
     );
