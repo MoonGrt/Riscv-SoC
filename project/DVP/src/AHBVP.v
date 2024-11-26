@@ -288,20 +288,6 @@ module AHBVP #(
         .post_de  (filler_post_de),
         .post_data(filler_post_data)
     );
-    filler2 #(
-        .H_DISP(H_DISP)
-    ) filler2 (
-        .rst_n    (rst_n),
-        .EN       (filler_en),
-        .pre_clk  (filler_pre_clk),
-        .pre_vs   (filler_pre_vs),
-        .pre_de   (filler_pre_de),
-        .pre_data (filler_pre_data),
-        .post_clk (),
-        .post_vs  (),
-        .post_de  (),
-        .post_data()
-    );
 
     //--------------------------------------------------------------------------
     // Output

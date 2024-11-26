@@ -12,6 +12,7 @@
         <File path="src/AHBVP.v" type="file.verilog" enable="1"/>
         <File path="src/CAM.v" type="file.verilog" enable="1"/>
         <File path="src/DDR3MI/DDR3MI.v" type="file.verilog" enable="1"/>
+        <File path="src/DVI_RX/DVI_RX.v" type="file.verilog" enable="1"/>
         <File path="src/DVI_TX/DVI_TX.v" type="file.verilog" enable="1"/>
         <File path="src/Frame_Buffer/Frame_Buffer.v" type="file.verilog" enable="1"/>
         <File path="src/PLL/HDMI_PLL.v" type="file.verilog" enable="1"/>
@@ -21,11 +22,13 @@
         <File path="src/VP/edger.v" type="file.verilog" enable="1"/>
         <File path="src/VP/filler.v" type="file.verilog" enable="1"/>
         <File path="src/VP/filter.v" type="file.verilog" enable="1"/>
+        <File path="src/VP/i2c_edid.v" type="file.verilog" enable="1"/>
         <File path="src/VP/rgb2ycbcr.v" type="file.verilog" enable="1"/>
         <File path="src/VP/scaler.v" type="file.verilog" enable="1"/>
+        <File path="src/edid_prom/edid_prom.v" type="file.verilog" enable="1"/>
         <File path="src/top.v" type="file.verilog" enable="1"/>
         <File path="src/top.cst" type="file.cst" enable="1"/>
         <File path="src/top.sdc" type="file.sdc" enable="1"/>
-        <File path="src/top.rao" type="file.gao" enable="0"/>
+        <File path="src/top.rao" type="file.gao" enable="1"/>
     </FileList>
 </Project>

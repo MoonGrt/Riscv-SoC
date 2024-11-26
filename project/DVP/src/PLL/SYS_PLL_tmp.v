@@ -5,7 +5,7 @@
 //Part Number: GW5AST-LV138FPG676AES
 //Device: GW5AST-138
 //Device Version: B
-//Created Time: Sun Nov  3 19:00:21 2024
+//Created Time: Tue Nov 26 16:49:24 2024
 
 //Change the instance name and port connections to the signal names
 //--------Copy here to design--------
@@ -15,11 +15,13 @@
         .clkout0(clkout0), //output clkout0
         .clkout1(clkout1), //output clkout1
         .clkout2(clkout2), //output clkout2
+        .clkout3(clkout3), //output clkout3
         .clkin(clkin), //input clkin
         .reset(reset), //input reset
         .enclk0(enclk0), //input enclk0
         .enclk1(enclk1), //input enclk1
-        .enclk2(enclk2) //input enclk2
+        .enclk2(enclk2), //input enclk2
+        .enclk3(enclk3) //input enclk3
     );
 
 //--------Copy end-------------------

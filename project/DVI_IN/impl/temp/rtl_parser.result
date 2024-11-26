@@ -1,0 +1,66 @@
+[
+ {
+  "InstFile" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVI_IN/src/video_top.v",
+  "InstLine" : 24,
+  "InstName" : "video_top",
+  "ModuleFile" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVI_IN/src/video_top.v",
+  "ModuleLine" : 24,
+  "ModuleName" : "video_top",
+  "SubInsts" : [
+   {
+    "InstFile" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVI_IN/src/video_top.v",
+    "InstLine" : 80,
+    "InstName" : "EDID_PROM_Top_inst",
+    "ModuleFile" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVI_IN/src/edid_prom/edid_prom.v",
+    "ModuleLine" : 819,
+    "ModuleName" : "EDID_PROM_Top",
+    "SubInsts" : [
+     {
+      "InstFile" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVI_IN/src/edid_prom/edid_prom.v",
+      "InstLine" : 840,
+      "InstName" : "i2c_slave_wrapper_inst",
+      "ModuleFile" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVI_IN/src/edid_prom/edid_prom.v",
+      "ModuleLine" : 10,
+      "ModuleName" : "~i2c_slave_wrapper.EDID_PROM_Top"
+     }
+    ]
+   },
+   {
+    "InstFile" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVI_IN/src/video_top.v",
+    "InstLine" : 90,
+    "InstName" : "DVI_RX_Top_inst",
+    "ModuleFile" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVI_IN/src/dvi_rx/dvi_rx.v",
+    "ModuleLine" : 7007,
+    "ModuleName" : "DVI_RX_Top",
+    "SubInsts" : [
+     {
+      "InstFile" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVI_IN/src/dvi_rx/dvi_rx.v",
+      "InstLine" : 7040,
+      "InstName" : "dvi2rgb_inst",
+      "ModuleFile" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVI_IN/src/dvi_rx/dvi_rx.v",
+      "ModuleLine" : 10,
+      "ModuleName" : "~dvi2rgb.DVI_RX_Top"
+     }
+    ]
+   },
+   {
+    "InstFile" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVI_IN/src/video_top.v",
+    "InstLine" : 110,
+    "InstName" : "DVI_TX_Top_inst",
+    "ModuleFile" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVI_IN/src/dvi_tx/dvi_tx.v",
+    "ModuleLine" : 1181,
+    "ModuleName" : "DVI_TX_Top",
+    "SubInsts" : [
+     {
+      "InstFile" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVI_IN/src/dvi_tx/dvi_tx.v",
+      "InstLine" : 1210,
+      "InstName" : "rgb2dvi_inst",
+      "ModuleFile" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVI_IN/src/dvi_tx/dvi_tx.v",
+      "ModuleLine" : 10,
+      "ModuleName" : "~rgb2dvi.DVI_TX_Top"
+     }
+    ]
+   }
+  ]
+ }
+]

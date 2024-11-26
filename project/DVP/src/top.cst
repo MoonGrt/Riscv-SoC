@@ -4,6 +4,27 @@ IO_PORT "clk" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 IO_LOC "rst_n" K16;
 IO_PORT "rst_n" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 
+//============ BUTTOM ===============
+IO_LOC "bottom" F15;
+IO_PORT "bottom" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
+
+IO_LOC "state_led[0]" J14;
+IO_LOC "state_led[1]" R26;
+IO_LOC "state_led[2]" L20;
+IO_LOC "state_led[3]" M25;
+IO_LOC "state_led[4]" N21;
+IO_PORT "state_led[0]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
+IO_PORT "state_led[1]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
+IO_PORT "state_led[2]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
+IO_PORT "state_led[3]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
+IO_PORT "state_led[4]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
+
+//============ IIC ===============
+IO_LOC "i2c_scl" K25;
+IO_LOC "i2c_sda" K26;
+IO_PORT "i2c_scl" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
+IO_PORT "i2c_sda" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
+
 //============ CAM ===============
 IO_LOC "i2c_sel[0]" N19;
 IO_LOC "i2c_sel[1]" P19;
@@ -12,8 +33,6 @@ IO_PORT "i2c_sel[0]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 IO_PORT "i2c_sel[1]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 IO_PORT "i2c_sel[2]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 
-IO_LOC "cmos_scl" K25;
-IO_LOC "cmos_sda" K26;
 IO_LOC "cmos_vsync" G17;
 IO_LOC "cmos_href" E16;
 IO_LOC "cmos_pclk" D20;
@@ -28,8 +47,6 @@ IO_LOC "cmos_db[4]" E20;
 IO_LOC "cmos_db[5]" D18;
 IO_LOC "cmos_db[6]" C18;
 IO_LOC "cmos_db[7]" B17;
-IO_PORT "cmos_scl" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
-IO_PORT "cmos_sda" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 IO_PORT "cmos_vsync" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 IO_PORT "cmos_href" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 IO_PORT "cmos_pclk" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
@@ -46,6 +63,7 @@ IO_PORT "cmos_db[6]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 IO_PORT "cmos_db[7]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 
 //============ HDMI ===============
+// TX
 IO_LOC "tmds_d_p_0[0]" AB24,AC24;
 IO_PORT "tmds_d_p_0[0]" PULL_MODE=NONE DRIVE=3.5;
 IO_LOC "tmds_d_p_0[1]" V24,W24;
@@ -54,6 +72,17 @@ IO_LOC "tmds_d_p_0[2]" AA22,AA23;
 IO_PORT "tmds_d_p_0[2]" PULL_MODE=NONE DRIVE=3.5;
 IO_LOC "tmds_clk_p_0" Y22,Y23;
 IO_PORT "tmds_clk_p_0" PULL_MODE=NONE DRIVE=3.5;
+
+// RX
+IO_LOC "tmds_d_p_1[0]" D19,C19;
+IO_PORT "tmds_d_p_1[0]" IO_TYPE=LVDS25;
+IO_LOC "tmds_d_p_1[1]" M15,L15;
+IO_PORT "tmds_d_p_1[1]" IO_TYPE=LVDS25;
+IO_LOC "tmds_d_p_1[2]" J25,J26;
+IO_PORT "tmds_d_p_1[2]" IO_TYPE=LVDS25;
+IO_LOC "tmds_clk_p_1" K20,J20;
+IO_PORT "tmds_clk_p_1" IO_TYPE=LVDS25;
+
 
 //====================DDR3==================
 IO_LOC "ddr_bank[2]" K3;

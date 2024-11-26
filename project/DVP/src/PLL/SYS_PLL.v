@@ -5,21 +5,22 @@
 //Part Number: GW5AST-LV138FPG676AES
 //Device: GW5AST-138
 //Device Version: B
-//Created Time: Sun Nov  3 19:00:21 2024
+//Created Time: Tue Nov 26 16:49:24 2024
 
-module SYS_PLL (lock, clkout0, clkout1, clkout2, clkin, reset, enclk0, enclk1, enclk2);
+module SYS_PLL (lock, clkout0, clkout1, clkout2, clkout3, clkin, reset, enclk0, enclk1, enclk2, enclk3);
 
 output lock;
 output clkout0;
 output clkout1;
 output clkout2;
+output clkout3;
 input clkin;
 input reset;
 input enclk0;
 input enclk1;
 input enclk2;
+input enclk3;
 
-wire clkout3;
 wire clkout4;
 wire clkout5;
 wire clkout6;
@@ -71,7 +72,7 @@ PLL PLL_inst (
     .ENCLK0(enclk0),
     .ENCLK1(enclk1),
     .ENCLK2(enclk2),
-    .ENCLK3(gw_vcc),
+    .ENCLK3(enclk3),
     .ENCLK4(gw_vcc),
     .ENCLK5(gw_vcc),
     .ENCLK6(gw_vcc),
@@ -87,7 +88,7 @@ defparam PLL_inst.FBDIV_SEL = 1;
 defparam PLL_inst.ODIV0_SEL = 50;
 defparam PLL_inst.ODIV1_SEL = 12;
 defparam PLL_inst.ODIV2_SEL = 3;
-defparam PLL_inst.ODIV3_SEL = 8;
+defparam PLL_inst.ODIV3_SEL = 120;
 defparam PLL_inst.ODIV4_SEL = 8;
 defparam PLL_inst.ODIV5_SEL = 8;
 defparam PLL_inst.ODIV6_SEL = 8;
@@ -97,7 +98,7 @@ defparam PLL_inst.ODIV0_FRAC_SEL = 0;
 defparam PLL_inst.CLKOUT0_EN = "TRUE";
 defparam PLL_inst.CLKOUT1_EN = "TRUE";
 defparam PLL_inst.CLKOUT2_EN = "TRUE";
-defparam PLL_inst.CLKOUT3_EN = "FALSE";
+defparam PLL_inst.CLKOUT3_EN = "TRUE";
 defparam PLL_inst.CLKOUT4_EN = "FALSE";
 defparam PLL_inst.CLKOUT5_EN = "FALSE";
 defparam PLL_inst.CLKOUT6_EN = "FALSE";

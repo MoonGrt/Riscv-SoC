@@ -1,0 +1,4 @@
+`define TX_USE_5AT_PLL
+`define TX_PLL_CLKIN_FRE "74.25"
+`define TX_PLL_ODIV_SEL 3
+`define USE_TLVDS_OBUF

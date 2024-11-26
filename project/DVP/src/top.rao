@@ -4,39 +4,13 @@
     <Mode>Standard</Mode>
     <AoCore index="0" sample_clock="clk" trig_type="0" storage_depth="16384" window_num="1" capture_amount="8192" implementation="0" trigger_pos="512" module_name="top" force_trigger_by_falling_edge="false" capture_init_data_enabled="false">
         <SignalList>
-            <Signal capture_enable="true">AHBVP/de_i</Signal>
-            <Bus capture_enable="true" name="AHBVP/post_data_scaler[23:0]">
-                <Signal>AHBVP/post_data_scaler[23]</Signal>
-                <Signal>AHBVP/post_data_scaler[22]</Signal>
-                <Signal>AHBVP/post_data_scaler[21]</Signal>
-                <Signal>AHBVP/post_data_scaler[20]</Signal>
-                <Signal>AHBVP/post_data_scaler[19]</Signal>
-                <Signal>AHBVP/post_data_scaler[18]</Signal>
-                <Signal>AHBVP/post_data_scaler[17]</Signal>
-                <Signal>AHBVP/post_data_scaler[16]</Signal>
-                <Signal>AHBVP/post_data_scaler[15]</Signal>
-                <Signal>AHBVP/post_data_scaler[14]</Signal>
-                <Signal>AHBVP/post_data_scaler[13]</Signal>
-                <Signal>AHBVP/post_data_scaler[12]</Signal>
-                <Signal>AHBVP/post_data_scaler[11]</Signal>
-                <Signal>AHBVP/post_data_scaler[10]</Signal>
-                <Signal>AHBVP/post_data_scaler[9]</Signal>
-                <Signal>AHBVP/post_data_scaler[8]</Signal>
-                <Signal>AHBVP/post_data_scaler[7]</Signal>
-                <Signal>AHBVP/post_data_scaler[6]</Signal>
-                <Signal>AHBVP/post_data_scaler[5]</Signal>
-                <Signal>AHBVP/post_data_scaler[4]</Signal>
-                <Signal>AHBVP/post_data_scaler[3]</Signal>
-                <Signal>AHBVP/post_data_scaler[2]</Signal>
-                <Signal>AHBVP/post_data_scaler[1]</Signal>
-                <Signal>AHBVP/post_data_scaler[0]</Signal>
-            </Bus>
-            <Signal capture_enable="true">AHBVP/post_de_scaler</Signal>
+            <Signal capture_enable="true">cmos_scl</Signal>
+            <Signal capture_enable="true">cmos_sda</Signal>
         </SignalList>
         <Triggers>
             <Trigger index="0">
                 <SignalList>
-                    <Signal>AHBVP/image_cut_de</Signal>
+                    <Signal>HDMI_de</Signal>
                 </SignalList>
             </Trigger>
             <Trigger index="1"/>
@@ -77,5 +51,5 @@
             <Expression>M0</Expression>
         </Expressions>
     </AoCore>
-    <GAO_ID>0011100100110001</GAO_ID>
+    <GAO_ID>1010001111000010</GAO_ID>
 </GAO_CONFIG>
