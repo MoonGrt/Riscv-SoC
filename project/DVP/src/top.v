@@ -5,11 +5,10 @@ module top #(
 ) (
     input clk,
     input rst_n,
-    input bottom,
-    input [4:0] state_led,
+    
 
     // CAM interface
-    inout        cmos_scl,    // cmos i2c clock
+    input        cmos_scl,    // cmos i2c clock
     inout        cmos_sda,    // cmos i2c data
     input        cmos_vsync,  // cmos vsync
     input        cmos_href,   // cmos hsync refrence,data valid
@@ -49,28 +48,7 @@ module top #(
     input [2:0] tmds_d_p_1
 );
 
-    reg bottom_d; // 用于保存输入 bottom 的延迟版本
-    reg func = 0;
-    always @(posedge clk) begin
-        // 保存当前的 bottom 状态
-        bottom_d <= bottom;
-        // 检测 bottom 的下降沿，翻转 func
-        if (~bottom && bottom_d)
-            func <= ~func; // 翻转 func
-    end
-
-//    wire cmos_scl, cmos_sda;
-//    wire hdmi_scl, hdmi_sda;
-    localparam HDMI_SEL = 3'b100;
-    localparam CMOS_SEL = 3'b101;
-//    assign i2c_scl = func ? cmos_scl : hdmi_scl;
-//    assign i2c_sda = func ? cmos_sda : hdmi_sda;
-    assign i2c_sel = func ? CMOS_SEL : HDMI_SEL;
-
-    wire [3:0] O_pll_phase;
-    assign state_led = {func, O_pll_phase};
-
-
+    assign i2c_sel = 3'b100;
 
 
     reg  [31:0] VP_CR = {2'b00, 30'b0};
@@ -169,6 +147,7 @@ module top #(
         .serial_clk(serial_clk),
         .rst_n     (rst_n),
 
+//        .i2c_sel (i2c_sel),
         // .cmos_scl(cmos_scl),
         // .cmos_sda(cmos_sda),
 

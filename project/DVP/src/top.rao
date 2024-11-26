@@ -4,8 +4,23 @@
     <Mode>Standard</Mode>
     <AoCore index="0" sample_clock="clk" trig_type="0" storage_depth="16384" window_num="1" capture_amount="8192" implementation="0" trigger_pos="512" module_name="top" force_trigger_by_falling_edge="false" capture_init_data_enabled="false">
         <SignalList>
-            <Signal capture_enable="true">cmos_scl</Signal>
-            <Signal capture_enable="true">cmos_sda</Signal>
+            <Signal capture_enable="true">HDMI_de</Signal>
+            <Bus capture_enable="true" name="HDMI_r[7:0]">
+                <Signal>HDMI_r[7]</Signal>
+                <Signal>HDMI_r[6]</Signal>
+                <Signal>HDMI_r[5]</Signal>
+                <Signal>HDMI_r[4]</Signal>
+                <Signal>HDMI_r[3]</Signal>
+                <Signal>HDMI_r[2]</Signal>
+                <Signal>HDMI_r[1]</Signal>
+                <Signal>HDMI_r[0]</Signal>
+            </Bus>
+            <Bus capture_enable="true" name="DVI_RX/O_pll_phase[3:0]">
+                <Signal>DVI_RX/O_pll_phase[3]</Signal>
+                <Signal>DVI_RX/O_pll_phase[2]</Signal>
+                <Signal>DVI_RX/O_pll_phase[1]</Signal>
+                <Signal>DVI_RX/O_pll_phase[0]</Signal>
+            </Bus>
         </SignalList>
         <Triggers>
             <Trigger index="0">
@@ -51,5 +66,5 @@
             <Expression>M0</Expression>
         </Expressions>
     </AoCore>
-    <GAO_ID>1010001111000010</GAO_ID>
+    <GAO_ID>1111011001110011</GAO_ID>
 </GAO_CONFIG>
