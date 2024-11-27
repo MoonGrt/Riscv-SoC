@@ -21,11 +21,11 @@ module AHBVI (
     input  wire        HDMI_vs,     // HDMI vertical sync
     input  wire        HDMI_de,     // HDMI data enable
     input  wire [15:0] HDMI_data,   // HDMI data
-    // HDMI interface
-    input  wire       tmds_clk_n_1,
-    input  wire       tmds_clk_p_1,
-    input  wire [2:0] tmds_d_n_1,    // {r,g,b}
-    input  wire [2:0] tmds_d_p_1,
+    // // HDMI interface
+    // input  wire       tmds_clk_n_1,
+    // input  wire       tmds_clk_p_1,
+    // input  wire [2:0] tmds_d_n_1,    // {r,g,b}
+    // input  wire [2:0] tmds_d_p_1,
     // output video interface
     output reg        vi_clk,
     output reg        vi_vs,
@@ -74,7 +74,7 @@ module AHBVI (
     CAM CAM (
         .clk     (clk),
         .cmos_clk(cmos_clk),
-        .rst_n   (rst_n),
+        .rst_n   (rst_n & (mode == 2'b10)),
 
         .i2c_sel   (i2c_sel),
         .cmos_scl  (cmos_scl),
@@ -103,26 +103,26 @@ module AHBVI (
                 2'b01: begin  // test pattern
                     vi_clk  = cmos_clk;
                     vi_vs   = tp0_vs_in;
-                    vi_data = {tp0_data_r[7:3], tp0_data_g[7:2], tp0_data_b[7:3]};
                     vi_de   = tp0_de_in;
+                    vi_data = {tp0_data_r[7:3], tp0_data_g[7:2], tp0_data_b[7:3]};
                 end
                 2'b10: begin  // cmos data
                     vi_clk  = cmos_16bit_clk;
                     vi_vs   = cmos_vsync;
-                    vi_data = write_data;
                     vi_de   = cmos_16bit_wr;
+                    vi_data = write_data;
                 end
                 2'b11: begin  // HDMI data
                     vi_clk  = HDMI_clk;
                     vi_vs   = HDMI_vs;
-                    vi_data = HDMI_data;
                     vi_de   = HDMI_de;
+                    vi_data = HDMI_data;
                 end
                 default: begin
                     vi_clk  = 1'b0;
                     vi_vs   = 1'b0;
-                    vi_data = 16'b0;
                     vi_de   = 1'b0;
+                    vi_data = 16'b0;
                 end
             endcase
         end

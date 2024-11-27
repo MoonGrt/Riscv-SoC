@@ -33,6 +33,6 @@ set_clock_groups -asynchronous
 //report_timing -hold -from_clock [get_clocks {clk*}] -to_clock [get_clocks {clk*}] -max_paths 25 -max_common_paths 1
 //report_timing -setup -from_clock [get_clocks {clk*}] -to_clock [get_clocks {clk*}] -max_paths 25 -max_common_paths 1
 
-create_clock -name tmds_clk_p_1 -period 13.468 -waveform {0 6.734} [get_ports {tmds_clk_p_1}] -add
+create_clock -name tmds_clk_p_1 -period 2.693 -waveform {0 1.3465} [get_ports {tmds_clk_p_1}] -add
 create_clock -name HDMI_clk -period 13.468 -waveform {0 6.734} [get_nets {HDMI_clk}] -add
 set_clock_groups -exclusive -group [get_clocks {tmds_clk_p_1}] -group [get_clocks {HDMI_clk}]

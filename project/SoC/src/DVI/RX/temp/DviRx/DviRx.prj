@@ -11,7 +11,7 @@
         <Option type="disable_insert_pad" value="1"/>
         <Option type="enable_dsrm" value="0"/>
         <Option type="include_path" value="S:/DevTools/Gowin/Gowin_V1.9.10.02_x64/IDE/ipcore/DVI_RX/data"/>
-        <Option type="include_path" value="F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/DVI/dvi_rx/temp/DviRx"/>
+        <Option type="include_path" value="F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/DVI/RX/temp/DviRx"/>
         <Option type="output_file" value="DVI_RX.vg"/>
         <Option type="output_template" value="DVI_RX_tmp.v"/>
         <Option type="ram_balance" value="1"/>

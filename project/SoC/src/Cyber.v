@@ -11,6 +11,7 @@ module Cyber (
     output wire io_jtag_tdo,
     input  wire io_jtag_tck,
     // GPIO
+    // output wire [3:0] state_led,
     inout wire [15:0] GPIOA,  // GPIO
     inout wire [15:0] GPIOB,  // GPIO
     // CAM interface
@@ -59,6 +60,9 @@ module Cyber (
 
     wire io_mainClk = clk;
     wire io_asyncReset = ~rst_n;
+
+    // wire [3:0] O_pll_phase;
+    // assign state_led = O_pll_phase; // 状态指示灯
 
     /* GPIO AFIO */
     // USART
@@ -569,10 +573,16 @@ module Cyber (
         .video_de  (video_de),
         .video_data(video_data)
     );
+    // EDID_PROM_Top EDID_PROM_Top (
+    //     .I_clk  (clk),    //>= 5MHz, <=200MHz 
+    //     .I_rst_n(rst_n & ~func),
+    //     .I_scl  (i2c_scl),
+    //     .IO_sda (i2c_sda)
+    // );
     wire HDMI_clk, HDMI_vs, HDMI_hs, HDMI_de;
     wire [7:0] HDMI_r, HDMI_g, HDMI_b;
     DVI_RX DVI_RX (
-        .I_rst_n         (~resetCtrl_systemReset),
+        .I_rst_n         (rst_n),
         .I_tmds_clk_p    (tmds_clk_p_1),      //input I_tmds_clk_p
         .I_tmds_clk_n    (tmds_clk_n_1),      //input I_tmds_clk_n
         .I_tmds_data_p   (tmds_d_p_1),        //input [2:0] I_tmds_data_p

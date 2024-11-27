@@ -52,10 +52,6 @@ module AhbDVP #(
     output       tmds_clk_p_0,
     output [2:0] tmds_d_n_0,  // {r,g,b}
     output [2:0] tmds_d_p_0,
-    input        tmds_clk_n_1,
-    input        tmds_clk_p_1,
-    input  [2:0] tmds_d_n_1,    // {r,g,b}
-    input  [2:0] tmds_d_p_1,
     // LCD interface
     output       lcd_clk,
     output       lcd_en,
@@ -141,8 +137,8 @@ module AhbDVP #(
     // video interface
     wire        vi_clk;
     wire        vi_vs;
-    wire [15:0] vi_data;
     wire        vi_de;
+    wire [15:0] vi_data;
 
     // 视频输入模块
     AHBVI AHBVI (
@@ -167,16 +163,11 @@ module AhbDVP #(
         .HDMI_vs   (HDMI_vs),
         .HDMI_de   (HDMI_de),
         .HDMI_data (HDMI_data),
-        // HDMI interface
-        .tmds_clk_n_1(tmds_clk_n_1),
-        .tmds_clk_p_1(tmds_clk_p_1),
-        .tmds_d_n_1  (tmds_d_n_1),
-        .tmds_d_p_1  (tmds_d_p_1),
         // Video interface
         .vi_clk (vi_clk),
         .vi_vs  (vi_vs),
-        .vi_data(vi_data),
-        .vi_de  (vi_de)
+        .vi_de  (vi_de),
+        .vi_data(vi_data)
     );
 
     // 视频处理模块
@@ -227,7 +218,7 @@ module AhbDVP #(
         .lcd_en      (lcd_en),
         .lcd_r       (lcd_r),
         .lcd_b       (lcd_b),
-        .lcd_g       (lcd_)
+        .lcd_g       (lcd_g)
     );
 
 endmodule
