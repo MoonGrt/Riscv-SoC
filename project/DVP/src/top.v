@@ -73,23 +73,6 @@ module top #(
     localparam HDMI_SEL = 3'b100;
     localparam CMOS_SEL = 3'b101;
     assign i2c_sel = func ? CMOS_SEL : HDMI_SEL;
-    // // 双向 I2C 信号处理
-    // wire i2c_scl_in, i2c_sda_in;   // 输入路径
-    // wire i2c_scl_out, i2c_sda_out; // 输出路径
-    // wire i2c_scl_oe, i2c_sda_oe;   // 输出使能
-    // // 根据 `func` 控制 I2C 信号来源
-    // assign i2c_scl_out = func ? cmos_scl : hdmi_scl;
-    // assign i2c_sda_out = func ? cmos_sda : hdmi_sda;
-    // // 默认输出方向高阻态（I2C 总线需要上拉）
-    // assign i2c_scl_oe = 1'b0; // 这里假设 i2c_scl 不需要主动驱动
-    // assign i2c_sda_oe = 1'b0; // 这里假设 i2c_sda 不需要主动驱动
-    // // 双向信号连接
-    // assign i2c_scl = i2c_scl_oe ? i2c_scl_out : 1'bz;
-    // assign i2c_sda = i2c_sda_oe ? i2c_sda_out : 1'bz;
-    // // 读取 I2C 信号
-    // assign i2c_scl_in = i2c_scl;
-    // assign i2c_sda_in = i2c_sda;
-
 
 
 
@@ -122,7 +105,6 @@ module top #(
     wire        clk_vp;
     wire        DDR_pll_lock;
     wire        TMDS_DDR_pll_lock;
-    wire        clk_10m;
     HDMI_PLL HDMI_PLL (
         .clkin  (clk),               // input clk
         .clkout0(serial_clk),        // output clk x5
@@ -135,23 +117,21 @@ module top #(
         .clkout0(cmos_clk),
         .clkout1(clk_vp),
         .clkout2(memory_clk),
-        .clkout3(clk_10m),
         .lock   (DDR_pll_lock),
         .reset  (1'b0),
         .enclk0 (1'b1),
         .enclk1 (1'b1),
-        .enclk2 (pll_stop),
-        .enclk3 (1'b1)
+        .enclk2 (pll_stop)
     );
 
 
     //===========================================================================
-    EDID_PROM_Top EDID_PROM_Top (
-        .I_clk  (clk),    //>= 5MHz, <=200MHz 
-        .I_rst_n(rst_n | ~func),
-        .I_scl  (i2c_scl),
-        .IO_sda (i2c_sda)
-    );
+    // EDID_PROM_Top EDID_PROM_Top (
+    //     .I_clk  (clk),    //>= 5MHz, <=200MHz 
+    //     .I_rst_n(rst_n & ~func),
+    //     .I_scl  (i2c_scl),
+    //     .IO_sda (i2c_sda)
+    // );
     wire HDMI_clk, HDMI_vs, HDMI_hs, HDMI_de;
     wire [7:0] HDMI_r, HDMI_g, HDMI_b;
     DVI_RX DVI_RX (
@@ -176,14 +156,14 @@ module top #(
         .USE_TPG(USE_TPG)
     ) AHBVI (
         .clk       (clk),
-        .clk_10m   (clk_10m),
         .cmos_clk  (cmos_clk),
         .video_clk (video_clk),
         .serial_clk(serial_clk),
         .rst_n     (rst_n),
 
-        // .cmos_scl(cmos_scl),
-        // .cmos_sda(cmos_sda),
+        .func      (func),
+        .cmos_scl(i2c_scl),
+        .cmos_sda(i2c_sda),
 
         .cmos_vsync(cmos_vsync),
         .cmos_href (cmos_href),
@@ -192,11 +172,11 @@ module top #(
         .cmos_xclk (cmos_xclk),
         .cmos_rst_n(cmos_rst_n),
         .cmos_pwdn (cmos_pwdn),
-        // HDMI interface
-        // .tmds_clk_n_1(tmds_clk_n_1),
-        // .tmds_clk_p_1(tmds_clk_p_1),
-        // .tmds_d_n_1  (tmds_d_n_1),
-        // .tmds_d_p_1  (tmds_d_p_1),
+        // HDMI IN
+        .HDMI_clk  (HDMI_clk),
+        .HDMI_vs   (HDMI_vs),
+        .HDMI_de   (HDMI_de),
+        .HDMI_data ({HDMI_r[7:3], HDMI_g[7:2], HDMI_b[7:3]}),
 
         .vi_clk (vi_clk),
         .vi_vs  (vi_vs),
@@ -239,10 +219,14 @@ module top #(
                 .DDR_pll_lock(DDR_pll_lock),
                 .pll_stop    (pll_stop),
 
-                .vi_clk (HDMI_clk),
-                .vi_vs  (HDMI_vs),
-                .vi_de  (HDMI_de),
-                .vi_data({HDMI_r[7:3], HDMI_g[7:2], HDMI_b[7:3]}),
+                // .vi_clk (HDMI_clk),
+                // .vi_vs  (HDMI_vs),
+                // .vi_de  (HDMI_de),
+                // .vi_data({HDMI_r[7:3], HDMI_g[7:2], HDMI_b[7:3]}),
+                .vi_clk (vi_clk),
+                .vi_vs  (vi_vs),
+                .vi_de  (vi_de),
+                .vi_data(vi_data),
                 // .vi_clk (vp_clk),
                 // .vi_vs  (vp_vs),
                 // .vi_de  (vp_de),

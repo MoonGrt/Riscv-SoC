@@ -2,7 +2,6 @@ module AHBVI #(
     parameter USE_TPG = "false"
 ) (
     input clk,         // system clock
-    input clk_10m,     // 10m clock
     input cmos_clk,    // cmos pixel clock
     input video_clk,   // video clock
     input serial_clk,  // serial clock
@@ -10,8 +9,8 @@ module AHBVI #(
 
     input        func,        // function select
 
-    // inout        cmos_scl,    // cmos i2c clock
-    // inout        cmos_sda,    // cmos i2c data
+    inout        cmos_scl,    // cmos i2c clock
+    inout        cmos_sda,    // cmos i2c data
     input        cmos_vsync,  // cmos vsync
     input        cmos_href,   // cmos hsync refrence,data valid
     input        cmos_pclk,   // cmos pxiel clock
@@ -33,26 +32,26 @@ module AHBVI #(
 
     wire cmos_16bit_clk, cmos_16bit_wr;
     wire [15:0] write_data;
-    // CAM CAM (
-    //     .clk     (clk),
-    //     .cmos_clk(cmos_clk),
-    //     .rst_n   (rst_n & func),
+    CAM CAM (
+        .clk     (clk),
+        .cmos_clk(cmos_clk),
+        .rst_n   (rst_n & func),
 
-    //     .i2c_sel   (i2c_sel),
-    //     .cmos_scl  (cmos_scl),
-    //     .cmos_sda  (cmos_sda),
-    //     .cmos_vsync(cmos_vsync),
-    //     .cmos_href (cmos_href),
-    //     .cmos_pclk (cmos_pclk),
-    //     .cmos_db   (cmos_db),
-    //     .cmos_xclk (cmos_xclk),
-    //     .cmos_rst_n(cmos_rst_n),
-    //     .cmos_pwdn (cmos_pwdn),
+        .i2c_sel   (i2c_sel),
+        .cmos_scl  (cmos_scl),
+        .cmos_sda  (cmos_sda),
+        .cmos_vsync(cmos_vsync),
+        .cmos_href (cmos_href),
+        .cmos_pclk (cmos_pclk),
+        .cmos_db   (cmos_db),
+        .cmos_xclk (cmos_xclk),
+        .cmos_rst_n(cmos_rst_n),
+        .cmos_pwdn (cmos_pwdn),
 
-    //     .write_data    (write_data),
-    //     .cmos_16bit_wr (cmos_16bit_wr),
-    //     .cmos_16bit_clk(cmos_16bit_clk)
-    // );
+        .write_data    (write_data),
+        .cmos_16bit_wr (cmos_16bit_wr),
+        .cmos_16bit_clk(cmos_16bit_clk)
+    );
 
 
     // 输入测试图
@@ -92,7 +91,7 @@ module AHBVI #(
 
    assign vi_clk  = func ? cmos_16bit_clk : HDMI_clk;
    assign vi_vs   = func ? cmos_vsync : HDMI_vs;
-   assign vi_data = func ? write_data : {vi_data[15:11], vi_data[10:5], vi_data[4:0]};
+   assign vi_data = func ? write_data : HDMI_data;
    assign vi_de   = func ? cmos_16bit_wr : HDMI_de;
 
     // assign vi_clk  = cmos_16bit_clk;

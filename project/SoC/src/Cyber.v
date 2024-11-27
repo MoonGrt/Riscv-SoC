@@ -569,6 +569,24 @@ module Cyber (
         .video_de  (video_de),
         .video_data(video_data)
     );
+    wire HDMI_clk, HDMI_vs, HDMI_hs, HDMI_de;
+    wire [7:0] HDMI_r, HDMI_g, HDMI_b;
+    DVI_RX DVI_RX (
+        .I_rst_n         (~resetCtrl_systemReset),
+        .I_tmds_clk_p    (tmds_clk_p_1),      //input I_tmds_clk_p
+        .I_tmds_clk_n    (tmds_clk_n_1),      //input I_tmds_clk_n
+        .I_tmds_data_p   (tmds_d_p_1),        //input [2:0] I_tmds_data_p
+        .I_tmds_data_n   (tmds_d_n_1),        //input [2:0] I_tmds_data_n
+        .O_pll_phase     (O_pll_phase),       //output [3:0] O_pll_phase
+        .O_pll_phase_lock(O_pll_phase_lock),  //output O_pll_phase_lock
+        .O_rgb_clk       (HDMI_clk),          // output O_rgb_clk
+        .O_rgb_vs        (HDMI_vs),           // output O_rgb_vs
+        .O_rgb_hs        (HDMI_hs),           // output O_rgb_hs
+        .O_rgb_de        (HDMI_de),           // output O_rgb_de
+        .O_rgb_r         (HDMI_r),            // output [7:0] O_rgb_r
+        .O_rgb_g         (HDMI_g),            // output [7:0] O_rgb_g
+        .O_rgb_b         (HDMI_b)             // output [7:0] O_rgb_b
+    );
     AhbDVP #(
         .H_DISP (12'd1280),
         .V_DISP (12'd720)
@@ -600,6 +618,11 @@ module Cyber (
         .cmos_db   (cmos_db),
         .cmos_rst_n(cmos_rst_n),
         .cmos_pwdn (cmos_pwdn),
+        // HDMI IN
+        .HDMI_clk  (HDMI_clk),
+        .HDMI_vs   (HDMI_vs),
+        .HDMI_de   (HDMI_de),
+        .HDMI_data ({HDMI_r[7:3], HDMI_g[7:2], HDMI_b[7:3]}),
         // Video output
         .vp_clk (vp_clk),
         .vp_vs  (vp_vs),
@@ -615,10 +638,6 @@ module Cyber (
         .tmds_clk_p_0(tmds_clk_p_0),
         .tmds_d_n_0  (tmds_d_n_0),
         .tmds_d_p_0  (tmds_d_p_0),
-        .tmds_clk_n_1(tmds_clk_n_1),
-        .tmds_clk_p_1(tmds_clk_p_1),
-        .tmds_d_n_1  (tmds_d_n_1),
-        .tmds_d_p_1  (tmds_d_p_1),
         // LCD interface
         .lcd_clk     (lcd_clk),
         .lcd_en      (lcd_en),

@@ -14,8 +14,8 @@ create_generated_clock -name mem_clk -source [get_ports {clk}] -master_clock clk
 create_generated_clock -name clk_x1 -source [get_nets {memory_clk}] -master_clock mem_clk -divide_by 4 -multiply_by 1 [get_pins {AHBDMA/DDR3MI/gw3_top/u_ddr_phy_top/fclkdiv/CLKOUT}]
 
 // camera pclk
-//create_clock -name cmos_pclk -period 5.88 -waveform {0 2.94} [get_ports {cmos_pclk}]
-create_clock -name cmos_pclk -period 23.81 -waveform {0 11.9} [get_ports {cmos_pclk}]
+create_clock -name cmos_pclk -period 5.88 -waveform {0 2.94} [get_ports {cmos_pclk}]
+//create_clock -name cmos_pclk -period 23.81 -waveform {0 11.9} [get_ports {cmos_pclk}]
 //create_generated_clock -name cmos_pclk_div2 -source [get_ports {cmos_pclk}] -master_clock cmos_pclk -divide_by 2 -multiply_by 1 [get_nets {vi_clk_Z}]
 create_clock -name cmos_vsync -period 10000 -waveform {0 5000} [get_ports {cmos_vsync}]
 
@@ -31,3 +31,7 @@ set_clock_groups -asynchronous
 
 //report_timing -hold -from_clock [get_clocks {clk*}] -to_clock [get_clocks {clk*}] -max_paths 25 -max_common_paths 1
 //report_timing -setup -from_clock [get_clocks {clk*}] -to_clock [get_clocks {clk*}] -max_paths 25 -max_common_paths 1
+
+create_clock -name tmds_clk_p_1 -period 2.693 -waveform {0 1.3465} [get_ports {tmds_clk_p_1}] -add
+create_clock -name HDMI_clk -period 13.468 -waveform {0 6.734} [get_nets {HDMI_clk}] -add
+set_clock_groups -exclusive -group [get_clocks {tmds_clk_p_1}] -group [get_clocks {HDMI_clk}]

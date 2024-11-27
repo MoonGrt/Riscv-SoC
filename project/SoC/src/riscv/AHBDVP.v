@@ -32,7 +32,11 @@ module AhbDVP #(
     input  [7:0] cmos_db,     // cmos data
     output       cmos_rst_n,  // cmos reset
     output       cmos_pwdn,   // cmos power down
-
+    // HDMI IN
+    input  wire        HDMI_clk,    // HDMI clock
+    input  wire        HDMI_vs,     // HDMI vertical sync
+    input  wire        HDMI_de,     // HDMI data enable
+    input  wire [15:0] HDMI_data,   // HDMI data
     // Video output interface
     output wire        vp_clk,
     output wire        vp_vs,
@@ -158,6 +162,11 @@ module AhbDVP #(
         .cmos_xclk (cmos_xclk),
         .cmos_rst_n(cmos_rst_n),
         .cmos_pwdn (cmos_pwdn),
+        // HDMI IN
+        .HDMI_clk  (HDMI_clk),
+        .HDMI_vs   (HDMI_vs),
+        .HDMI_de   (HDMI_de),
+        .HDMI_data (HDMI_data),
         // HDMI interface
         .tmds_clk_n_1(tmds_clk_n_1),
         .tmds_clk_p_1(tmds_clk_p_1),

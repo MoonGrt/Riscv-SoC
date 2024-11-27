@@ -7,14 +7,12 @@ Running placement......
 [10%] Placement Phase 0 completed
 [20%] Placement Phase 1 completed
 [30%] Placement Phase 2 completed
-WARN  (TA1132) :  'tck_pad_i' was determined to be a clock but was not created.
 [50%] Placement Phase 3 completed
 Running routing......
 [60%] Routing Phase 0 completed
 [70%] Routing Phase 1 completed
 [80%] Routing Phase 2 completed
 WARN  (PR1014) : Generic routing resource will be used to clock signal 'I_clk_d' by the specified constraint. And then it may lead to the excessive delay or skew
-WARN  (PR1014) : Generic routing resource will be used to clock signal '\DVI_RX_Top_inst/dvi2rgb_inst/HDMI_CLK ' by the specified constraint. And then it may lead to the excessive delay or skew
 [90%] Routing Phase 3 completed
 Running timing analysis......
 [95%] Timing analysis completed
@@ -28,5 +26,5 @@ Generate file "F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\DVI_IN\impl\pn
 Generate file "F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\DVI_IN\impl\pnr\DVP.rpt.html" completed
 Generate file "F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\DVI_IN\impl\pnr\DVP.rpt.txt" completed
 Generate file "F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\DVI_IN\impl\pnr\DVP.tr.html" completed
-Tue Nov 26 22:15:30 2024
+Wed Nov 27 15:45:27 2024
 
