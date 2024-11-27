@@ -9,9 +9,11 @@ module top #(
     input        bottom,
     output [4:0] state_led,
 
+    output [2:0] i2c_sel,
+    inout        i2c_scl,  // i2c clock
+    inout        i2c_sda,  // i2c data
+
     // CAM interface
-    input        cmos_scl,    // cmos i2c clock
-    inout        cmos_sda,    // cmos i2c data
     input        cmos_vsync,  // cmos vsync
     input        cmos_href,   // cmos hsync refrence,data valid
     input        cmos_pclk,   // cmos pxiel clock
@@ -19,7 +21,6 @@ module top #(
     input  [7:0] cmos_db,     // cmos data
     output       cmos_rst_n,  // cmos reset
     output       cmos_pwdn,   // cmos power down
-    output [2:0] i2c_sel,
 
     // DDR3 interface
     output [16-1:0] ddr_addr,     // ROW_WIDTH=16
@@ -148,8 +149,8 @@ module top #(
     EDID_PROM_Top EDID_PROM_Top (
         .I_clk  (clk),    //>= 5MHz, <=200MHz 
         .I_rst_n(rst_n | ~func),
-        .I_scl  (cmos_scl),
-        .IO_sda (cmos_sda)
+        .I_scl  (i2c_scl),
+        .IO_sda (i2c_sda)
     );
     wire HDMI_clk, HDMI_vs, HDMI_hs, HDMI_de;
     wire [7:0] HDMI_r, HDMI_g, HDMI_b;
@@ -181,7 +182,6 @@ module top #(
         .serial_clk(serial_clk),
         .rst_n     (rst_n),
 
-//        .i2c_sel (i2c_sel),
         // .cmos_scl(cmos_scl),
         // .cmos_sda(cmos_sda),
 

@@ -20,12 +20,6 @@ IO_PORT "state_led[3]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 IO_PORT "state_led[4]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 
 //============ IIC ===============
-IO_LOC "cmos_scl" K25;
-IO_LOC "cmos_sda" K26;
-IO_PORT "cmos_scl" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
-IO_PORT "cmos_sda" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
-
-//============ CAM ===============
 IO_LOC "i2c_sel[0]" N19;
 IO_LOC "i2c_sel[1]" P19;
 IO_LOC "i2c_sel[2]" P26;
@@ -33,6 +27,12 @@ IO_PORT "i2c_sel[0]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 IO_PORT "i2c_sel[1]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 IO_PORT "i2c_sel[2]" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
 
+IO_LOC "i2c_scl" K25;
+IO_LOC "i2c_sda" K26;
+IO_PORT "i2c_scl" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
+IO_PORT "i2c_sda" IO_TYPE=LVCMOS33 PULL_MODE=NONE BANK_VCCIO=3.3;
+
+//============ CAM ===============
 IO_LOC "cmos_vsync" G17;
 IO_LOC "cmos_href" E16;
 IO_LOC "cmos_pclk" D20;
