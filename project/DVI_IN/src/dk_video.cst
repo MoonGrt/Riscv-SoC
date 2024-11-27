@@ -17,10 +17,10 @@ IO_PORT "O_led[3]" IO_TYPE=LVCMOS33;
 
 //====================================
 //HDMI3 RX
-IO_LOC "I_tmds_clk_p"      Y22,Y23;
-IO_LOC "I_tmds_data_p[2]"  AA22,AA23;
-IO_LOC "I_tmds_data_p[1]"  V24,W24;
-IO_LOC "I_tmds_data_p[0]"  AB24,AC24;
+IO_LOC "I_tmds_clk_p"      K20,J20;
+IO_LOC "I_tmds_data_p[2]"  J25,J26;
+IO_LOC "I_tmds_data_p[1]"  M15,L15;
+IO_LOC "I_tmds_data_p[0]"  D19,C19;
 
 IO_PORT "I_tmds_clk_p"      PULL_MODE=NONE;
 IO_PORT "I_tmds_data_p[2]"  PULL_MODE=NONE;
@@ -29,10 +29,10 @@ IO_PORT "I_tmds_data_p[0]"  PULL_MODE=NONE;
 
 //======================================
 //HDMI4 TX
-IO_LOC "O_tmds_clk_p"     K20,J20;
-IO_LOC "O_tmds_data_p[2]" J25,J26;
-IO_LOC "O_tmds_data_p[1]" M15,L15;
-IO_LOC "O_tmds_data_p[0]" D19,C19;
+IO_LOC "O_tmds_clk_p"     Y22,Y23;
+IO_LOC "O_tmds_data_p[2]" AA22,AA23;
+IO_LOC "O_tmds_data_p[1]" V24,W24;
+IO_LOC "O_tmds_data_p[0]" AB24,AC24;
 
 IO_PORT "O_tmds_data_p[2]" PULL_MODE=NONE DRIVE=3.5;
 IO_PORT "O_tmds_data_p[1]" PULL_MODE=NONE DRIVE=3.5;

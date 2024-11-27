@@ -23,6 +23,7 @@
                 <Signal>pll_phase[0]</Signal>
             </Bus>
             <Signal capture_enable="true">pll_phase_lock</Signal>
+            <Signal capture_enable="true">I_scl</Signal>
         </SignalList>
         <Triggers>
             <Trigger index="0">
@@ -68,5 +69,5 @@
             <Expression>M0</Expression>
         </Expressions>
     </AoCore>
-    <GAO_ID>1000000011000100</GAO_ID>
+    <GAO_ID>0100010111110010</GAO_ID>
 </GAO_CONFIG>

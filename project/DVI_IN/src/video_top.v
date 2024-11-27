@@ -39,7 +39,7 @@ module video_top
     output     [2:0]  i2c_sel
 );
 
-assign i2c_sel = 3'b100;
+assign i2c_sel = 3'b011;
 
 //==================================================
 reg  [31:0] run_cnt;
