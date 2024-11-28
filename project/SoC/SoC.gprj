@@ -35,6 +35,7 @@
         <File path="src/VP/filter.v" type="file.verilog" enable="1"/>
         <File path="src/VP/rgb2ycbcr.v" type="file.verilog" enable="1"/>
         <File path="src/VP/scaler.v" type="file.verilog" enable="1"/>
+        <File path="src/edid_prom/edid_prom.v" type="file.verilog" enable="1"/>
         <File path="src/SoC.cst" type="file.cst" enable="1"/>
         <File path="src/SoC.sdc" type="file.sdc" enable="1"/>
         <File path="src/SoC.rao" type="file.gao" enable="0"/>

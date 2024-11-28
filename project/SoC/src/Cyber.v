@@ -573,12 +573,12 @@ module Cyber (
         .video_de  (video_de),
         .video_data(video_data)
     );
-    // EDID_PROM_Top EDID_PROM_Top (
-    //     .I_clk  (clk),    //>= 5MHz, <=200MHz 
-    //     .I_rst_n(rst_n & ~func),
-    //     .I_scl  (i2c_scl),
-    //     .IO_sda (i2c_sda)
-    // );
+    EDID_PROM_Top EDID_PROM_Top (
+        .I_clk  (clk),    //>= 5MHz, <=200MHz 
+        .I_rst_n(rst_n),
+        .I_scl  (cmos_scl),
+        .IO_sda (cmos_sda)
+    );
     wire HDMI_clk, HDMI_vs, HDMI_hs, HDMI_de;
     wire [7:0] HDMI_r, HDMI_g, HDMI_b;
     DVI_RX DVI_RX (

@@ -21,17 +21,17 @@ module AHBVI (
     input  wire        HDMI_vs,     // HDMI vertical sync
     input  wire        HDMI_de,     // HDMI data enable
     input  wire [15:0] HDMI_data,   // HDMI data
-    // // HDMI interface
-    // input  wire       tmds_clk_n_1,
-    // input  wire       tmds_clk_p_1,
-    // input  wire [2:0] tmds_d_n_1,    // {r,g,b}
-    // input  wire [2:0] tmds_d_p_1,
     // output video interface
     output reg        vi_clk,
     output reg        vi_vs,
     output reg [15:0] vi_data,
     output reg        vi_de
 );
+
+    // I2C 输出选择逻辑
+    localparam HDMI_SEL = 3'b011;
+    localparam CMOS_SEL = 3'b101;
+    assign i2c_sel = (mode == 2'b10) ? CMOS_SEL : HDMI_SEL;
 
     // 输入测试图
     wire       tp0_vs_in;
@@ -76,7 +76,6 @@ module AHBVI (
         .cmos_clk(cmos_clk),
         .rst_n   (rst_n & (mode == 2'b10)),
 
-        .i2c_sel   (i2c_sel),
         .cmos_scl  (cmos_scl),
         .cmos_sda  (cmos_sda),
         .cmos_vsync(cmos_vsync),
@@ -418,7 +417,6 @@ module CAM (
     input         cmos_clk,    // cmos pixel clock
     input         rst_n,       // system reset
 
-    output [2:0]  i2c_sel,     // select i2c slave
     inout         cmos_scl,    // cmos i2c clock
     inout         cmos_sda,    // cmos i2c data
     input         cmos_vsync,  // cmos vsync
@@ -453,7 +451,6 @@ module CAM (
     reg  [ 4:0] cmos_vs_cnt;
     always @(posedge cmos_vsync) cmos_vs_cnt <= cmos_vs_cnt + 1;
 
-    assign i2c_sel    = 'b101;
     assign cmos_xclk  = cmos_clk;
     assign cmos_pwdn  = 1'b0;
     // assign cmos_rst_n = 1'b1;

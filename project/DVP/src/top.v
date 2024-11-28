@@ -70,7 +70,7 @@ module top #(
     end
 
     // 输出选择逻辑
-    localparam HDMI_SEL = 3'b100;
+    localparam HDMI_SEL = 3'b011;
     localparam CMOS_SEL = 3'b101;
     assign i2c_sel = func ? CMOS_SEL : HDMI_SEL;
 
@@ -126,12 +126,12 @@ module top #(
 
 
     //===========================================================================
-    // EDID_PROM_Top EDID_PROM_Top (
-    //     .I_clk  (clk),    //>= 5MHz, <=200MHz 
-    //     .I_rst_n(rst_n & ~func),
-    //     .I_scl  (i2c_scl),
-    //     .IO_sda (i2c_sda)
-    // );
+     EDID_PROM_Top EDID_PROM_Top (
+         .I_clk  (clk),    //>= 5MHz, <=200MHz 
+         .I_rst_n(rst_n & ~func),
+         .I_scl  (i2c_scl),
+         .IO_sda (i2c_sda)
+     );
     wire HDMI_clk, HDMI_vs, HDMI_hs, HDMI_de;
     wire [7:0] HDMI_r, HDMI_g, HDMI_b;
     DVI_RX DVI_RX (
