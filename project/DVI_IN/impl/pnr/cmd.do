@@ -4,6 +4,7 @@
 -cst F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\DVI_IN\src\dk_video.cst
 -cfg F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\DVI_IN\impl\pnr\device.cfg
 -sdc F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\DVI_IN\src\dk_video.sdc
+-gao_crc 0100010111110010
 -bit
 -tr
 -ph
@@ -17,3 +18,4 @@
 -route_maxfan 23
 -global_freq 100.000
 -enable_dsrm 0
+-rtl_gao
