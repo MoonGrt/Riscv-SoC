@@ -1,0 +1,16 @@
+输入密码：cyber
+
+打印命令：list
+打印线程：list_thread
+开启LED线程：led_init
+打印线程：list_thread
+
+设置视频源：SetVI 5
+设置边缘检测：SetVP 5
+设置滤波：FilterMode 3/5/7
+设置二值化：SetVP 7
+设置缩放：SetVP 3
+缩小：SetOutRes 756 412
+          SetOutRes 1280 720
+放大：SetStart 123 64
+          SetEnd 802 400
