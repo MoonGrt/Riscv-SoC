@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
- `define SYNTHESIS
+`define SYNTHESIS
 
 module Cyber (
     // Clock and Reset
