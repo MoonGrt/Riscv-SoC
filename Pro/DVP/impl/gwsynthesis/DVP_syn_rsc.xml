@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="top" Register="2" Lut="2" T_Register="7458(2)" T_Alu="366(0)" T_Lut="7484(2)" T_Bsram="54(0)">
+    <SubModule name="HDMI_PLL"/>
+    <SubModule name="SYS_PLL"/>
+    <SubModule name="gw_gao_inst_0" Register="314" Alu="17" Lut="470" Bsram="14" T_Register="314(314)" T_Alu="17(17)" T_Lut="470(470)" T_Bsram="14(14)"/>
+    <SubModule name="DVI_RX" Register="715" Alu="46" Lut="1355" T_Register="715(715)" T_Alu="46(46)" T_Lut="1355(1355)"/>
+    <SubModule name="AHBVI" Lut="18" T_Register="186(0)" T_Alu="15(0)" T_Lut="896(18)">
+        <SubModule name="CAM" Register="34" Lut="61" T_Register="186(34)" T_Alu="15(0)" T_Lut="878(61)">
+            <SubModule name="i2c_config" Register="13" Lut="27" T_Register="124(13)" T_Alu="15(0)" T_Lut="814(27)">
+                <SubModule name="i2c_master_top_m0" Register="17" Lut="644" T_Register="111(17)" T_Alu="15(0)" T_Lut="787(644)">
+                    <SubModule name="byte_controller" Register="23" Lut="48" T_Register="94(23)" T_Alu="15(0)" T_Lut="143(48)">
+                        <SubModule name="bit_controller" Register="71" Alu="15" Lut="95" T_Register="71(71)" T_Alu="15(15)" T_Lut="95(95)"/>
+                    </SubModule>
+                </SubModule>
+            </SubModule>
+            <SubModule name="cmos_8_16bit" Register="28" Lut="3" T_Register="28(28)" T_Lut="3(3)"/>
+        </SubModule>
+    </SubModule>
+    <SubModule name="AHBDMA" Lut="2" T_Register="6134(0)" T_Alu="219(0)" T_Lut="4455(2)" T_Bsram="40(0)">
+        <SubModule name="Frame_Buffer" Register="319" Alu="30" Lut="1065" Bsram="16" T_Register="319(319)" T_Alu="30(30)" T_Lut="1065(1065)" T_Bsram="16(16)"/>
+        <SubModule name="DDR3MI" Register="5815" Alu="189" Lut="3388" Bsram="24" T_Register="5815(5815)" T_Alu="189(189)" T_Lut="3388(3388)" T_Bsram="24(24)"/>
+    </SubModule>
+    <SubModule name="AHBVO" Register="6" Lut="17" T_Register="107(6)" T_Alu="69(0)" T_Lut="306(17)">
+        <SubModule name="vga_timing" Register="28" Lut="60" T_Register="28(28)" T_Lut="60(60)"/>
+        <SubModule name="DVI_TX" Register="73" Alu="69" Lut="229" T_Register="73(73)" T_Alu="69(69)" T_Lut="229(229)"/>
+    </SubModule>
+</Module>

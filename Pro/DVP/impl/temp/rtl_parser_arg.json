@@ -1,0 +1,101 @@
+{
+ "Device" : "GW5AST-138B",
+ "Files" : [
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/AHBDMA.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/AHBDVP.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/AHBVI.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/AHBVO.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/AHBVP.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/CAM.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/DDR3MI/DDR3MI.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/DVI_RX/DVI_RX.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/DVI_TX/DVI_TX.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/Frame_Buffer/Frame_Buffer.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/PLL/HDMI_PLL.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/PLL/SYS_PLL.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/VP/binarizer.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/VP/cutter.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/VP/edger.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/VP/filler.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/VP/filter.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/VP/i2c_edid.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/VP/rgb2ycbcr.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/VP/scaler.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/edid_prom/edid_prom.v",
+   "Type" : "verilog"
+  },
+  {
+   "Path" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/src/top.v",
+   "Type" : "verilog"
+  }
+ ],
+ "IncludePath" : [
+
+ ],
+ "LoopLimit" : 2000,
+ "ResultFile" : "F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/DVP/impl/temp/rtl_parser.result",
+ "Top" : "top",
+ "VerilogStd" : "verilog_2001",
+ "VhdlStd" : "vhdl_93"
+}
