@@ -669,10 +669,10 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-MoonGrt - 1561145394@qq.com
-Deng XinYang -
-Zhao WenXi -
-Project Link: [MoonGrt/Riscv-SoC](https://github.com/MoonGrt/Riscv-SoC)
+MoonGrt - 1561145394@qq.com  
+Deng XinYang -  
+Zhao WenXi -  
+Project Link: [MoonGrt/Riscv-SoC](https://github.com/MoonGrt/Riscv-SoC)  
 
 <p align="right">(<a href="#top">top</a>)</p>
 
