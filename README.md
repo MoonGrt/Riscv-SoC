@@ -106,14 +106,14 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-Project hardware part: [Riscv-SoC](https://github.com/MoonGrt/Riscv-SoC)
-Project software part: [Riscv-SoC-Software](https://github.com/MoonGrt/Riscv-SoC-Software)
+Project hardware part: [Riscv-SoC](https://github.com/MoonGrt/Riscv-SoC)  
+Project software part: [Riscv-SoC-Software](https://github.com/MoonGrt/Riscv-SoC-Software)  
 
 ### Part I Design Overview
 
 #### 1. Design Purpose
 
-Based on the Tang Mega 138K Pro Dock development board, the ‘RISC-V Core’ is a full-featured RISC-V processing system. The core adopts the open source VexRiscV CPU, supporting RV32IM instruction set and hardware and software interrupts. The system integrates GPIO, UART, I2C, timer and other peripheral modules, and extends the hardware structure of the video channel to form a complete video processing platform. The video channel supports camera as well as HDMI access, and transfers the videoton to DDR storage via DMA, and finally outputs it via HDMI. The system provides image acceleration hardware to support video processing algorithms such as edge detection filtering, scaling, etc. Users can control the functions of each module through programming to achieve complex video processing operations.
+Based on the Tang Mega 138K Pro Dock development board, the 'RISC-V Core' is a full-featured RISC-V processing system. The core adopts the open source VexRiscV CPU, supporting RV32IM instruction set and hardware and software interrupts. The system integrates GPIO, UART, I2C, timer and other peripheral modules, and extends the hardware structure of the video channel to form a complete video processing platform. The video channel supports camera as well as HDMI access, and transfers the videoton to DDR storage via DMA, and finally outputs it via HDMI. The system provides image acceleration hardware to support video processing algorithms such as edge detection filtering, scaling, etc. Users can control the functions of each module through programming to achieve complex video processing operations.
 
 #### 2. Application Fields
 
@@ -122,9 +122,13 @@ This project has a wide range of application prospects, covering fields such as 
 #### 3. Key Technical Features
 
 **(1) Modular RISC-V processor architecture**: supports RV32IM instruction set with hardware and software interrupt management: provides a good foundation for multi-tasking and real-time response, suitable for embedded devices and real-time applications.
+
 **(2) Efficient Video Processing Link**: Integrated hardware-accelerated image processing capability to quickly perform operations such as edge detection, scaling and filtering, and support for HDMI input and DMA transmission to enhance video data processing efficiency.
+
 **(3) RTOS compatibility**: Supports RT-Thread and FreeRTOS operating systems with bare-metal development, providing efficient task management and real-time response capabilities to meet the needs of latency-sensitive applications. The supporting SDK facilitates rapid development and application deployment.
+
 **(4) Arbitrary Zoom**: Video zoom can be scaled by arbitrary multiples, either expanding any size to full screen or reducing the full screen to any resolution, leaving a series of interfaces for users to configure.
+
 **(5) Based on the software and hardware co-optimisation of custom development capabilities**: This system allows users to flexibly configure the GPIO module through the supporting graphical IDE developed by the team to expand the input and output interfaces of the RISC-V processor. Users are not only able to regulate the peripheral control logic of the system, but also extend the hardware functions on the FPGA through customised Hardware Description Language (HDL) code to achieve algorithm acceleration or edge computing functions for specific industry needs.
 
 #### 4. Key Performance Indicators
@@ -147,35 +151,31 @@ This project has a wide range of application prospects, covering fields such as 
 
 #### 5. Main Innovations
 
-**(1) Development of supporting IDE**: For the team's self-developed ‘Raycom’ CPU, the team has designed and implemented a supporting integrated development environment (IDE). The IDE is equipped with a simple and intuitive graphical user interface (GUI), so that users can easily get started without complex programming. At the same time, the team embedded rich debugging and configuration functions in the IDE to support code editing, compilation, simulation and debugging, which greatly simplifies the development process of users on the ‘CoreVision’ platform, and improves the development efficiency and ease of operation.
+**(1) Development of supporting IDE**: For the team's self-developed 'Raycom' CPU, the team has designed and implemented a supporting integrated development environment (IDE). The IDE is equipped with a simple and intuitive graphical user interface (GUI), so that users can easily get started without complex programming. At the same time, the team embedded rich debugging and configuration functions in the IDE to support code editing, compilation, simulation and debugging, which greatly simplifies the development process of users on the 'CoreVision' platform, and improves the development efficiency and ease of operation.
 
 **(2) Configurable GPIO Expansion**: In order to enhance the adaptability and flexibility of the CPU, the team has designed a configurable GPIO module, which enables users to customise different peripherals and control schemes according to their needs. By maximising the open GPIO configuration, users can flexibly expand the CPU functions to adapt to diverse application scenarios, such as edge computing and IoT device control. This design makes the system more compatible and expandable, and meets the individual needs of different industries and applications.
 
-**(3) Software system support**: The project's ‘CoreVision’ CPU fully supports RT-Thread and FreeRTOS operating systems and bare-metal development, and integrates the corresponding SDK (Software Development Kit). RT-Thread, as a lightweight real-time operating system, is widely used in embedded devices. With the support of this system, we can make full use of the advantages of ‘CoreVision’ in terms of real-time response and task scheduling; BareMetal has no operating system scheduling and has a very fast response speed, which is suitable for controlling simple tasks such as subsequent user access to sensors; FreeRTOS supports real-time scheduling, which is suitable for the requirement of fast response. real-time scheduling and is suitable for applications requiring fast response. Each operating system is equipped with routines for users to use or refer to the development of the SDK supporting the provision of a rich API interface, easy for developers to quickly get started, shorten the development cycle, to achieve efficient software development and application deployment.
+**(3) Software system support**: The project's 'CoreVision' CPU fully supports RT-Thread and FreeRTOS operating systems and bare-metal development, and integrates the corresponding SDK (Software Development Kit). RT-Thread, as a lightweight real-time operating system, is widely used in embedded devices. With the support of this system, we can make full use of the advantages of 'CoreVision' in terms of real-time response and task scheduling; BareMetal has no operating system scheduling and has a very fast response speed, which is suitable for controlling simple tasks such as subsequent user access to sensors; FreeRTOS supports real-time scheduling, which is suitable for the requirement of fast response. real-time scheduling and is suitable for applications requiring fast response. Each operating system is equipped with routines for users to use or refer to the development of the SDK supporting the provision of a rich API interface, easy for developers to quickly get started, shorten the development cycle, to achieve efficient software development and application deployment.
 
-**(4) Hardware Acceleration of Video Processing Algorithms**: For the needs of video processing, especially in the application scenarios of edge detection, image filtering, etc., this project optimises the convolutional operation through hardware acceleration. The use of hardware convolutional acceleration greatly improves the efficiency of image processing, so that the ‘Ruixin Core’ CPU has higher performance and processing speed in video processing, which is suitable for real-time video analysis, intelligent monitoring and other high computing demand scenarios. The introduction of hardware acceleration significantly reduces the CPU load, optimises system power consumption and response performance, and provides strong support for the wide application of edge computing [1].
+**(4) Hardware Acceleration of Video Processing Algorithms**: For the needs of video processing, especially in the application scenarios of edge detection, image filtering, etc., this project optimises the convolutional operation through hardware acceleration. The use of hardware convolutional acceleration greatly improves the efficiency of image processing, so that the 'Ruixin Core' CPU has higher performance and processing speed in video processing, which is suitable for real-time video analysis, intelligent monitoring and other high computing demand scenarios. The introduction of hardware acceleration significantly reduces the CPU load, optimises system power consumption and response performance, and provides strong support for the wide application of edge computing [1].
 
-**(5) Data Cache Optimisation and Latency Control**: We optimise the data cache and latency control method for the needs of ‘RuiViCore’ CPU in image interpolation computation. In the implementation of the interpolation algorithm, the pixel values around the interpolation point need to be stored and called frequently, so we introduced a FIFO (first-in-first-out) buffer with RAM as the element as the storage scheme, instead of the traditional row buffer and ping-pong rotation mechanism. Compared with the row buffer scheme, the RAM FIFO buffer can effectively reduce the latency; compared with the ping-pong rotation mechanism, the RAM FIFO buffer significantly reduces the hardware resource consumption [2]. In addition, the sequential storage of the FIFO buffer ensures the efficient reading and writing of data, which provides a guarantee for the real-time and accuracy of the interpolation algorithm, and helps to improve the response speed and system performance of image processing.
+**(5) Data Cache Optimisation and Latency Control**: We optimise the data cache and latency control method for the needs of 'RuiViCore' CPU in image interpolation computation. In the implementation of the interpolation algorithm, the pixel values around the interpolation point need to be stored and called frequently, so we introduced a FIFO (first-in-first-out) buffer with RAM as the element as the storage scheme, instead of the traditional row buffer and ping-pong rotation mechanism. Compared with the row buffer scheme, the RAM FIFO buffer can effectively reduce the latency; compared with the ping-pong rotation mechanism, the RAM FIFO buffer significantly reduces the hardware resource consumption [2]. In addition, the sequential storage of the FIFO buffer ensures the efficient reading and writing of data, which provides a guarantee for the real-time and accuracy of the interpolation algorithm, and helps to improve the response speed and system performance of image processing.
 
 ### Part II System Composition and Function Description
 
 #### 1. Overall Introduction
 
-Our ‘RISC-V’ RISC-V processing system is shown in Fig. 1 and Fig. 2 (the block diagram of the system and the RTL diagram exported by Gowin IDE, respectively):
+Our 'RISC-V' RISC-V processing system is shown in Fig. 1 and Fig. 2 (the block diagram of the system and the RTL diagram exported by Gowin IDE, respectively):
 
-<div style="text-align: center;">
+<p align="center"><img src="Document/images/report/block_diagram.jpg" alt="block_diagram"></p>
+<p align="center">Figure 1. Block diagram of the 'CoreVision' system.</p>
 
-![](Document/images/report/block_diagram.jpg)
-Figure 1. Block diagram of the ‘CoreVision’ system.
-
-![](Document/images/report/overall_RTL.jpg)
-Figure 2: RTL diagram of the ‘CoreVision’ system project (exported by Gowin IDE).
-
-</div>
+<p align="center"><img src="Document/images/report/overall_RTL.jpg" alt="overall_RTL"></p>
+<p align="center">Figure 2: RTL diagram of the 'CoreVision' system project (exported by Gowin IDE).</p>
 
 #### System Architecture
 
-The system consists of two major components, hardware and software, working in tandem to provide a comprehensive video processing solution. The hardware part includes a processor based on RISC-√ architecture and a specially designed video processing path, while the software part includes an integrated development environment (iDE) and supporting libraries (libs, Makefile, linker).
+The system consists of two major components, hardware and software, working in tandem to provide a comprehensive video processing solution. The hardware part includes a processor based on RISC-V architecture and a specially designed video processing path, while the software part includes an integrated development environment (iDE) and supporting libraries (libs, Makefile, linker).
 
 ##### hardware part:
 
@@ -194,12 +194,8 @@ As a complete video processing system, a variety of algorithms have been integra
 #### 2.1 System software:
 ##### 2.1.1 VexRiscV CPU
 
-<div style="text-align: center;">
-
-![](Document/images/report/VexRiscv.jpg)
-Figure 3. Block diagram of the VexRiscV CPU core.
-
-</div>
+<p align="center"><img src="Document/images/report/VexRiscv.jpg" alt="VexRiscv"></p>
+<p align="center">Figure 3. Block diagram of the VexRiscV CPU core.</p>
 
 The architecture of this system processor design consists of a core CPU module, bus cross switches, peripheral interfaces and control modules.
 
@@ -226,11 +222,8 @@ DVP module: video processing module, realising the processing system application
 
 ##### 2.1.5 Video Pathway
 
-<div style="text-align: center;">
-
-![](Document/images/report/dvp.jpg)
-Figure 4. Block diagram of the video processing pathway
-</div>
+<p align="center"><img src="Document/images/report/dvp.jpg" alt="dvp"></p>
+<p align="center">Figure 4. Block diagram of the video processing pathway.</p>
 
 The video processing path is divided into three parts, video input (VI), video processing (VP) and video output (VO), according to the flow of video streaming data and functions.
 
@@ -238,18 +231,14 @@ The video processing path is divided into three parts, video input (VI), video p
 
 The Video Input (VI) module is a multi-functional video capture and processing unit designed to acquire image data from a CMOS image sensor or built-in test pattern generator, format it and synchronise the signal output for use by subsequent video processing modules. The core functions of the module include data acquisition and initialisation configuration based on an external CMOS image sensor, test pattern generation and output selection, and format conversion from 8-bit data to 16-bit data The module supports two main input modes: test pattern mode and CMOS data mode. When the mode is set to test pattern, the VI module activates the internal testpattern sub-module to generate pattern data. testpattern module generates preset test patterns (such as coloured stripes, grey scale or grid patterns) according to the configuration and outputs them together with line sync, field sync and data enable signals. The module converts the received testpattern data into RGB565 format for output, and at the same time controls the output of the sync signal, field sync and enable signal to ensure the timing synchronisation of the testpattern; when set to CMOS data mode, the VI module realises the configuration and data metrics set of the CMOS sensor by interfacing with the CMOS image sensor and using the internal CAM submodule. First, the CAM module establishes contact with the CMOS sensor via I2C communication to configure its operating parameters, including resolution and frame rate, to ensure that the output of the image sensor meets the expected specifications. After the configuration is complete, the CAM module receives the pixel data transmitted from the image sensor line by line, driven by the pixel clock of the CMOS sensor. The valid region of the image data is typically marked by the horizontal and vertical reference signals of the CMOS sensor to indicate whether the current data is valid. To accommodate subsequent processing requirements, the CAM module contains an internal data format conversion sub-module that converts the 8-bit data output from the sensor to a 16-bit RGB565 format. This format conversion ensures that the data can be formatted to match the inputs of subsequent modules. The converted 16-bit data is output via the CAM module to the main data interface of the VI module. At the same time, the control signals generated by the CAM module are used to mark the validity and synchronisation of the data, ensuring that the data flow is continuous and synchronised throughout the system. the VI module can be equipped with a Vl Control Register.
 
-<div style="text-align: center;">
-
-![](Document/images/report/dvp_RTL.jpg)
-Fig. 5. RTL diagram of the video processing (VP) module (exported by Gowan IDE)
-
-</div>
+<p align="center"><img src="Document/images/report/dvp_RTL.jpg" alt="dvp_RTL"></p>
+<p align="center">Figure. 5. RTL diagram of the video processing (VP) module (exported by Gowan IDE).</p>
 
 ##### Video Processing (VP)
 
 The video processing module is used to perform a variety of image processing operations on the input video stream data, specifically including cropping, filtering, scaling, colour space conversion, edge detection, binarization and filling, etc. The VP module can dynamically enable or disable these processing functions according to the configuration of the control registers, so as to support diversified video application scenarios.
 
-The VP module receives data from the VI module, processes the data sequentially through multiple function modules, and finally outputs the processed data stream. The following are the main data flow processes within the √P module and the processing steps of the functional modules, all VP Control Register:
+The VP module receives data from the VI module, processes the data sequentially through multiple function modules, and finally outputs the processed data stream. The following are the main data flow processes within the VP module and the processing steps of the functional modules, all VP Control Register:
 
 1. Input and Signal Conversion
 The input video data is accessed to the VP module in 16-bit RGB565 format. The data is first converted to 24-bit RGB format after entering the VP module to meet the processing requirements of subsequent modules. There are video valid signals (de) and vertical sync signals (vs) in the module to ensure the timing and validity of data processing.
@@ -270,18 +259,14 @@ The Fill module is used to fill the image edges when the resolution of the scale
 
 ##### Video Output (VO)
 
-The Video Output module (VO module) is used to output video data to the HDMI interface. It is responsible for generating the timing and differential signals required by HDMI from the incoming video data and ensuring that the video data is output to the display at the correct time and location.The VO module consists of three main parts: input processing, timing generation and HDMI transmission.The VO module receives 16-bit video data from the incoming √P module. When the signal is valid, it maps the input data to complete 24-bit RGB data and generates the output display clock. The processing includes parsing out each bit of the red, green and blue tri-colour signals from the input signal and splicing them in the format required for HDMI display. After processing by the timing generation module, the generated timing signal and the processed RGB data are input to the DVI/HDMI transmission module. This module generates the TMDS signal (Transmission Minimum Differential Signal) required by HDMI through differential transmission, including clock signals and TMDS data signals. This system supports LCD, HDMI and other video output methods for users to choose from, through the VOControlRegister.
+The Video Output module (VO module) is used to output video data to the HDMI interface. It is responsible for generating the timing and differential signals required by HDMI from the incoming video data and ensuring that the video data is output to the display at the correct time and location.The VO module consists of three main parts: input processing, timing generation and HDMI transmission.The VO module receives 16-bit video data from the incoming VP module. When the signal is valid, it maps the input data to complete 24-bit RGB data and generates the output display clock. The processing includes parsing out each bit of the red, green and blue tri-colour signals from the input signal and splicing them in the format required for HDMI display. After processing by the timing generation module, the generated timing signal and the processed RGB data are input to the DVI/HDMI transmission module. This module generates the TMDS signal (Transmission Minimum Differential Signal) required by HDMI through differential transmission, including clock signals and TMDS data signals. This system supports LCD, HDMI and other video output methods for users to choose from, through the VOControlRegister.
 
 #### 2.2 System Software:
 
 Ubuntu side (IDE), Windows side (UART)
 
-<div style="text-align: center;">
-
-![](Document/images/report/block_diagram_software_part.jpg)
-Figure 6. Ubuntu side (IDE), Windows side (UART)
-
-</div>
+<p align="center"><img src="Document/images/report/block_diagram_software_part.jpg" alt="block_diagram_software_part"></p>
+<p align="center">Figure 6. Ubuntu side (IDE), Windows side (UART).</p>
 
 The software design scheme of this system covers the embedded system development process, including code compilation, hardware configuration, interaction with FPGA, and debugging and other modules.
 
@@ -321,206 +306,164 @@ The workflow of the system starts with selecting the sample programme and comple
 
 The IDE page (shown in Figure 7) developed by our team is simple and clear, and supports a variety of integrated development functions.
 
-<div style="text-align: center;">
-
-![](Document/images/IDE/overview.png)
-Figure 7. IDE page
-</div>
+<p align="center"><img src="Document/images/IDE/overview.png" alt="IDE_overview"></p>
+<p align="center">Figure 7. IDE page.</p>
 
 **(1) Project Management**: Users can create, open and manage multiple project files in the IDE to make the development process more efficient. In order to enhance the comfort of use and smooth operation, when the user selects a target file, the system will automatically import the directory where the file is located into the file resource management bar on the left side of the IDE page, which makes it easy for the user to quickly switch and access the file in one window. The file resource management bar supports hierarchical display and directory tree operation, in which users can directly view, edit and manage items from the file structure. In addition, through the buttons on the top of the resource management bar, users can easily rename, delete, copy and other operations, thus further improving the convenience and operational efficiency of project management (as shown in Figure 8).
 
-<div style="text-align: center;">
+<p align="center"><img src="Document/images/report/resource_management_column.jpg" alt="resource_management_column"></p>
+<p align="center">Figure 8. Resource management column.</p>
 
-![](Document/images/report/resource_management_column.jpg)
-Figure 8. Resource management column
-</div>
-
-**(2) Project Configuration**: support for users to create new projects in the IDE (as shown in Figure 9), can be compatible with multiple types of core users can follow their own needs for AHB or APB enablement, if there is no specified core, tick Cyber ’, you can generate the team produced lightweight core Cyber.h.
+**(2) Project Configuration**: support for users to create new projects in the IDE (as shown in Figure 9), can be compatible with multiple types of core users can follow their own needs for AHB or APB enablement, if there is no specified core, tick Cyber ', you can generate the team produced lightweight core Cyber.h.
 
 After the selection is complete, you can configure the GPIO autonomy on the visualisation page (as shown in Figure 10). This configuration page supports serial port addition, pin selection, initial pin invalidation, and automatic error reporting. When the configuration is complete and the Generate button is clicked, the top-level Cyber.v file is automatically generated.
 
-<div style="text-align: center;">
+<p align="center"><img src="Document/images/IDE/new_project.png" alt="IDE_new_project"></p>
+<p align="center">Figure 9. New Project Window.</p>
 
-![](Document/images/IDE/new_project.png)
-Figure 9. New Project Window
+<p align="center"><img src="Document/images/IDE/GPIO_conf.png" alt="IDE_GPIO_conf"></p>
+<p align="center">Figure 10. GPIO Autoconfiguration Window.</p>
 
-![](Document/images/IDE/GPIO_conf.png)
-Figure 10. GPIO Autoconfiguration Window
+<p align="center"><img src="Document/images/report/hardware_gen.jpg" alt="hardware_gen"></p>
+<p align="center">Figure 11. Generating the .v hardware file.</p>
 
-![](Document/images/report/hardware_gen.jpg)
-Figure 11. Generating the .v hardware file
+**(3) Software Compilation**: After the user selects or creates a code file, the file will be displayed in the central editing window of the IDE's file page (as shown in Figure 12). Users can write and modify the code in this central window and enjoy a convenient editing experience. After writing, users can click the 'Compile', 'Run' and 'Modify' buttons at the top of the page, and the background will execute the corresponding workflow according to the selected operation.
 
-</div>
+If the user selects 'Compile', the system will automatically compile the current code and display the compiled assembly code and machine code in the 'AssembleCode' and 'MachineCode' areas on the right side of the page in real time (as shown in Figure 12). MachineCode' areas (shown in Figure 12) display the compiled assembly code and machine code in real time. These areas provide an intuitive display of assembly language and machine code, making it easy for users to analyse and optimise code performance. Through this intuitive compilation feedback, users can quickly detect and correct errors in the code and optimise the code logic, thus significantly improving development efficiency.
 
-**(3) Software Compilation**: After the user selects or creates a code file, the file will be displayed in the central editing window of the IDE's file page (as shown in Figure 12). Users can write and modify the code in this central window and enjoy a convenient editing experience. After writing, users can click the ‘Compile’, ‘Run’ and ‘Modify’ buttons at the top of the page, and the background will execute the corresponding workflow according to the selected operation.
+<p align="center"><img src="Document/images/report/sections.jpg" alt="sections"></p>
+<p align="center">Figure 12. Compile the file to generate assembly and machine code.</p>
 
-If the user selects ‘Compile’, the system will automatically compile the current code and display the compiled assembly code and machine code in the ‘AssembleCode’ and ‘MachineCode’ areas on the right side of the page in real time (as shown in Figure 12). MachineCode’ areas (shown in Figure 12) display the compiled assembly code and machine code in real time. These areas provide an intuitive display of assembly language and machine code, making it easy for users to analyse and optimise code performance. Through this intuitive compilation feedback, users can quickly detect and correct errors in the code and optimise the code logic, thus significantly improving development efficiency.
+<p align="center"><img src="Document/images/report/simulation.jpg" alt="simulation"></p>
+<p align="center">Figure 13. Stepping assembly code for simulation.</p>
 
-<div style="text-align: center;">
-
-![](Document/images/report/sections.jpg)
-Figure 12. Compile the file to generate assembly and machine code
-
-![](Document/images/report/simulation.jpg)
-Figure 13. Stepping assembly code for simulation
-
-![](Document/images/IDE/message.png)
-Figure 14. Message
-
-</div>
+<p align="center"><img src="Document/images/IDE/message.png" alt="IDE_message"></p>
+<p align="center">Figure 14. Message Panel.</p>
 
 **Real-time operating system and corresponding video path algorithms**
 
-The complete video processing pathway algorithm developed by our team has successfully downloaded the executable file (.elf file) to the on-board DDR memory via the GDB tool. When the user logs into the system, he/she can choose either bare-metal upload or any real-time operating system (RT-Thread Free RTOS, RT-Thread is recommended,) to input commands and run the programme. In the user login screen (shown in Figure 15), the system requires the user to enter a password to secure access. After successfully logging in, the user can use the ‘list’ command (similar to the commonly used ‘help’ command) to view the list of programs available for execution, and the ‘list-thread’ command to view all the threads currently running on the CPU to enhance the user-friendliness of the system. To enhance the user-friendliness of the system, a number of interactive features have been integrated into the system. For example, during the login process, if the user enters the wrong password, the system will remind the user to re-enter it in time. In addition, the system supports the auto-completion function of commands, which allows the user to press the ‘Tab’ key to complete some of the letters in the commands, thus improving the operation efficiency. These features are designed to optimise the user's operating experience and ensure that the user can control and execute the required procedures efficiently and conveniently in the real-time system.
+The complete video processing pathway algorithm developed by our team has successfully downloaded the executable file (.elf file) to the on-board DDR memory via the GDB tool. When the user logs into the system, he/she can choose either bare-metal upload or any real-time operating system (RT-Thread Free RTOS, RT-Thread is recommended,) to input commands and run the programme. In the user login screen (shown in Figure 15), the system requires the user to enter a password to secure access. After successfully logging in, the user can use the 'list' command (similar to the commonly used 'help' command) to view the list of programs available for execution, and the 'list-thread' command to view all the threads currently running on the CPU to enhance the user-friendliness of the system. To enhance the user-friendliness of the system, a number of interactive features have been integrated into the system. For example, during the login process, if the user enters the wrong password, the system will remind the user to re-enter it in time. In addition, the system supports the auto-completion function of commands, which allows the user to press the 'Tab' key to complete some of the letters in the commands, thus improving the operation efficiency. These features are designed to optimise the user's operating experience and ensure that the user can control and execute the required procedures efficiently and conveniently in the real-time system.
 
-<div style="text-align: center;">
+<p align="center"><img src="Document/images/report/finsh.jpg" alt="finsh"></p>
+<p align="center">Figure 15. Logging in to the real-time operating system to view demos and threads.</p>
 
-![](Document/images/report/finsh.jpg)
-Figure 15. Logging in to the real-time operating system to view demos and threads
+Take the OV5640 camera as the video input source as an example, configure it as 1280*720 video frame input to FPGA, set the video shrinking mode through the instruction shown in Figure 16, and use 'SetOutRes 756 423' to shrink the 1280*720 video frame to 756*423, and fill the remaining part of the screen with black through the 'Fl' instruction, to prevent the execution of the shrinking instruction. The cached image of the previous frame is presented on the screen at the same time with the reduced image of the real-time display video frame.
 
-</div>
+<p align="center"><img src="Document/images/report/commend.jpg" alt="commend"></p>
+<p align="center">Figure 16. Video Reduce and Fill Blanks command.</p>
 
-Take the OV5640 camera as the video input source as an example, configure it as 1280*720 video frame input to FPGA, set the video shrinking mode through the instruction shown in Figure 16, and use ‘SetOutRes756423’ to shrink the 1280*720 video frame to 756*423, and fill the remaining part of the screen with black through the ‘Fl’ instruction, to prevent the execution of the shrinking instruction. The cached image of the previous frame is presented on the screen at the same time with the reduced image of the real-time display video frame.
-
-<div style="text-align: center;">
-
-![](Document/images/report/commend.jpg)
-Figure 16. Video Reduce and Fill Blanks command
-
-</div>
-
-command to set the video zoom mode, using ‘SetOutReS1280720’ to set the output image pixels to 1280*720, zoom area through the ‘SetStart12364’ and ‘SetEnd802400’ to determine the start and end point of the area coordinates of (123, 64), (802, 400).
-SetStart12364’ and “SetEnd802400” to determine the start point and end point coordinates of the region (123, 64), (802, 400).
+Command to set the video zoom mode, using 'SetOutRes 1280 720' to set the output image pixels to 1280*720, zoom area through the 'SetStart 123 64' and 'SetEnd 802 400' to determine the start and end point of the area coordinates of (123, 64), (802, 400).
+SetStart 123 64' and “SetEnd 802 400” to determine the start point and end point coordinates of the region (123, 64), (802, 400).
 
 The video zoom in and zoom out is shown in Figure 17, with a team member standing with a tablet in his hand at the same distance and angle from the camera in three situations: the original image, the zoomed-in image, and the zoomed-in image. As shown in the figure, the video zoom in and zoom out can be processed in real time with high definition and low latency.
 
-<div style="text-align: center;">
-
-![](Document/images/report/vp_effect.jpg)
-Fig. 17. Video captured in three cases
-
-</div>
+<p align="center"><img src="Document/images/report/vp_effect.jpg" alt="vp_effect"></p>
+<p align="center">Figure. 17. Video captured in three cases.</p>
 
 #### 3.2 CPU part of the simulation waveforms
 
 The project completes a variety of custom peripherals: timer, GPIO, SPI, UART, interrupt, and watchdog. Table 1 shows the APB bus signal name definitions and descriptions:
 
-<div style="text-align: center;">Table 1. APB bus emulation waveform signal name definition and description</div>
+<div align="center">
+
+Table 1. APB bus emulation waveform signal name definition and description.
 
 | **APB Bus Signal Names** | **Signal Definitions and Functional Descriptions** |
 |-----------------------|-------------------------------------------|
 | io_apb_PCLK | APB bus clock signal |
 | io_apb_PRESET | APB bus reset signal that resets the module when low |
-| io_apb_PADDR | APB address bus, register for GPIO selection | | io_apb_PADDR | APB address bus, register for GPIO selection | | io_apb_PSTOP
-| io_apb_PSEL | APB select signal to select GPIO module | | io_apb_PADDR | APB address bus, used to select GPIO registers
-| io_apb_PENABLE | APB enable signal, when high indicates a valid transfer | | io_apb_PENABLE | APB_PENABLE | APB address bus, used to select the GPIO's registers
-| io_apb_PWRITE | APB Write enable signal, high for write operation, low for read operation | | io_apb_PWRITE | APB Write enable signal, high for write operation, low for read operation
-| io_apb_PWDATA | APB Data bus, used for writing data | io_apb_PWDATA | APB Write enable signal, high for write operation, low for read operation
-| io_apb_PRDATA | APB data bus for read data | | io_apb_PWDATA | APB write enable signal, high for write operation, low for read operation
+| io_apb_PADDR | APB address bus, register for GPIO selection | 
+| io_apb_PSEL | APB select signal to select GPIO module | 
+| io_apb_PENABLE | APB enable signal, when high indicates a valid transfer | 
+| io_apb_PWRITE | APB Write enable signal, high for write operation, low for read operation | 
+| io_apb_PWDATA | APB Data bus, used for writing data |
+| io_apb_PRDATA | APB data bus for read data | 
 
-<div style="text-align: center;">Table 2. GPIO Configuration Register Name Descriptions</div>
+</div>
+
+<div align="center">
+
+Table 2. GPIO Configuration Register Name Descriptions.
 
 | **GPIO Configuration Registers** | **Signal Definitions and Functional Description** |
 |:---------------------:|:---------------------:|
 | CRL and CRH | IO Configuration Registers |
 | BSRR | IO Set/Reset Register |
-| BSRR | IO Set/Reset Register | IDR | GPIO Input Data Register | ODR | GPIO Input Data Register | ODR
-| ODR | GPIO Output Data Register | BSRR | IO Set/Reset Register | IDR | GPIO Input Data Register
-
-The GPIO configuration and push-pull and open-drain output waveforms are shown in the following figure.CRL and CRH are used to configure the push-pull outputs, open-drain outputs, and input modes of the GPIO pins II, etc. The configuration waveforms in the figure show the configuration of CRL and CRH through PADDR and PWDATA.IDO and ODR are used to read and write the status of the GPIO pins I and II, respectively. In push-pull mode, after configuring GPIO pin I to push-pull mode, the value of ODR register directly controls the output level, which can be used to drive high and low levels; in open-drain mode, after configuring GPIO pin I to open-drain mode, ODR outputs a low level when it writes ‘O’, and the pin is suspended when it writes ‘1’ (high-resistance state). This mode is suitable for bus communication circuits.
-
-<div style="text-align: center;">
-
-![](Document/images/report/gpio_functions.jpg)
-Figure 18. GPIO section function prototypes
-
-![](Document/images/report/gpio_simulation.jpg)
-Figure 19. GPIO configuration, push-pull open-drain output simulation waveforms
+| IDR | GPIO Input Data Register |
+| ODR | GPIO Output Data Register |
 
 </div>
 
-The UART configuration, transmit-receive interrupt waveform is shown in the figure below.In the UART configuration stage, the baud rate of the UART is set through the BRR register to control the data transmission speed. As shown in the figure, the data in PWDATA in the waveform is written to the BRR address, and the baud rate of UART is configured successfully in this process. Configure the operating mode of the UART and enable the transmit and receive interrupts through the CR1 and CR2 registers. By setting the corresponding bit in CR1, the UART can be configured to trigger an interrupt signal when data is received or when transmission is complete. During the data transmission and reception phases, data is written to the TX register. Each time data is written, the UART module sends the data via the UART TX signal. A change in the waveform of the UART TX signal can be observed in the waveform, indicating that the data is being sent bit by bit.The UART receives data on UART RX, and the data enters the UART's receive buffer bit by bit. When a full byte of data is received, it is placed in the RX register. The ‘UART interrupt handler’ marked in the waveform indicates that after the interrupt is triggered, the CPU enters the interrupt service routine (ISR), which reads the flag bits in the SR to determine whether the transmission is complete or the reception is complete, and then handles the situation accordingly (e.g., reading the received data or preparing to send new data). The actual simulated waveforms conform to the expected design.
+The GPIO configuration and push-pull and open-drain output waveforms are shown in the following figure.CRL and CRH are used to configure the push-pull outputs, open-drain outputs, and input modes of the GPIO pins II, etc. The configuration waveforms in the figure show the configuration of CRL and CRH through PADDR and PWDATA.IDO and ODR are used to read and write the status of the GPIO pins I and II, respectively. In push-pull mode, after configuring GPIO pin I to push-pull mode, the value of ODR register directly controls the output level, which can be used to drive high and low levels; in open-drain mode, after configuring GPIO pin I to open-drain mode, ODR outputs a low level when it writes 'O', and the pin is suspended when it writes '1' (high-resistance state). This mode is suitable for bus communication circuits.
 
-<div style="text-align: center;">
+<p align="center"><img src="Document/images/report/gpio_function.jpg" alt="gpio_function"></p>
+<p align="center">Figure 18. GPIO section function prototypes.</p>
 
-![](Document/images/report/uart_function.jpg)
-Figure 20. Prototype of the UART part of the function
+<p align="center"><img src="Document/images/report/gpio_simulation.jpg" alt="gpio_simulation"></p>
+<p align="center">Figure 19. GPIO configuration, push-pull open-drain output simulation waveforms.</p>
 
-![](Document/images/report/uart_simulation.jpg)
-Figure 21. UART Configuration, Send-Receive Interrupt Waveforms
+The UART configuration, transmit-receive interrupt waveform is shown in the figure below.In the UART configuration stage, the baud rate of the UART is set through the BRR register to control the data transmission speed. As shown in the figure, the data in PWDATA in the waveform is written to the BRR address, and the baud rate of UART is configured successfully in this process. Configure the operating mode of the UART and enable the transmit and receive interrupts through the CR1 and CR2 registers. By setting the corresponding bit in CR1, the UART can be configured to trigger an interrupt signal when data is received or when transmission is complete. During the data transmission and reception phases, data is written to the TX register. Each time data is written, the UART module sends the data via the UART TX signal. A change in the waveform of the UART TX signal can be observed in the waveform, indicating that the data is being sent bit by bit.The UART receives data on UART RX, and the data enters the UART's receive buffer bit by bit. When a full byte of data is received, it is placed in the RX register. The 'UART interrupt handler' marked in the waveform indicates that after the interrupt is triggered, the CPU enters the interrupt service routine (ISR), which reads the flag bits in the SR to determine whether the transmission is complete or the reception is complete, and then handles the situation accordingly (e.g., reading the received data or preparing to send new data). The actual simulated waveforms conform to the expected design.
 
-</div>
+<p align="center"><img src="Document/images/report/uart_function.jpg" alt="uart_function"></p>
+<p align="center">Figure 20. Prototype of the UART part of the function.</p>
+
+<p align="center"><img src="Document/images/report/uart_simulation.jpg" alt="uart_simulation"></p>
+<p align="center">Figure 21. UART Configuration, Send-Receive Interrupt Waveforms.</p>
 
 The SPI configuration, output waveforms are shown below. During the SPI configuration phase, the parameters for SPI communication are configured by writing values to the CR1 and CR2 registers via the APB bus. Configuration register operations are done through the PADDR address core PWDATA data bus, PWRITE is high to indicate a write operation, and PSEL and PENABLE work together to control the validity of data transmission. When sending data (MOSI), the master device writes data to the DR register when it wants to send data. Multiple data write operations can be seen in the waveform on PWDATA, and these data are transferred to the MOSI signal line. When receiving data (MISO), the MISO signal line is used to receive the data returned from the device and store it in the DR register. The data received by MISO can be read through PRDATA. At the start of communication, the master device pulls the CS signal low to select the corresponding slave device. When CS goes low, SPI data transmission is valid, and CS returns high to end the transmission. When the transmission is complete, the SPI module can trigger an interrupt to notify the CPU for subsequent processing, with the corresponding flag bit set by the SR signal. The waveforms show how the APB bus configures the SPI module through registers and how the signals of SCK, MOSI, MISO and CS change during the SPI data transfer. This configuration and transmission process is a typical SPI communication protocol flow and is consistent with the expected results.
 
-<div style="text-align: center;">
+<p align="center"><img src="Document/images/report/spi_function.jpg" alt="spi_function"></p>
+<p align="center">Figure 22. SPI Port API Function Prototype.</p>
 
-![](Document/images/report/spi_function.jpg)
-Figure 20. SPI Port API Function Prototype
+<p align="center"><img src="Document/images/report/spi_simulation.jpg" alt="spi_simulation"></p>
+<p align="center">Figure 23. SPI configuration, output waveforms.</p>
 
-![](Document/images/report/spi_simulation.jpg)
-Figure 21. SPI configuration, output waveforms
+<div align="center">
 
-</div>
-
-<div style="text-align: center;">Table 3. Timer Configuration Register Name Descriptions</div>
+Table 3. Timer Configuration Register Name Descriptions.
 
 | **TIM Register Name** | **Signal Definition and Function Description** |
 |---------------------|-----------------------|
-|CR1 | Timer Control Register 1, used to enable the timer, set the timer operating mode, counting direction, etc |
-|CR2 | Timer Control Register 2, usually contains additional function configuration options such as output control, etc | |DIER | Disconnect Enable Register 1, used to enable the timer, set the timer operating mode, count direction, etc
-|DIER | Interrupt Enable Register, used to enable interrupts for the timer | |SR | Register, usually contains additional function configuration options such as output control, etc.
-|SR |SR register, used to indicate the status of the timer, e.g. update event, capture compare event, etc. |EGR |Error Generation Register, used to indicate the status of the timer.
-|EGR |File Generation Register for generating update events (e.g., reloading counter values) |CCMR1 CCMR1
-|CCMR1 CCMR2 | Compare Mode Register, configure the output compare mode or input capture mode, here used for PWM output mode configuration |
-|CCR | Get/Compare Register, controls the duty cycle of the PWM signal, i.e., signal high duration ||PSC
-|PSC | Crossover Register, used to set the clock crossover coefficient of the timer and control the timer counting speed | |ARR | Reload Register, used for PWM output mode configuration
-|ARR | Reload Register, used to set the period of the timer. The counter will reload and trigger an update event when it reaches the ARR value ||ARR
+| CR1 | Timer Control Register 1, used to enable the timer, set the timer operating mode, counting direction, etc |
+| CR2 | Timer Control Register 2, usually contains additional function configuration options such as output control, etc |
+| DIER | Disconnect Enable Register 1, used to enable the timer, set the timer operating mode, count direction, etc
+| SR | Register, usually contains additional function configuration options such as output control, etc. |
+| EGR | File Generation Register for generating update events |
+| CCMR1 CCMR2 | Compare Mode Register, configure the output compare mode or input capture mode, here used for PWM output mode configuration |
+| CCR | Get/Compare Register, controls the duty cycle of the PWM signal, i.e., signal high duration |
+| PSC | Crossover Register, used to set the clock crossover coefficient of the timer and control the timer counting speed | 
+| ARR | Reload Register, used to set the period of the timer. The counter will reload and trigger an update event when it reaches the ARR value |
+
+</div>
 
 The timer configuration and PWM output waveforms are shown below. In the timer configuration stage, the timer is enabled through the CR1 control register, and the timer starts counting. the relevant bits in CR1 set the operation mode of the timer (e.g. counting up or counting down), and control whether the timer will start immediately. In the PWM waveform configuration, the value of CCMR1 or CCMR2 determines the mode of the PWM signal, e.g., edge-aligned mode or centre-aligned mode, and implements the frequency and duty cycle control of the PWM signal. the CR capture/comparison register, with the incoming value, defines the duration of the high level of the PWM signal, and the value of the duty cycle determines the ratio of high and low levels of the signal. For example, setting the CCR value to 50 results in a PWM signal that is high for half a cycle. The waveform diagram shows how the timer is configured and generates the PWM signal through the PWM output mode, focusing mainly on the period setting and duty cycle adjustment of the timer. By configuring the CCMR and CCR registers, the output characteristics of the PWM signal can be flexibly controlled, and the waveform is as expected
 
-<div style="text-align: center;">
+<p align="center"><img src="Document/images/report/tim_funcion.jpg" alt="tim_funcion"></p>
+<p align="center">Figure 24. Timer Port API Function Prototype.</p>
 
-![](Document/images/report/tim_funcion.jpg)
-Figure 22. Timer Port API Function Prototype
-
-![](Document/images/report/tim_simulation.jpg)
-Figure 23. Timer configuration, PWM output waveforms
-
-</div>
+<p align="center"><img src="Document/images/report/tim_simulation.jpg" alt="tim_simulation"></p>
+<p align="center">Figure 25. Timer configuration, PWM output waveforms.</p>
 
 The timer configuration, timing interrupt waveform is shown below. An interrupt signal is generated when the timer reaches the auto-reload value and triggers an update event. This signal is used to notify the CPU to process the timer interrupt service routine (ISR). The timer configuration phase performs the enable and mode settings and prescales and reloads the value.The timer clock division value and automatic reload value are set by writing to the PSC and ARR registers. The timer update interrupt is enabled by setting the appropriate bit in the DIER register. The timer starts counting from ○ and gradually increases according to the preset division factor. When the count value reaches the ARR setting, the counter resets and an update event is generated. The update event triggers an interrupt when the timer's counter reaches the ARR value and is reloaded. The waveform shows that the TIM interrupt signal is pulled high at a specific moment, indicating that the interrupt has been triggered. After the interrupt is triggered, the CPU enters the interrupt service routine (ISR) to process the timer overflow event. From the waveform, it can be seen that the timer interrupt signal is repeatedly triggered at fixed intervals to form a periodic interrupt, which is in accordance with the design.
 
-<div style="text-align: center;">
-
-![](Document/images/report/tim_interrupt.jpg)
-Figure 24. Timer Configuration, Timed Interrupt Waveforms
-
-</div>
+<p align="center"><img src="Document/images/report/tim_interrupt.jpg" alt="tim_interrupt"></p>
+<p align="center">Figure 26. Timer Configuration, Timed Interrupt Waveforms.</p>
 
 The Independent Watchdog (IWDG) Configuration, Watchdog Reset output waveform is shown in the following figure.MDG Configuration Phase, the waveform can be seen that PADDR selects the address of the PR register and PWDATA writes the prescaler value. For example, 12h01e indicates that a specific value is written to configure the prescaler parameter of the IWDG to change the decrement rate of the counter. At another point in time, PADDR points to the RLR register address and a reload value is written in PWDATA (e.g., 32h00000073), which indicates that a reset operation will be triggered when the counter decrements from this value to zero. In the feed dog operation (KR register write), you can see that PADDR selects the KR register address and a specific feed dog value is written in PWDATA. This will reset the counter to the reload value in the RLR register, preventing the watchdog from triggering a reset.The PR and RLR registers are used to set the counter's prescaler and reload values, respectively, and to control the counter's countdown interval and reset time. The basic functionality of the WDR module is verified by this waveform including counter countdown, dog feed operation and register configuration taking effect.
 
-<div style="text-align: center;">
+<p align="center"><img src="Document/images/report/iwdg_function.jpg" alt="iwdg_function"></p>
+<p align="center">Figure 27. Independent Watchdog Port API Function Prototype.</p>
 
-![](Document/images/report/iwdg_function.jpg)
-Figure 25. Independent Watchdog Port API Function Prototype
-
-![](Document/images/report/iwdg_simulation.jpg)
-Figure 26. IWDG configuration, watchdog reset output waveforms
-
-</div>
+<p align="center"><img src="Document/images/report/iwdg_simulation.jpg" alt="iwdg_simulation"></p>
+<p align="center">Figure 28. IWDG configuration, watchdog reset output waveforms.</p>
 
 The window watchdog (WWDG) configuration, watchdog reset output waveform is shown below. In the configuration phase, the CFR register address is selected through PADDR, into a specific prescaler value and window value to set the time window of the counter. The window value determines the timing of feeding the dog, if the dog is fed too early or too late it will result in a reset. For example, 8c0 and 7h40 indicate the upper and lower limits of the setup window, and a dog feed operation is only valid if performed within that window. The waveform diagrams illustrate the configuration process including setting the window and prescaler factor as well as performing the dog feeding operation within the window period as expected [7, 8].
 
-<div style="text-align: center;">
+<p align="center"><img src="Document/images/report/wwdg_function.jpg" alt="wwdg_function"></p>
+<p align="center">Figure 29. Window Watchdog Port API Function Prototype.</p>
 
-![](Document/images/report/wwdg_function.jpg)
-Figure 25. Window Watchdog Port API Function Prototype
-
-![](Document/images/report/wwdg_simulation.jpg)
-Figure 26. WWDG configuration, watchdog reset output waveforms
-
-</div>
+<p align="center"><img src="Document/images/report/wwdg_simulation.jpg" alt="wwdg_simulation"></p>
+<p align="center">Figure 30. WWDG configuration, watchdog reset output waveforms.</p>
 
 #### 3.3 Video Path Simulation Waveforms
 
@@ -528,48 +471,28 @@ The video path hardware implementation simulation results are simulated using th
 
 **Zoom**: This is set to cut out the middle 172 parts of each frame of the video stream, and zoom the cut out image to double the original. A 1280*720 pixel colour bar is used here for simulation. When prede is high, it means that the pixel input data at the current moment is valid image data in the format of 24-bit wide RGB888 signal. cutter is the module responsible for image cutting. After the input image passes through the cutter module, the output is the cut data (i.e., the image data of the selected region), which is then sent to the next level of the filter module for smoothing or edge processing of the image data. When zooming in, interpolation generates new pixels between the original pixels, so the postdata will contain values for intermediate colours rather than simply repeating them. For example, between the colours 24h3e003e and 24hba00ba, interpolation may generate intermediate values with a gradual transition; post_de will go high more frequently, meaning that more valid data is seen to be output because interpolation generates more intermediate pixels. The simulation results show that the image is enlarged and the simulation is ideal and correct.
 
-<div style="text-align: center;">
-
-![](Document/images/report/scaler_up_simulation.jpg)
-Figure 27. Original image zoomed to two times (bilinear interpolation algorithm) waveforms
-
-</div>
+<p align="center"><img src="Document/images/report/scaler_up_simulation.jpg" alt="scaler_up_simulation"></p>
+<p align="center">Figure 31. Original image zoomed to two times (bilinear interpolation algorithm) waveforms.</p>
 
 **SIZE DOWN**: The 1280*720 image captured and incoming from the camera is scaled down to 1/2 pixel size of the original and placed in the top left position of the screen for display. A 1280*720 pixel colour bar is used here for simulation. Similar to the amplification of most data streams, it goes through the cutter and filter modules and then enters the scaler for reduction. During the reduction, the bilinear interpolation performs a weighted average of multiple pixels of the original image so that more details can be retained in the reduced image. Similarly, the data in post_data will be a mixture of multiple pixels. Due to the reduced output data, the high levels of post_data are relatively sparse. The waveform simulation shows that the image is reduced and the results are as expected and correct.
 
-<div style="text-align: center;">
-
-![](Document/images/report/scaler_down_simulation.jpg)
-Figure 28. The original image is reduced to 1/2(Bilinear interpolation algorithm) waveform
-
-</div>
+<p align="center"><img src="Document/images/report/scaler_down_simulation.jpg" alt="scaler_down_simulation"></p>
+<p align="center">Figure 32. The original image is reduced to 1/2(Bilinear interpolation algorithm) waveform.</p>
 
 **Image binarization**: Convert the RGB565 image input from the camera into a black and white image output. The data after binarization is usually 1-bit data, and each pixel has only 0 or 1 states. 0 is usually black and 1 is white. Therefore, a high level means that the pixel is judged to be white, while a low level means that the pixel is judged to be black. By watching the postbit change, you can see which pixels are judged to be black or white, forming a black and white image.
 
-<div style="text-align: center;">
-
-![](Document/images/report/binarization_simulation.jpg)
-Figure 29. Image binarization waveform
-
-</div>
+<p align="center"><img src="Document/images/report/binarization_simulation.jpg" alt="binarization_simulation"></p>
+<p align="center">Figure 33. Image binarization waveform.</p>
 
 **Edge detection**: Identify the outline of the object in the RGB565 image input by the camera, outline the edge part with white, and fill the rest with black to highlight the outline. Observe changes in the edge/post_bit signal and view the image after edge detection processing. The high and low levels of the postbit signal can determine which pixels belong to the edge and which pixels belong to the background. When the post_bit signal is high (1), it means that the pixel is detected as an edge and should be displayed in white. These high level pulses are distributed at short intervals in the postbit, indicating the edge profile of the detected image. When the post_bit signal is low (o), it means that the pixel belongs to the background and should be displayed in black. Most of the post_bit remains low, indicating that the background area of the image has not changed significantly. It can be seen from the simulation results that post_bit is pulled up 8 times in each frame of image simulation, corresponding to the color change gap between the eight color blocks of the color bar and the edge, and the simulation results are in line with expectations.
 
-<div style="text-align: center;">
-
-![](Document/images/report/edge_detecter_simulation.jpg)
-Figure 30. Edge detection waveform (sobel operator)
-
-</div>
+<p align="center"><img src="Document/images/report/edge_detecter_simulation.jpg" alt="edge_detecter_simulation"></p>
+<p align="center">Figure 34. Edge detection waveform (sobel operator).</p>
 
 #### 3.3 Resource Consumption
 
-<div style="text-align: center;">
-
-![](Document/images/report/rescource.jpg)
-Figure 31. Rexcore system resource consumption
-
-</div>
+<p align="center"><img src="Document/images/report/rescource.jpg" alt="rescource"></p>
+<p align="center">Figure 35. Rexcore system resource consumption.</p>
 
 The system resource consumption is shown in Figure 31, which mainly includes Register, lookup table (LUT), arithmetic logic unit (ALU), block SRAM(BSRAM) and slice SRAM(SSRAM) and other resources. The resource consumption of each module on the FPGA is divided according to the function and shown in a hierarchical structure.
 
@@ -587,41 +510,33 @@ CAM: The submodule CAM under the AhbDVP module also uses relatively more resourc
 
 For the smallest system (without peripherals), the maximum clock frequency is shown in Figure 32:
 
-<div style="text-align: center;">
-
-![](Document/images/report/clk.jpg)
-Figure 32. Minimum system maximum clock frequency
-
-</div>
+<p align="center"><img src="Document/images/report/clk.jpg" alt="clk"></p>
+<p align="center">Figure 36. Minimum system maximum clock frequency.</p>
 
 For a full CPU processing system, the maximum clock rate is shown in Figure 33:
 
 <div style="text-align: center;">
 
 ![](Document/images/report/clk_max.jpg)
-Figure 32. The maximum actual clock frequency can exceed 50MHz of the crystal oscillator frequency of the development board
+Figure 32. The maximum actual clock frequency can exceed 50MHz of the crystal oscillator frequency of the development board.
 
 </div>
+
+<p align="center"><img src="Document/images/report/clk_max.jpg" alt="clk_max"></p>
+<p align="center">Figure 37. The maximum actual clock frequency can exceed 50MHz of the crystal oscillator frequency of the development board.</p>
+
 
 ##### Power consumption analysis:
 
 For the smallest system (without peripherals), the power consumption data is shown in Figure 34:
 
-<div style="text-align: center;">
-
-![](Document/images/report/power.jpg)
-Figure 34. Minimum system power consumption
-
-</div>
+<p align="center"><img src="Document/images/report/power.jpg" alt="power"></p>
+<p align="center">Figure 38. Minimum system power consumption.</p>
 
 For a full CPU processing system, the power consumption data is shown in Figure 35:
 
-<div style="text-align: center;">
-
-![](Document/images/report/power_max.jpg)
-Figure 35. Maximum system power consumption
-
-</div>
+<p align="center"><img src="Document/images/report/power_max.jpg" alt="power_max"></p>
+<p align="center">Figure 39. Maximum system power consumption.</p>
 
 For this team to develop a video processing application function of the "Revision core" work system. From the above data, it can be seen that the power distribution of the system is reasonable, and the dynamic power consumption and static power consumption are effectively controlled. The junction temperature is much lower than the maximum temperature allowed by the system, which indicates that the heat dissipation design meets the system requirements and provides a certain temperature margin, which helps to improve the long-term reliability of the system.
 
@@ -671,12 +586,16 @@ The picture of the Tang Mega 138K pro development board based on this project wa
 
 Through calculation, the PSNR and SSIM indexes obtained by bilinear interpolation and adjacent domain algorithm in scaling up and reducing the above verification are shown in Table 4.
 
-<div style="text-align: center;">Table 4. Video streaming scaling algorithm verification and comparison</div>
+<div align="center">
+
+Table 4. Video streaming scaling algorithm verification and comparison.
 
 | Algorithm | Bilinear interpolation | adjacent field |
 | ------------------ | ---------- | -------------- |
 | Scaler up | 33.27 dB / 0.8791 | 27.68 dB / 0.8536 |
 | Scaler down  | 36.10 dB / 0.9228 | 29.54 dB / 0.8924 |
+
+</div>
 
 The PSNR values and SSIM results shown in Table 4 show that the image quality is higher after scaling, which fully demonstrates the effectiveness of our video streaming media scaling algorithm.
 
