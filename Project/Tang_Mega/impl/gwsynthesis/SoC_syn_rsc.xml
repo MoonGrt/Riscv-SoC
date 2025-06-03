@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Module name="Cyber" Register="81" Alu="5" Lut="111" T_Register="13474(81)" T_Alu="5482(5)" T_Lut="24345(111)" T_MULTALU27X18="7(0)" T_MULT12X12="4(0)" T_MULTADDALU12X12="7(0)" T_Bsram="105(0)">
+    <SubModule name="BufferCC_RST" Register="2" T_Register="2(2)"/>
+    <SubModule name="JtagBridge" Register="114" Lut="65" T_Register="123(114)" T_Lut="68(65)">
+        <SubModule name="FlowCCUnsafeByToggle" Register="7" Lut="3" T_Register="9(7)" T_Lut="3(3)">
+            <SubModule name="BufferCC_JTAG" Register="2" T_Register="2(2)"/>
+        </SubModule>
+    </SubModule>
+    <SubModule name="Debugger" Register="78" Lut="13" T_Register="78(78)" T_Lut="13(13)"/>
+    <SubModule name="VexRiscv" Register="1034" Alu="273" Lut="1981" MULTALU27X18="4" Bsram="2" T_Register="1067(1034)" T_Alu="273(273)" T_Lut="1984(1981)" T_MULTALU27X18="4(4)" T_Bsram="2(2)">
+        <SubModule name="IBusSimplePlugin_rspJoin_rspBuffer_c" T_Register="33(0)" T_Lut="3(0)">
+            <SubModule name="StreamFifo_VexRisv" Register="33" Lut="3" T_Register="33(33)" T_Lut="3(3)"/>
+        </SubModule>
+    </SubModule>
+    <SubModule name="MasterArbiter" Register="1" Lut="25" T_Register="1(1)" T_Lut="25(25)"/>
+    <SubModule name="AhbBridge" Register="42" Lut="8" T_Register="42(42)" T_Lut="8(8)"/>
+    <SubModule name="AhbPRouter" Register="4" Lut="8" T_Register="4(4)" T_Lut="8(8)"/>
+    <SubModule name="AhbRCC">
+        <SubModule name="HDMI_PLL"/>
+        <SubModule name="SYS_PLL"/>
+    </SubModule>
+    <SubModule name="AHBDMA" Lut="2" T_Register="6134(0)" T_Alu="219(0)" T_Lut="4454(2)" T_Bsram="40(0)">
+        <SubModule name="Frame_Buffer" Register="319" Alu="30" Lut="1065" Bsram="16" T_Register="319(319)" T_Alu="30(30)" T_Lut="1065(1065)" T_Bsram="16(16)"/>
+        <SubModule name="DDR3MI" Register="5815" Alu="189" Lut="3387" Bsram="24" T_Register="5815(5815)" T_Alu="189(189)" T_Lut="3387(3387)" T_Bsram="24(24)"/>
+    </SubModule>
+    <SubModule name="DVI_RX" Register="705" Alu="46" Lut="1334" T_Register="705(705)" T_Alu="46(46)" T_Lut="1334(1334)"/>
+    <SubModule name="AhbDVP" Register="86" Lut="9" T_Register="2165(86)" T_Alu="4561(0)" T_Lut="13455(9)" T_MULTALU27X18="3(0)" T_MULT12X12="4(0)" T_MULTADDALU12X12="7(0)" T_Bsram="31(0)">
+        <SubModule name="AHBVI" Lut="6" T_Register="249(0)" T_Alu="15(0)" T_Lut="917(6)">
+            <SubModule name="testpattern" Register="63" Lut="106" T_Register="63(63)" T_Lut="106(106)"/>
+            <SubModule name="CAM" Register="34" Lut="61" T_Register="186(34)" T_Alu="15(0)" T_Lut="805(61)">
+                <SubModule name="i2c_config" Register="13" Lut="24" T_Register="124(13)" T_Alu="15(0)" T_Lut="741(24)">
+                    <SubModule name="i2c_master_top_m0" Register="17" Lut="556" T_Register="111(17)" T_Alu="15(0)" T_Lut="717(556)">
+                        <SubModule name="byte_controller" Register="23" Lut="59" T_Register="94(23)" T_Alu="15(0)" T_Lut="161(59)">
+                            <SubModule name="bit_controller" Register="71" Alu="15" Lut="102" T_Register="71(71)" T_Alu="15(15)" T_Lut="102(102)"/>
+                        </SubModule>
+                    </SubModule>
+                </SubModule>
+                <SubModule name="cmos_8_16bit" Register="28" Lut="3" T_Register="28(28)" T_Lut="3(3)"/>
+            </SubModule>
+        </SubModule>
+        <SubModule name="AHBVP" Alu="22" Lut="12" T_Register="1723(0)" T_Alu="4477(22)" T_Lut="12220(12)" T_MULTALU27X18="3(0)" T_MULT12X12="4(0)" T_MULTADDALU12X12="7(0)" T_Bsram="31(0)">
+            <SubModule name="cutter" Register="39" Alu="42" Lut="99" T_Register="39(39)" T_Alu="42(42)" T_Lut="99(99)"/>
+            <SubModule name="filter" Lut="67" T_Register="1162(0)" T_Alu="3819(0)" T_Lut="6922(67)" T_Bsram="18(0)">
+                <SubModule name="gaussian" Register="26" Alu="228" T_Register="346(26)" T_Alu="1116(228)" T_Lut="1849(0)" T_Bsram="6(0)">
+                    <SubModule name="matrix3x3_r" Register="64" T_Register="108(64)" T_Alu="296(0)" T_Lut="625(0)" T_Bsram="2(0)">
+                        <SubModule name="line_shift_ram0" Register="22" Alu="148" Lut="319" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="319(319)" T_Bsram="1(1)"/>
+                        <SubModule name="line_shift_ram1" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                    </SubModule>
+                    <SubModule name="matrix3x3_g" Register="64" T_Register="108(64)" T_Alu="296(0)" T_Lut="612(0)" T_Bsram="2(0)">
+                        <SubModule name="line_shift_ram0" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                        <SubModule name="line_shift_ram1" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                    </SubModule>
+                    <SubModule name="matrix3x3_b" Register="60" T_Register="104(60)" T_Alu="296(0)" T_Lut="612(0)" T_Bsram="2(0)">
+                        <SubModule name="line_shift_ram0" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                        <SubModule name="line_shift_ram1" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                    </SubModule>
+                </SubModule>
+                <SubModule name="mean" Register="24" Alu="189" Lut="108" T_Register="276(24)" T_Alu="1077(189)" T_Lut="1944(108)" T_Bsram="6(0)">
+                    <SubModule name="matrix3x3_r" Register="40" T_Register="84(40)" T_Alu="296(0)" T_Lut="612(0)" T_Bsram="2(0)">
+                        <SubModule name="line_shift_ram0" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                        <SubModule name="line_shift_ram1" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                    </SubModule>
+                    <SubModule name="matrix3x3_g" Register="40" T_Register="84(40)" T_Alu="296(0)" T_Lut="612(0)" T_Bsram="2(0)">
+                        <SubModule name="line_shift_ram0" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                        <SubModule name="line_shift_ram1" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                    </SubModule>
+                    <SubModule name="matrix3x3_b" Register="40" T_Register="84(40)" T_Alu="296(0)" T_Lut="612(0)" T_Bsram="2(0)">
+                        <SubModule name="line_shift_ram0" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                        <SubModule name="line_shift_ram1" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                    </SubModule>
+                </SubModule>
+                <SubModule name="median" T_Register="540(0)" T_Alu="1626(0)" T_Lut="3062(0)" T_Bsram="6(0)">
+                    <SubModule name="matrix3x3_r" Register="40" T_Register="84(40)" T_Alu="296(0)" T_Lut="612(0)" T_Bsram="2(0)">
+                        <SubModule name="line_shift_ram0" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                        <SubModule name="line_shift_ram1" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                    </SubModule>
+                    <SubModule name="Matrix3x3Median_r" Register="95" Alu="240" Lut="404" T_Register="95(95)" T_Alu="240(240)" T_Lut="404(404)"/>
+                    <SubModule name="matrix3x3_g" Register="40" T_Register="84(40)" T_Alu="296(0)" T_Lut="612(0)" T_Bsram="2(0)">
+                        <SubModule name="line_shift_ram0" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                        <SubModule name="line_shift_ram1" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                    </SubModule>
+                    <SubModule name="Matrix3x3Median_g" Register="98" Alu="258" Lut="417" T_Register="98(98)" T_Alu="258(258)" T_Lut="417(417)"/>
+                    <SubModule name="matrix3x3_b" Register="40" T_Register="84(40)" T_Alu="296(0)" T_Lut="612(0)" T_Bsram="2(0)">
+                        <SubModule name="line_shift_ram0" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                        <SubModule name="line_shift_ram1" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                    </SubModule>
+                    <SubModule name="Matrix3x3Median_b" Register="95" Alu="240" Lut="405" T_Register="95(95)" T_Alu="240(240)" T_Lut="405(405)"/>
+                </SubModule>
+            </SubModule>
+            <SubModule name="scaler" Lut="3788" T_Register="221(0)" T_Alu="122(0)" T_Lut="4374(3788)" T_MULTALU27X18="3(0)" T_MULTADDALU12X12="6(0)" T_Bsram="11(0)">
+                <SubModule name="FIFO" Register="56" Alu="40" Lut="14" Bsram="2" T_Register="102(56)" T_Alu="40(40)" T_Lut="53(14)" T_Bsram="2(2)">
+                    <SubModule name="U1_WrAddrCnt" Register="12" Lut="3" T_Register="23(12)" T_Lut="20(3)">
+                        <SubModule name="U1_AddrCnt" Register="11" Lut="17" T_Register="11(11)" T_Lut="17(17)"/>
+                    </SubModule>
+                    <SubModule name="U2_RdAddrCnt" Register="12" Lut="2" T_Register="23(12)" T_Lut="19(2)">
+                        <SubModule name="U1_AddrCnt" Register="11" Lut="17" T_Register="11(11)" T_Lut="17(17)"/>
+                    </SubModule>
+                </SubModule>
+                <SubModule name="streamScaler" Register="111" Alu="72" Lut="367" MULTALU27X18="3" MULTADDALU12X12="6" T_Register="119(111)" T_Alu="82(72)" T_Lut="533(367)" T_MULTALU27X18="3(3)" T_MULTADDALU12X12="6(6)" T_Bsram="9(0)">
+                    <SubModule name="ramFifo" Register="8" Alu="10" Lut="166" T_Register="8(8)" T_Alu="10(10)" T_Lut="166(166)" T_Bsram="9(0)">
+                        <SubModule name="[0].ramDualPort" Bsram="3" T_Bsram="3(3)"/>
+                        <SubModule name="[1].ramDualPort" Bsram="3" T_Bsram="3(3)"/>
+                        <SubModule name="[2].ramDualPort" Bsram="3" T_Bsram="3(3)"/>
+                    </SubModule>
+                </SubModule>
+            </SubModule>
+            <SubModule name="rgb2ycbcr" Register="66" Alu="30" Lut="71" MULT12X12="3" T_Register="66(66)" T_Alu="30(30)" T_Lut="71(71)" T_MULT12X12="3(3)"/>
+            <SubModule name="edger" Register="72" Alu="146" Lut="45" MULT12X12="1" MULTADDALU12X12="1" T_Register="192(72)" T_Alu="442(146)" T_Lut="658(45)" T_MULT12X12="1(1)" T_MULTADDALU12X12="1(1)" T_Bsram="2(0)">
+                <SubModule name="matrix3x3" Register="76" T_Register="120(76)" T_Alu="296(0)" T_Lut="613(0)" T_Bsram="2(0)">
+                    <SubModule name="line_shift_ram0" Register="22" Alu="148" Lut="307" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="307(307)" T_Bsram="1(1)"/>
+                    <SubModule name="line_shift_ram1" Register="22" Alu="148" Lut="306" Bsram="1" T_Register="22(22)" T_Alu="148(148)" T_Lut="306(306)" T_Bsram="1(1)"/>
+                </SubModule>
+            </SubModule>
+            <SubModule name="binarizer" Register="1" Lut="7" T_Register="1(1)" T_Lut="7(7)"/>
+            <SubModule name="filler" Register="42" Lut="77" T_Register="42(42)" T_Lut="77(77)"/>
+        </SubModule>
+        <SubModule name="AHBVO" Register="6" Lut="17" T_Register="107(6)" T_Alu="69(0)" T_Lut="309(17)">
+            <SubModule name="vga_timing" Register="28" Lut="63" T_Register="28(28)" T_Lut="63(63)"/>
+            <SubModule name="DVI_TX" Register="73" Alu="69" Lut="229" T_Register="73(73)" T_Alu="69(69)" T_Lut="229(229)"/>
+        </SubModule>
+    </SubModule>
+    <SubModule name="Apb3Bridge" Register="81" Lut="8" T_Register="81(81)" T_Lut="8(8)"/>
+    <SubModule name="Apb3RAM" Register="1" Lut="9" Bsram="32" T_Register="1(1)" T_Lut="9(9)" T_Bsram="32(32)"/>
+    <SubModule name="Apb3PRouter" Register="39" Lut="103" T_Register="39(39)" T_Lut="103(103)"/>
+    <SubModule name="Apb3GPIORouter" Register="35" Lut="35" T_Register="453(35)" T_Lut="528(35)">
+        <SubModule name="Apb3GPIOA" Register="209" Lut="265" T_Register="209(209)" T_Lut="265(265)"/>
+        <SubModule name="Apb3GPIOB" Register="209" Lut="228" T_Register="209(209)" T_Lut="228(228)"/>
+    </SubModule>
+    <SubModule name="Apb3USARTRouter" Register="19" Lut="19" T_Register="983(19)" T_Alu="68(0)" T_Lut="855(19)">
+        <SubModule name="Apb3USART1" Register="114" Lut="94" T_Register="482(114)" T_Alu="34(0)" T_Lut="419(94)">
+            <SubModule name="StreamFifo_UART_TX" Register="152" Alu="17" Lut="105" T_Register="152(152)" T_Alu="17(17)" T_Lut="105(105)"/>
+            <SubModule name="UartCtrl" Register="21" Lut="38" T_Register="64(21)" T_Lut="123(38)">
+                <SubModule name="tx" Register="11" Lut="32" T_Register="11(11)" T_Lut="32(32)"/>
+                <SubModule name="rx" Register="30" Lut="53" T_Register="32(30)" T_Lut="53(53)">
+                    <SubModule name="BufferCC_UART" Register="2" T_Register="2(2)"/>
+                </SubModule>
+            </SubModule>
+            <SubModule name="StreamFifo_UART_RX" Register="152" Alu="17" Lut="97" T_Register="152(152)" T_Alu="17(17)" T_Lut="97(97)"/>
+        </SubModule>
+        <SubModule name="Apb3USART2" Register="114" Lut="92" T_Register="482(114)" T_Alu="34(0)" T_Lut="417(92)">
+            <SubModule name="StreamFifo_UART_TX" Register="152" Alu="17" Lut="105" T_Register="152(152)" T_Alu="17(17)" T_Lut="105(105)"/>
+            <SubModule name="UartCtrl" Register="21" Lut="38" T_Register="64(21)" T_Lut="123(38)">
+                <SubModule name="tx" Register="11" Lut="32" T_Register="11(11)" T_Lut="32(32)"/>
+                <SubModule name="rx" Register="30" Lut="53" T_Register="32(30)" T_Lut="53(53)">
+                    <SubModule name="BufferCC_UART" Register="2" T_Register="2(2)"/>
+                </SubModule>
+            </SubModule>
+            <SubModule name="StreamFifo_UART_RX" Register="152" Alu="17" Lut="97" T_Register="152(152)" T_Alu="17(17)" T_Lut="97(97)"/>
+        </SubModule>
+    </SubModule>
+    <SubModule name="Apb3I2CRouter" Register="19" Lut="17" T_Register="277(19)" T_Lut="209(17)">
+        <SubModule name="Apb3I2C1" Register="129" Lut="99" T_Register="129(129)" T_Lut="99(99)"/>
+        <SubModule name="Apb3I2C2" Register="129" Lut="93" T_Register="129(129)" T_Lut="93(93)"/>
+    </SubModule>
+    <SubModule name="Apb3SPIRouter" Register="19" Lut="19" T_Register="337(19)" T_Lut="344(19)">
+        <SubModule name="Apb3SPI1" Register="113" Lut="88" T_Register="159(113)" T_Lut="162(88)">
+            <SubModule name="SPICtrl" Register="46" Lut="74" T_Register="46(46)" T_Lut="74(74)"/>
+        </SubModule>
+        <SubModule name="Apb3SPI2" Register="113" Lut="89" T_Register="159(113)" T_Lut="163(89)">
+            <SubModule name="SPICtrl" Register="46" Lut="74" T_Register="46(46)" T_Lut="74(74)"/>
+        </SubModule>
+    </SubModule>
+    <SubModule name="Apb3TIMRouter" Register="19" Lut="22" T_Register="727(19)" T_Alu="304(0)" T_Lut="559(22)">
+        <SubModule name="Apb3TIM1" Register="354" Alu="152" Lut="269" T_Register="354(354)" T_Alu="152(152)" T_Lut="269(269)"/>
+        <SubModule name="Apb3TIM2" Register="354" Alu="152" Lut="268" T_Register="354(354)" T_Alu="152(152)" T_Lut="268(268)"/>
+    </SubModule>
+    <SubModule name="Apb3WDGRouter" Register="19" Lut="38" T_Register="174(19)" T_Alu="6(0)" T_Lut="270(38)">
+        <SubModule name="IWDG" Register="114" Lut="179" T_Register="114(114)" T_Lut="179(179)"/>
+        <SubModule name="WWDG" Register="41" Alu="6" Lut="53" T_Register="41(41)" T_Alu="6(6)" T_Lut="53(53)"/>
+    </SubModule>
+</Module>

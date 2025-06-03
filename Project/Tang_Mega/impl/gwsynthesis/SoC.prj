@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gowin-synthesis-project>
+<Project>
+    <Version>beta</Version>
+    <Device id="GW5AST-138B" package="FCPBGA676A" speed="1" partNumber="GW5AST-LV138FPG676AES"/>
+    <FileList>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\Cyber.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\DDR3MI\DDR3MI.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\DVI\RX\DVI_RX.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\DVI\TX\DVI_TX.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\Frame_Buffer\Frame_Buffer.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\PLL\HDMI_PLL.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\PLL\SYS_PLL.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\RISCV\AHBBUS.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\RISCV\AHBDMA.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\RISCV\AHBDVP.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\RISCV\AHBRCC.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\RISCV\AHBVI.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\RISCV\AHBVO.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\RISCV\AHBVP.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\RISCV\APB3BUS.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\RISCV\APB3GPIO.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\RISCV\APB3I2C.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\RISCV\APB3RAM.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\RISCV\APB3SPI.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\RISCV\APB3TIM.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\RISCV\APB3USART.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\RISCV\APB3WDG.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\RISCV\VexRiscv.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\VP\binarizer.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\VP\cutter.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\VP\edger.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\VP\filler.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\VP\filter.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\VP\rgb2ycbcr.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\VP\scaler.v" type="verilog"/>
+        <File path="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\src\edid_prom\edid_prom.v" type="verilog"/>
+    </FileList>
+    <OptionList>
+        <Option type="disable_insert_pad" value="0"/>
+        <Option type="enable_dsrm" value="0"/>
+        <Option type="global_freq" value="100.000"/>
+        <Option type="looplimit" value="2000"/>
+        <Option type="output_file" value="F:\Project\Sipeed\FPGA\Tang_Mega\Riscv-SoC\Project\SoC\impl\gwsynthesis\SoC.vg"/>
+        <Option type="print_all_synthesis_warning" value="0"/>
+        <Option type="ram_rw_check" value="0"/>
+        <Option type="top_module" value="Cyber"/>
+        <Option type="vcc" value="0.9"/>
+        <Option type="vccx" value="1.8"/>
+        <Option type="verilog_language" value="verilog-2001"/>
+        <Option type="vhdl_language" value="vhdl-1993"/>
+    </OptionList>
+</Project>
