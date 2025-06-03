@@ -2,3 +2,10 @@
 */*.gprj
 */*.gprj.user
 */gowin_workfile/work/*
+
+*/.Xil/*
+*/Cyber.cache/*
+*/Cyber.hw/*
+*/Cyber.ip_user_files/*
+*/vivado*
+

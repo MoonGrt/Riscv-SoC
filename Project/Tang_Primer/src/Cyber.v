@@ -11,55 +11,60 @@ module Cyber (
     output wire io_jtag_tdo,
     input  wire io_jtag_tck,
     // GPIO
-    // output wire [3:0] state_led,
     inout wire [15:0] GPIOA,  // GPIO
-    inout wire [15:0] GPIOB,  // GPIO
-    // CAM interface
-    output [2:0] i2c_sel,
-    inout        cmos_scl,    // cmos i2c clock
-    inout        cmos_sda,    // cmos i2c data
-    input        cmos_vsync,  // cmos vsync
-    input        cmos_href,   // cmos hsync refrence,data valid
-    input        cmos_pclk,   // cmos pxiel clock
-    output       cmos_xclk,   // cmos externl clock
-    input  [7:0] cmos_db,     // cmos data
-    output       cmos_rst_n,  // cmos reset
-    output       cmos_pwdn,   // cmos power down
-    // DDR3 interface
-    output [16-1:0] ddr_addr,  // ROW_WIDTH=16
-    output [ 3-1:0] ddr_bank,  // BANK_WIDTH=3
-    output          ddr_cs,
-    output          ddr_ras,
-    output          ddr_cas,
-    output          ddr_we,
-    output          ddr_ck,
-    output          ddr_ck_n,
-    output          ddr_cke,
-    output          ddr_odt,
-    output          ddr_reset_n,
-    output [ 4-1:0] ddr_dm,       // DM_WIDTH=4
-    inout  [32-1:0] ddr_dq,       // DQ_WIDTH=32
-    inout  [ 4-1:0] ddr_dqs,      // DQS_WIDTH=4
-    inout  [ 4-1:0] ddr_dqs_n,    // DQS_WIDTH=4
-    // HDMI interface
-    output       tmds_clk_n_0,
-    output       tmds_clk_p_0,
-    output [2:0] tmds_d_n_0,    // {r,g,b}
-    output [2:0] tmds_d_p_0,
+    inout wire [15:0] GPIOB   // GPIO
+    // // CAM interface
+    // output [2:0] i2c_sel,
+    // inout        cmos_scl,    // cmos i2c clock
+    // inout        cmos_sda,    // cmos i2c data
+    // input        cmos_vsync,  // cmos vsync
+    // input        cmos_href,   // cmos hsync refrence,data valid
+    // input        cmos_pclk,   // cmos pxiel clock
+    // output       cmos_xclk,   // cmos externl clock
+    // input  [7:0] cmos_db,     // cmos data
+    // output       cmos_rst_n,  // cmos reset
+    // output       cmos_pwdn,   // cmos power down
+    // // DDR3 interface
+    // output [16-1:0] ddr_addr,  // ROW_WIDTH=16
+    // output [ 3-1:0] ddr_bank,  // BANK_WIDTH=3
+    // output          ddr_cs,
+    // output          ddr_ras,
+    // output          ddr_cas,
+    // output          ddr_we,
+    // output          ddr_ck,
+    // output          ddr_ck_n,
+    // output          ddr_cke,
+    // output          ddr_odt,
+    // output          ddr_reset_n,
+    // output [ 4-1:0] ddr_dm,       // DM_WIDTH=4
+    // inout  [32-1:0] ddr_dq,       // DQ_WIDTH=32
+    // inout  [ 4-1:0] ddr_dqs,      // DQS_WIDTH=4
+    // inout  [ 4-1:0] ddr_dqs_n,    // DQS_WIDTH=4
+    // // HDMI interface
+    // output       tmds_clk_n_0,
+    // output       tmds_clk_p_0,
+    // output [2:0] tmds_d_n_0,    // {r,g,b}
+    // output [2:0] tmds_d_p_0,
     // input        tmds_clk_n_1,
     // input        tmds_clk_p_1,
     // input  [2:0] tmds_d_n_1,    // {r,g,b}
     // input  [2:0] tmds_d_p_1,
-    // LCD interface
-    output       lcd_clk,
-    output       lcd_en,
-    output [5:0] lcd_r,
-    output [5:0] lcd_b,
-    output [5:0] lcd_g
+    // // LCD interface
+    // output       lcd_clk,
+    // output       lcd_en,
+    // output [5:0] lcd_r,
+    // output [5:0] lcd_b,
+    // output [5:0] lcd_g
 );
 
-    wire io_mainClk = clk;
+    wire io_mainClk;
     wire io_asyncReset = ~rst_n;
+
+    SYS_rPLL SYS_rPLL(
+        .clkout(io_mainClk), //output clkout
+        .reset(reset), //input reset
+        .clkin(clk) //input clkin
+    );
 
     // wire [3:0] O_pll_phase;
     // assign state_led = O_pll_phase; // 状态指示灯
@@ -539,46 +544,46 @@ module Cyber (
         .WDG_clk          (WDG_clk),    // o
         .WDG_rst          (WDG_rst)     // o
     );
-    AHBDMA AHBDMA (
-        .clk         (io_mainClk),
-        .memory_clk  (memory_clk),
-        .rst_n       (~resetCtrl_systemReset),
-        .DDR_pll_lock(DDR_pll_lock),
-        .pll_stop    (pll_stop),
+    // AHBDMA AHBDMA (
+    //     .clk         (io_mainClk),
+    //     .memory_clk  (memory_clk),
+    //     .rst_n       (~resetCtrl_systemReset),
+    //     .DDR_pll_lock(DDR_pll_lock),
+    //     .pll_stop    (pll_stop),
 
-        .vi_clk (vp_clk),
-        .vi_vs  (vp_vs),
-        .vi_de  (vp_de),
-        .vi_data(vp_data),
+    //     .vi_clk (vp_clk),
+    //     .vi_vs  (vp_vs),
+    //     .vi_de  (vp_de),
+    //     .vi_data(vp_data),
 
-        .ddr_addr   (ddr_addr),
-        .ddr_bank   (ddr_bank),
-        .ddr_cs     (ddr_cs),
-        .ddr_ras    (ddr_ras),
-        .ddr_cas    (ddr_cas),
-        .ddr_we     (ddr_we),
-        .ddr_ck     (ddr_ck),
-        .ddr_ck_n   (ddr_ck_n),
-        .ddr_cke    (ddr_cke),
-        .ddr_odt    (ddr_odt),
-        .ddr_reset_n(ddr_reset_n),
-        .ddr_dm     (ddr_dm),
-        .ddr_dq     (ddr_dq),
-        .ddr_dqs    (ddr_dqs),
-        .ddr_dqs_n  (ddr_dqs_n),
+    //     .ddr_addr   (ddr_addr),
+    //     .ddr_bank   (ddr_bank),
+    //     .ddr_cs     (ddr_cs),
+    //     .ddr_ras    (ddr_ras),
+    //     .ddr_cas    (ddr_cas),
+    //     .ddr_we     (ddr_we),
+    //     .ddr_ck     (ddr_ck),
+    //     .ddr_ck_n   (ddr_ck_n),
+    //     .ddr_cke    (ddr_cke),
+    //     .ddr_odt    (ddr_odt),
+    //     .ddr_reset_n(ddr_reset_n),
+    //     .ddr_dm     (ddr_dm),
+    //     .ddr_dq     (ddr_dq),
+    //     .ddr_dqs    (ddr_dqs),
+    //     .ddr_dqs_n  (ddr_dqs_n),
 
-        .video_clk (video_clk),
-        .vo_vs     (vo_vs),
-        .vo_de     (vo_de),
-        .video_de  (video_de),
-        .video_data(video_data)
-    );
-    EDID_PROM_Top EDID_PROM_Top (
-        .I_clk  (clk),    //>= 5MHz, <=200MHz 
-        .I_rst_n(rst_n),
-        .I_scl  (cmos_scl),
-        .IO_sda (cmos_sda)
-    );
+    //     .video_clk (video_clk),
+    //     .vo_vs     (vo_vs),
+    //     .vo_de     (vo_de),
+    //     .video_de  (video_de),
+    //     .video_data(video_data)
+    // );
+    // EDID_PROM_Top EDID_PROM_Top (
+    //     .I_clk  (clk),    //>= 5MHz, <=200MHz 
+    //     .I_rst_n(rst_n),
+    //     .I_scl  (cmos_scl),
+    //     .IO_sda (cmos_sda)
+    // );
     wire HDMI_clk, HDMI_vs, HDMI_hs, HDMI_de;
     wire [7:0] HDMI_r, HDMI_g, HDMI_b;
     // DVI_RX DVI_RX (
@@ -597,64 +602,64 @@ module Cyber (
     //     .O_rgb_g         (HDMI_g),            // output [7:0] O_rgb_g
     //     .O_rgb_b         (HDMI_b)             // output [7:0] O_rgb_b
     // );
-    AhbDVP #(
-        .H_DISP (12'd1280),
-        .V_DISP (12'd720)
-    ) AhbDVP (
-        .io_ahb_PCLK     (io_mainClk),
-        .io_ahb_PRESET   (resetCtrl_systemReset),
-        .io_ahb_PADDR    (system_dvpCtrl_io_ahb_PADDR),
-        .io_ahb_PSEL     (ahbRouter_1_io_outputs_2_PSEL),
-        .io_ahb_PENABLE  (ahbRouter_1_io_outputs_2_PENABLE),
-        .io_ahb_PREADY   (system_dvpCtrl_io_ahb_PREADY),
-        .io_ahb_PWRITE   (ahbRouter_1_io_outputs_2_PWRITE),
-        .io_ahb_PWDATA   (ahbRouter_1_io_outputs_2_PWDATA),
-        .io_ahb_PRDATA   (system_dvpCtrl_io_ahb_PRDATA),
-        .io_ahb_PSLVERROR(system_dvpCtrl_io_ahb_PSLVERROR),
-        // clk
-        .cmos_clk         (cmos_clk),
-        .serial_clk       (serial_clk),
-        .video_clk        (video_clk),
-        .clk_vp           (clk_vp),
-        .TMDS_DDR_pll_lock(TMDS_DDR_pll_lock),
-        // CAM interface
-        .i2c_sel   (i2c_sel),
-        .cmos_scl  (cmos_scl),
-        .cmos_sda  (cmos_sda),
-        .cmos_vsync(cmos_vsync),
-        .cmos_href (cmos_href),
-        .cmos_pclk (cmos_pclk),
-        .cmos_xclk (cmos_xclk),
-        .cmos_db   (cmos_db),
-        .cmos_rst_n(cmos_rst_n),
-        .cmos_pwdn (cmos_pwdn),
-        // HDMI IN
-        .HDMI_clk  (HDMI_clk),
-        .HDMI_vs   (HDMI_vs),
-        .HDMI_de   (HDMI_de),
-        .HDMI_data ({HDMI_r[7:3], HDMI_g[7:2], HDMI_b[7:3]}),
-        // Video output
-        .vp_clk (vp_clk),
-        .vp_vs  (vp_vs),
-        .vp_de  (vp_de),
-        .vp_data(vp_data),
-        // Video input
-        .vo_vs     (vo_vs),
-        .vo_de     (vo_de),
-        .video_de  (video_de),
-        .video_data(video_data),
-        // HDMI interface
-        .tmds_clk_n_0(tmds_clk_n_0),
-        .tmds_clk_p_0(tmds_clk_p_0),
-        .tmds_d_n_0  (tmds_d_n_0),
-        .tmds_d_p_0  (tmds_d_p_0),
-        // LCD interface
-        .lcd_clk     (lcd_clk),
-        .lcd_en      (lcd_en),
-        .lcd_r       (lcd_r),
-        .lcd_b       (lcd_b),
-        .lcd_g       (lcd_)
-    );
+    // AhbDVP #(
+    //     .H_DISP (12'd1280),
+    //     .V_DISP (12'd720)
+    // ) AhbDVP (
+    //     .io_ahb_PCLK     (io_mainClk),
+    //     .io_ahb_PRESET   (resetCtrl_systemReset),
+    //     .io_ahb_PADDR    (system_dvpCtrl_io_ahb_PADDR),
+    //     .io_ahb_PSEL     (ahbRouter_1_io_outputs_2_PSEL),
+    //     .io_ahb_PENABLE  (ahbRouter_1_io_outputs_2_PENABLE),
+    //     .io_ahb_PREADY   (system_dvpCtrl_io_ahb_PREADY),
+    //     .io_ahb_PWRITE   (ahbRouter_1_io_outputs_2_PWRITE),
+    //     .io_ahb_PWDATA   (ahbRouter_1_io_outputs_2_PWDATA),
+    //     .io_ahb_PRDATA   (system_dvpCtrl_io_ahb_PRDATA),
+    //     .io_ahb_PSLVERROR(system_dvpCtrl_io_ahb_PSLVERROR),
+    //     // clk
+    //     .cmos_clk         (cmos_clk),
+    //     .serial_clk       (serial_clk),
+    //     .video_clk        (video_clk),
+    //     .clk_vp           (clk_vp),
+    //     .TMDS_DDR_pll_lock(TMDS_DDR_pll_lock),
+    //     // CAM interface
+    //     .i2c_sel   (i2c_sel),
+    //     .cmos_scl  (cmos_scl),
+    //     .cmos_sda  (cmos_sda),
+    //     .cmos_vsync(cmos_vsync),
+    //     .cmos_href (cmos_href),
+    //     .cmos_pclk (cmos_pclk),
+    //     .cmos_xclk (cmos_xclk),
+    //     .cmos_db   (cmos_db),
+    //     .cmos_rst_n(cmos_rst_n),
+    //     .cmos_pwdn (cmos_pwdn),
+    //     // HDMI IN
+    //     .HDMI_clk  (HDMI_clk),
+    //     .HDMI_vs   (HDMI_vs),
+    //     .HDMI_de   (HDMI_de),
+    //     .HDMI_data ({HDMI_r[7:3], HDMI_g[7:2], HDMI_b[7:3]}),
+    //     // Video output
+    //     .vp_clk (vp_clk),
+    //     .vp_vs  (vp_vs),
+    //     .vp_de  (vp_de),
+    //     .vp_data(vp_data),
+    //     // Video input
+    //     .vo_vs     (vo_vs),
+    //     .vo_de     (vo_de),
+    //     .video_de  (video_de),
+    //     .video_data(video_data),
+    //     // HDMI interface
+    //     .tmds_clk_n_0(tmds_clk_n_0),
+    //     .tmds_clk_p_0(tmds_clk_p_0),
+    //     .tmds_d_n_0  (tmds_d_n_0),
+    //     .tmds_d_p_0  (tmds_d_p_0),
+    //     // LCD interface
+    //     .lcd_clk     (lcd_clk),
+    //     .lcd_en      (lcd_en),
+    //     .lcd_r       (lcd_r),
+    //     .lcd_b       (lcd_b),
+    //     .lcd_g       (lcd_)
+    // );
     Apb3Bridge Apb3Bridge (
         .io_pipelinedMemoryBus_cmd_valid           (system_apbBridge_io_pipelinedMemoryBus_cmd_valid                     ), // i
         .io_pipelinedMemoryBus_cmd_ready           (system_apbBridge_io_pipelinedMemoryBus_cmd_ready                     ), // o

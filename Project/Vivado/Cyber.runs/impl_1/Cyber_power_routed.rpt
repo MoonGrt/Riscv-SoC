@@ -1,0 +1,189 @@
+Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
+-------------------------------------------------------------------------------------------------------------------------------------
+| Tool Version     : Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
+| Date             : Tue Jun  3 18:02:07 2025
+| Host             : DESKTOP-0TSH46O running 64-bit major release  (build 9200)
+| Command          : report_power -file Cyber_power_routed.rpt -pb Cyber_power_summary_routed.pb -rpx Cyber_power_routed.rpx
+| Design           : Cyber
+| Device           : xc7z010iclg225-1L
+| Design State     : routed
+| Grade            : industrial
+| Process          : typical
+| Characterization : Production
+-------------------------------------------------------------------------------------------------------------------------------------
+
+Power Report
+
+Table of Contents
+-----------------
+1. Summary
+1.1 On-Chip Components
+1.2 Power Supply Summary
+1.3 Confidence Level
+2. Settings
+2.1 Environment
+2.2 Clock Constraints
+3. Detailed Reports
+3.1 By Hierarchy
+
+1. Summary
+----------
+
++--------------------------+--------------+
+| Total On-Chip Power (W)  | 35.387       |
+| Design Power Budget (W)  | Unspecified* |
+| Power Budget Margin (W)  | NA           |
+| Dynamic (W)              | 34.838       |
+| Device Static (W)        | 0.549        |
+| Effective TJA (C/W)      | 11.5         |
+| Max Ambient (C)          | 0.0          |
+| Junction Temperature (C) | 125.0        |
+| Confidence Level         | Low          |
+| Setting File             | ---          |
+| Simulation Activity File | ---          |
+| Design Nets Matched      | NA           |
++--------------------------+--------------+
+* Specify Design Power Budget using, set_operating_conditions -design_power_budget <value in Watts>
+
+
+1.1 On-Chip Components
+----------------------
+
++--------------------------+-----------+----------+-----------+-----------------+
+| On-Chip                  | Power (W) | Used     | Available | Utilization (%) |
++--------------------------+-----------+----------+-----------+-----------------+
+| Slice Logic              |    11.726 |     7197 |       --- |             --- |
+|   LUT as Logic           |    10.528 |     2861 |     17600 |           16.26 |
+|   CARRY4                 |     0.625 |      138 |      4400 |            3.14 |
+|   Register               |     0.543 |     3570 |     35200 |           10.14 |
+|   F7/F8 Muxes            |     0.020 |       78 |     17600 |            0.44 |
+|   BUFG                   |     0.010 |        5 |        32 |           15.63 |
+|   Others                 |     0.000 |       91 |       --- |             --- |
+|   LUT as Distributed RAM |     0.000 |       16 |      6000 |            0.27 |
+|   LUT as Shift Register  |     0.000 |        2 |      6000 |            0.03 |
+| Signals                  |    18.638 |     6022 |       --- |             --- |
+| Block RAM                |     0.389 |       17 |        60 |           28.33 |
+| DSPs                     |     3.837 |        4 |        80 |            5.00 |
+| I/O                      |     0.249 |       38 |        54 |           70.37 |
+| Static Power             |     0.549 |          |           |                 |
+| Total                    |    35.387 |          |           |                 |
++--------------------------+-----------+----------+-----------+-----------------+
+
+
+1.2 Power Supply Summary
+------------------------
+
++-----------+-------------+-----------+-------------+------------+
+| Source    | Voltage (V) | Total (A) | Dynamic (A) | Static (A) |
++-----------+-------------+-----------+-------------+------------+
+| Vccint    |       0.950 |    36.493 |      36.408 |      0.085 |
+| Vccaux    |       1.800 |     0.056 |       0.019 |      0.036 |
+| Vcco33    |       3.300 |     0.000 |       0.000 |      0.000 |
+| Vcco25    |       2.500 |     0.000 |       0.000 |      0.000 |
+| Vcco18    |       1.800 |     0.114 |       0.113 |      0.001 |
+| Vcco15    |       1.500 |     0.000 |       0.000 |      0.000 |
+| Vcco135   |       1.350 |     0.000 |       0.000 |      0.000 |
+| Vcco12    |       1.200 |     0.000 |       0.000 |      0.000 |
+| Vccaux_io |       1.800 |     0.000 |       0.000 |      0.000 |
+| Vccbram   |       0.950 |     0.030 |       0.014 |      0.017 |
+| MGTAVcc   |       1.000 |     0.000 |       0.000 |      0.000 |
+| MGTAVtt   |       1.200 |     0.000 |       0.000 |      0.000 |
+| MGTVccaux |       1.800 |     0.000 |       0.000 |      0.000 |
+| Vccpint   |       1.000 |     0.331 |       0.000 |      0.331 |
+| Vccpaux   |       1.800 |     0.009 |       0.000 |      0.009 |
+| Vccpll    |       1.800 |     0.003 |       0.000 |      0.003 |
+| Vcco_ddr  |       1.500 |     0.000 |       0.000 |      0.000 |
+| Vcco_mio0 |       1.800 |     0.000 |       0.000 |      0.000 |
+| Vcco_mio1 |       1.800 |     0.000 |       0.000 |      0.000 |
+| Vccadc    |       1.800 |     0.018 |       0.000 |      0.018 |
++-----------+-------------+-----------+-------------+------------+
+
+
+1.3 Confidence Level
+--------------------
+
++-----------------------------+------------+--------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------+
+| User Input Data             | Confidence | Details                                                | Action                                                                                                             |
++-----------------------------+------------+--------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------+
+| Design implementation state | High       | Design is routed                                       |                                                                                                                    |
+| Clock nodes activity        | Low        | User specified less than 75% of clocks                 | Provide missing clock activity with a constraint file, simulation results or by editing the "By Clock Domain" view |
+| I/O nodes activity          | Low        | More than 75% of inputs are missing user specification | Provide missing input activity with simulation results or by editing the "By Resource Type -> I/Os" view           |
+| Internal nodes activity     | Medium     | User specified less than 25% of internal nodes         | Provide missing internal nodes activity with simulation results or by editing the "By Resource Type" views         |
+| Device models               | High       | Device models are Production                           |                                                                                                                    |
+|                             |            |                                                        |                                                                                                                    |
+| Overall confidence level    | Low        |                                                        |                                                                                                                    |
++-----------------------------+------------+--------------------------------------------------------+--------------------------------------------------------------------------------------------------------------------+
+
+
+2. Settings
+-----------
+
+2.1 Environment
+---------------
+
++-----------------------+------------------------+
+| Ambient Temp (C)      | 25.0                   |
+| ThetaJA (C/W)         | 11.5                   |
+| Airflow (LFM)         | 250                    |
+| Heat Sink             | none                   |
+| ThetaSA (C/W)         | 0.0                    |
+| Board Selection       | medium (10"x10")       |
+| # of Board Layers     | 8to11 (8 to 11 Layers) |
+| Board Temperature (C) | 25.0                   |
++-----------------------+------------------------+
+
+
+2.2 Clock Constraints
+---------------------
+
++-------+--------+-----------------+
+| Clock | Domain | Constraint (ns) |
++-------+--------+-----------------+
+
+
+3. Detailed Reports
+-------------------
+
+3.1 By Hierarchy
+----------------
+
++------------------------------------------+-----------+
+| Name                                     | Power (W) |
++------------------------------------------+-----------+
+| Cyber                                    |    34.838 |
+|   Apb3Bridge                             |     8.489 |
+|   Apb3GPIORouter                         |     0.011 |
+|     Apb3GPIOA                            |     0.005 |
+|     Apb3GPIOB                            |     0.006 |
+|   Apb3I2CRouter                          |     0.089 |
+|     Apb3I2C1                             |     0.049 |
+|     Apb3I2C2                             |     0.039 |
+|   Apb3PRouter                            |     0.003 |
+|   Apb3RAM                                |     0.029 |
+|   Apb3SPIRouter                          |     0.177 |
+|     Apb3SPI1                             |     0.092 |
+|     Apb3SPI2                             |     0.085 |
+|   Apb3TIMRouter                          |     1.259 |
+|     Apb3TIM1                             |     0.615 |
+|     Apb3TIM2                             |     0.644 |
+|   Apb3USARTRouter                        |     0.374 |
+|     Apb3USART1                           |     0.193 |
+|       StreamFifo_UART_RX                 |     0.044 |
+|       StreamFifo_UART_TX                 |     0.003 |
+|       UartCtrl                           |     0.053 |
+|     Apb3USART2                           |     0.181 |
+|       StreamFifo_UART_RX                 |     0.021 |
+|       StreamFifo_UART_TX                 |     0.003 |
+|       UartCtrl                           |     0.067 |
+|   Apb3WDGRouter                          |     0.400 |
+|     IWDG                                 |     0.348 |
+|     WWDG                                 |     0.052 |
+|   Debugger                               |     0.002 |
+|   JtagBridge                             |     0.010 |
+|     FlowCCUnsafeByToggle                 |     0.002 |
+|   VexRiscv                               |    22.545 |
+|     IBusSimplePlugin_rspJoin_rspBuffer_c |     0.185 |
+|       StreamFifo_VexRisv                 |     0.185 |
++------------------------------------------+-----------+
+
+

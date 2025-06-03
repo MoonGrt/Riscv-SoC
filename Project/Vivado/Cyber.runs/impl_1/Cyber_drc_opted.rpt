@@ -1,0 +1,490 @@
+Copyright 1986-2018 Xilinx, Inc. All Rights Reserved.
+------------------------------------------------------------------------------------------------------
+| Tool Version : Vivado v.2018.3 (win64) Build 2405991 Thu Dec  6 23:38:27 MST 2018
+| Date         : Tue Jun  3 18:01:40 2025
+| Host         : DESKTOP-0TSH46O running 64-bit major release  (build 9200)
+| Command      : report_drc -file Cyber_drc_opted.rpt -pb Cyber_drc_opted.pb -rpx Cyber_drc_opted.rpx
+| Design       : Cyber
+| Device       : xc7z010iclg225-1L
+| Speed File   : -1L
+| Design State : Synthesized
+------------------------------------------------------------------------------------------------------
+
+Report DRC
+
+Table of Contents
+-----------------
+1. REPORT SUMMARY
+2. REPORT DETAILS
+
+1. REPORT SUMMARY
+-----------------
+            Netlist: netlist
+          Floorplan: design_1
+      Design limits: <entire design considered>
+           Ruledeck: default
+             Max violations: <unlimited>
+             Violations found: 89
++-----------+------------------+---------------------------------+------------+
+| Rule      | Severity         | Description                     | Violations |
++-----------+------------------+---------------------------------+------------+
+| NSTD-1    | Critical Warning | Unspecified I/O Standard        | 1          |
+| UCIO-1    | Critical Warning | Unconstrained Logical Port      | 1          |
+| CHECK-3   | Warning          | Report rule limit reached       | 2          |
+| DPIP-1    | Warning          | Input pipelining                | 8          |
+| DPOP-2    | Warning          | MREG Output pipelining          | 3          |
+| IOSR-1    | Warning          | IOB set reset sharing           | 1          |
+| REQP-1839 | Warning          | RAMB36 async control check      | 20         |
+| REQP-1840 | Warning          | RAMB18 async control check      | 20         |
+| RPBF-3    | Warning          | IO port buffering is incomplete | 32         |
+| ZPS7-1    | Warning          | PS7 block required              | 1          |
++-----------+------------------+---------------------------------+------------+
+
+2. REPORT DETAILS
+-----------------
+NSTD-1#1 Critical Warning
+Unspecified I/O Standard  
+38 out of 38 logical ports use I/O standard (IOSTANDARD) value 'DEFAULT', instead of a user assigned specific value. This may cause I/O contention or incompatibility with the board power or connectivity affecting performance, signal integrity or in extreme cases cause damage to the device or the components to which it is connected. To correct this violation, specify all I/O standards. This design will fail to generate a bitstream unless all logical ports have a user specified I/O standard value defined. To allow bitstream creation with unspecified I/O standard values (not recommended), use this command: set_property SEVERITY {Warning} [get_drc_checks NSTD-1].  NOTE: When using the Vivado Runs infrastructure (e.g. launch_runs Tcl command), add this command to a .tcl file and add that file as a pre-hook for write_bitstream step for the implementation run. Problem ports: GPIOA[15:0], GPIOB[15:0], clk, io_jtag_tck, io_jtag_tdi, io_jtag_tdo, io_jtag_tms, rst_n.
+Related violations: <none>
+
+UCIO-1#1 Critical Warning
+Unconstrained Logical Port  
+38 out of 38 logical ports have no user assigned specific location constraint (LOC). This may cause I/O contention or incompatibility with the board power or connectivity affecting performance, signal integrity or in extreme cases cause damage to the device or the components to which it is connected. To correct this violation, specify all pin locations. This design will fail to generate a bitstream unless all logical ports have a user specified site LOC constraint defined.  To allow bitstream creation with unspecified pin locations (not recommended), use this command: set_property SEVERITY {Warning} [get_drc_checks UCIO-1].  NOTE: When using the Vivado Runs infrastructure (e.g. launch_runs Tcl command), add this command to a .tcl file and add that file as a pre-hook for write_bitstream step for the implementation run.  Problem ports: GPIOA[15:0], GPIOB[15:0], clk, io_jtag_tck, io_jtag_tdi, io_jtag_tdo, io_jtag_tms, rst_n.
+Related violations: <none>
+
+CHECK-3#1 Warning
+Report rule limit reached  
+REQP-1839 rule limit reached: 20 violations have been found.
+Related violations: <none>
+
+CHECK-3#2 Warning
+Report rule limit reached  
+REQP-1840 rule limit reached: 20 violations have been found.
+Related violations: <none>
+
+DPIP-1#1 Warning
+Input pipelining  
+DSP VexRiscv/execute_to_memory_MUL_HL_reg input VexRiscv/execute_to_memory_MUL_HL_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#2 Warning
+Input pipelining  
+DSP VexRiscv/execute_to_memory_MUL_HL_reg input VexRiscv/execute_to_memory_MUL_HL_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#3 Warning
+Input pipelining  
+DSP VexRiscv/execute_to_memory_MUL_LH_reg input VexRiscv/execute_to_memory_MUL_LH_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#4 Warning
+Input pipelining  
+DSP VexRiscv/execute_to_memory_MUL_LH_reg input VexRiscv/execute_to_memory_MUL_LH_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#5 Warning
+Input pipelining  
+DSP VexRiscv/execute_to_memory_MUL_LL_reg input VexRiscv/execute_to_memory_MUL_LL_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#6 Warning
+Input pipelining  
+DSP VexRiscv/execute_to_memory_MUL_LL_reg input VexRiscv/execute_to_memory_MUL_LL_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#7 Warning
+Input pipelining  
+DSP VexRiscv/memory_to_writeBack_MUL_HH_reg input VexRiscv/memory_to_writeBack_MUL_HH_reg/A[29:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPIP-1#8 Warning
+Input pipelining  
+DSP VexRiscv/memory_to_writeBack_MUL_HH_reg input VexRiscv/memory_to_writeBack_MUL_HH_reg/B[17:0] is not pipelined. Pipelining DSP48 input will improve performance.
+Related violations: <none>
+
+DPOP-2#1 Warning
+MREG Output pipelining  
+DSP VexRiscv/execute_to_memory_MUL_HL_reg multiplier stage VexRiscv/execute_to_memory_MUL_HL_reg/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#2 Warning
+MREG Output pipelining  
+DSP VexRiscv/execute_to_memory_MUL_LH_reg multiplier stage VexRiscv/execute_to_memory_MUL_LH_reg/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+DPOP-2#3 Warning
+MREG Output pipelining  
+DSP VexRiscv/execute_to_memory_MUL_LL_reg multiplier stage VexRiscv/execute_to_memory_MUL_LL_reg/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+IOSR-1#1 Warning
+IOB set reset sharing  
+IO io_jtag_tdi connects to flops which have these JtagBridge/jtag_idcodeArea_ctrl_capture, JtagBridge/jtag_tap_instructionShift0 set/reset signals.  For optimal IOB flop packing there should be only one set/reset signal coming into the IOB.
+Related violations: <none>
+
+REQP-1839#1 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[10] (net: Apb3RAM/ADDRARDADDR[9]) which is driven by a register (VexRiscv/IBusSimplePlugin_fetchPc_pcReg_reg[11]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#2 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[10] (net: Apb3RAM/ADDRARDADDR[9]) which is driven by a register (toplevel_system_cpu_dBus_cmd_rValid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#3 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[11] (net: Apb3RAM/ADDRARDADDR[10]) which is driven by a register (VexRiscv/IBusSimplePlugin_fetchPc_pcReg_reg[12]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#4 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[11] (net: Apb3RAM/ADDRARDADDR[10]) which is driven by a register (toplevel_system_cpu_dBus_cmd_rValid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#5 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[12] (net: Apb3RAM/ADDRARDADDR[11]) which is driven by a register (VexRiscv/IBusSimplePlugin_fetchPc_pcReg_reg[13]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#6 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[12] (net: Apb3RAM/ADDRARDADDR[11]) which is driven by a register (toplevel_system_cpu_dBus_cmd_rValid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#7 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[13] (net: Apb3RAM/ADDRARDADDR[12]) which is driven by a register (VexRiscv/IBusSimplePlugin_fetchPc_pcReg_reg[14]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#8 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[13] (net: Apb3RAM/ADDRARDADDR[12]) which is driven by a register (toplevel_system_cpu_dBus_cmd_rValid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#9 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[14] (net: Apb3RAM/ADDRARDADDR[13]) which is driven by a register (VexRiscv/IBusSimplePlugin_fetchPc_pcReg_reg[15]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#10 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[14] (net: Apb3RAM/ADDRARDADDR[13]) which is driven by a register (toplevel_system_cpu_dBus_cmd_rValid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#11 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[5] (net: Apb3RAM/ADDRARDADDR[4]) which is driven by a register (VexRiscv/IBusSimplePlugin_fetchPc_pcReg_reg[6]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#12 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[5] (net: Apb3RAM/ADDRARDADDR[4]) which is driven by a register (toplevel_system_cpu_dBus_cmd_rValid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#13 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[6] (net: Apb3RAM/ADDRARDADDR[5]) which is driven by a register (VexRiscv/IBusSimplePlugin_fetchPc_pcReg_reg[7]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#14 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[6] (net: Apb3RAM/ADDRARDADDR[5]) which is driven by a register (toplevel_system_cpu_dBus_cmd_rValid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#15 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[7] (net: Apb3RAM/ADDRARDADDR[6]) which is driven by a register (VexRiscv/IBusSimplePlugin_fetchPc_pcReg_reg[8]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#16 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[7] (net: Apb3RAM/ADDRARDADDR[6]) which is driven by a register (toplevel_system_cpu_dBus_cmd_rValid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#17 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[8] (net: Apb3RAM/ADDRARDADDR[7]) which is driven by a register (VexRiscv/IBusSimplePlugin_fetchPc_pcReg_reg[9]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#18 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[8] (net: Apb3RAM/ADDRARDADDR[7]) which is driven by a register (toplevel_system_cpu_dBus_cmd_rValid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#19 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[9] (net: Apb3RAM/ADDRARDADDR[8]) which is driven by a register (VexRiscv/IBusSimplePlugin_fetchPc_pcReg_reg[10]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1839#20 Warning
+RAMB36 async control check  
+The RAMB36E1 Apb3RAM/ram_symbol0_reg_0 has an input control pin Apb3RAM/ram_symbol0_reg_0/ADDRARDADDR[9] (net: Apb3RAM/ADDRARDADDR[8]) which is driven by a register (toplevel_system_cpu_dBus_cmd_rValid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#1 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[8] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[3]) which is driven by a register (Apb3Bridge/pipelinedMemoryBusStage_rsp_regNext_valid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#2 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[8] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[3]) which is driven by a register (Apb3RAM/_zz_io_bus_rsp_valid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#3 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[8] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[3]) which is driven by a register (MasterArbiter/rspTarget_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#4 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (Apb3Bridge/pipelinedMemoryBusStage_rsp_regNext_valid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#5 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (Apb3RAM/_zz_io_bus_rsp_valid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#6 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (MasterArbiter/rspTarget_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#7 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (VexRiscv/CsrPlugin_interrupt_valid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#8 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (VexRiscv/DebugPlugin_haltIt_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#9 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (VexRiscv/DebugPlugin_stepIt_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#10 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (VexRiscv/FSM_sequential_IBusSimplePlugin_injector_port_state_reg[0]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#11 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (VexRiscv/FSM_sequential_IBusSimplePlugin_injector_port_state_reg[1]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#12 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (VexRiscv/FSM_sequential_IBusSimplePlugin_injector_port_state_reg[2]) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#13 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (VexRiscv/IBusSimplePlugin_rspJoin_rspBuffer_c/StreamFifo_VexRisv/io_push_rValid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#14 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (VexRiscv/_zz_IBusSimplePlugin_injector_decodeInput_valid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#15 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (VexRiscv/execute_arbitration_isValid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#16 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (VexRiscv/memory_arbitration_isValid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#17 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (VexRiscv/writeBack_arbitration_isValid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#18 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (system_mainBusDecoder_logic_rspNoHit_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#19 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (system_mainBusDecoder_logic_rspPending_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+REQP-1840#20 Warning
+RAMB18 async control check  
+The RAMB18E1 VexRiscv/RegFilePlugin_regFile_reg_1 has an input control pin VexRiscv/RegFilePlugin_regFile_reg_1/ADDRARDADDR[9] (net: VexRiscv/decode_RegFilePlugin_regFileReadAddress1[4]) which is driven by a register (toplevel_system_cpu_dBus_cmd_rValid_reg) that has an active asychronous set or reset. This may cause corruption of the memory contents and/or read values when the set/reset is asserted and is not analyzed by the default static timing analysis. It is suggested to eliminate the use of a set/reset to registers driving this RAMB pin or else use a synchronous reset in which the assertion of the reset is timed by default.
+Related violations: <none>
+
+RPBF-3#1 Warning
+IO port buffering is incomplete  
+Device port GPIOA[0] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#2 Warning
+IO port buffering is incomplete  
+Device port GPIOA[10] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#3 Warning
+IO port buffering is incomplete  
+Device port GPIOA[11] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#4 Warning
+IO port buffering is incomplete  
+Device port GPIOA[12] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#5 Warning
+IO port buffering is incomplete  
+Device port GPIOA[13] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#6 Warning
+IO port buffering is incomplete  
+Device port GPIOA[14] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#7 Warning
+IO port buffering is incomplete  
+Device port GPIOA[15] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#8 Warning
+IO port buffering is incomplete  
+Device port GPIOA[1] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#9 Warning
+IO port buffering is incomplete  
+Device port GPIOA[2] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#10 Warning
+IO port buffering is incomplete  
+Device port GPIOA[3] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#11 Warning
+IO port buffering is incomplete  
+Device port GPIOA[4] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#12 Warning
+IO port buffering is incomplete  
+Device port GPIOA[5] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#13 Warning
+IO port buffering is incomplete  
+Device port GPIOA[6] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#14 Warning
+IO port buffering is incomplete  
+Device port GPIOA[7] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#15 Warning
+IO port buffering is incomplete  
+Device port GPIOA[8] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#16 Warning
+IO port buffering is incomplete  
+Device port GPIOA[9] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#17 Warning
+IO port buffering is incomplete  
+Device port GPIOB[0] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#18 Warning
+IO port buffering is incomplete  
+Device port GPIOB[10] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#19 Warning
+IO port buffering is incomplete  
+Device port GPIOB[11] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#20 Warning
+IO port buffering is incomplete  
+Device port GPIOB[12] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#21 Warning
+IO port buffering is incomplete  
+Device port GPIOB[13] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#22 Warning
+IO port buffering is incomplete  
+Device port GPIOB[14] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#23 Warning
+IO port buffering is incomplete  
+Device port GPIOB[15] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#24 Warning
+IO port buffering is incomplete  
+Device port GPIOB[1] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#25 Warning
+IO port buffering is incomplete  
+Device port GPIOB[2] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#26 Warning
+IO port buffering is incomplete  
+Device port GPIOB[3] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#27 Warning
+IO port buffering is incomplete  
+Device port GPIOB[4] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#28 Warning
+IO port buffering is incomplete  
+Device port GPIOB[5] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#29 Warning
+IO port buffering is incomplete  
+Device port GPIOB[6] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#30 Warning
+IO port buffering is incomplete  
+Device port GPIOB[7] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#31 Warning
+IO port buffering is incomplete  
+Device port GPIOB[8] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+RPBF-3#32 Warning
+IO port buffering is incomplete  
+Device port GPIOB[9] expects both input and output buffering but the buffers are incomplete.
+Related violations: <none>
+
+ZPS7-1#1 Warning
+PS7 block required  
+The PS7 cell must be used in this Zynq design in order to enable correct default configuration.
+Related violations: <none>
+
+

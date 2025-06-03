@@ -1,6 +1,6 @@
 module Apb3RAM #(
-    parameter ADDR_DEPTH = 16384
-    // parameter ADDR_DEPTH = 8192
+    // parameter ADDR_DEPTH = 16384 // 不确定为什么16384，当运行rt-thread时，会概率性死机
+    parameter ADDR_DEPTH = 8192
 )(
     input  wire        io_bus_cmd_valid,
     output wire        io_bus_cmd_ready,
@@ -35,12 +35,12 @@ module Apb3RAM #(
     // assign _zz_io_bus_rsp_payload_data_2 = _zz_io_bus_rsp_payload_data[15:0];
     assign _zz_io_bus_rsp_payload_data_2 = io_bus_cmd_payload_address[$clog2(ADDR_DEPTH)+1:2];
     assign _zz_io_bus_rsp_payload_data_3 = io_bus_cmd_payload_address[$clog2(ADDR_DEPTH)+1:0];
-    // initial begin
-    //     $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram0.bin", ram_symbol0);
-    //     $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram1.bin", ram_symbol1);
-    //     $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram2.bin", ram_symbol2);
-    //     $readmemh("F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/tool/ram3.bin", ram_symbol3);
-    // end
+    initial begin
+        $readmemh("F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Tool/ram0.bin", ram_symbol0);
+        $readmemh("F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Tool/ram1.bin", ram_symbol1);
+        $readmemh("F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Tool/ram2.bin", ram_symbol2);
+        $readmemh("F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Tool/ram3.bin", ram_symbol3);
+    end
     always @(*) begin
         ram_spinal_port0 = {
             _zz_ramsymbol_read_3, _zz_ramsymbol_read_2, _zz_ramsymbol_read_1, _zz_ramsymbol_read
