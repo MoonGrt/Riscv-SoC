@@ -1,16 +1,3 @@
-Project/DVI_IN/impl/
-Project/DVP/impl/
-Project/DVP/src/gowin_workfile
-Project/SoC/impl/
-Project/SoC/src/gowin_workfile
-Project/Murax/Murax.cache/
-Project/Murax/Murax.hw/
-Project/Murax/Murax.ip_user_files/
-Project/Murax/Murax.sim/
-Project/Cyber/Cyber.cache/
-Project/Cyber/Cyber.hw/
-Project/Cyber/Cyber.ip_user_files/
-Project/Cyber/Cyber.sim/
 *.bin
 *.hex
 *.zip
