@@ -57,14 +57,14 @@ module Cyber (
     // output [5:0] lcd_g
 );
 
-    wire io_mainClk;
     wire io_asyncReset = ~rst_n;
-
-    SYS_rPLL SYS_rPLL(
-        .clkout(io_mainClk), //output clkout
-        .reset(reset), //input reset
-        .clkin(clk) //input clkin
-    );
+    wire io_mainClk = clk;
+    // wire io_mainClk;
+    // SYS_rPLL SYS_rPLL(
+    //     .clkout(io_mainClk), //output clkout
+    //     .reset(reset), //input reset
+    //     .clkin(clk) //input clkin
+    // );
 
     // wire [3:0] O_pll_phase;
     // assign state_led = O_pll_phase; // 状态指示灯
@@ -101,6 +101,7 @@ module Cyber (
     wire timer_interrupt, uart_interrupt;
     wire USART1_interrupt, USART2_interrupt;
     wire TIM1_interrupt, TIM2_interrupt;
+    wire systick_interrupt;
 
     // RCC
     wire pll_stop;
@@ -211,6 +212,9 @@ module Cyber (
     wire        system_timCtrl_io_apb_PREADY;  // TIM
     wire [31:0] system_timCtrl_io_apb_PRDATA;  // TIM
     wire        system_timCtrl_io_apb_PSLVERROR;  // TIM
+    wire        system_systickCtrl_io_apb_PREADY;  // SysTick
+    wire [31:0] system_systickCtrl_io_apb_PRDATA;  // SysTick
+    wire        system_systickCtrl_io_apb_PSLVERROR;  // SysTick
 
     wire [19:0] apb3Router_1_io_outputs_0_PADDR;  // GPIO
     wire [ 0:0] apb3Router_1_io_outputs_0_PSEL;  // GPIO
@@ -242,6 +246,11 @@ module Cyber (
     wire        apb3Router_1_io_outputs_5_PENABLE;  // TIM
     wire        apb3Router_1_io_outputs_5_PWRITE;  // TIM
     wire [31:0] apb3Router_1_io_outputs_5_PWDATA;  // TIM
+    wire [19:0] apb3Router_1_io_outputs_6_PADDR;  // SysTick
+    wire [ 0:0] apb3Router_1_io_outputs_6_PSEL;  // SysTick
+    wire        apb3Router_1_io_outputs_6_PENABLE;  // SysTick
+    wire        apb3Router_1_io_outputs_6_PWRITE;  // SysTick
+    wire [31:0] apb3Router_1_io_outputs_6_PWDATA;  // SysTick
 
     wire [15:0] system_gpioCtrl_io_apb_PADDR;  // GPIO PADDR
     wire [15:0] system_wdgCtrl_io_apb_PADDR;  // WDG PADDR
@@ -249,12 +258,14 @@ module Cyber (
     wire [15:0] system_i2cCtrl_io_apb_PADDR;  // I2C PADDR
     wire [15:0] system_spiCtrl_io_apb_PADDR;  // SPI PADDR
     wire [15:0] system_timCtrl_io_apb_PADDR;  // TIM PADDR
+    wire [15:0] system_systickCtrl_io_apb_PADDR;  // SysTick PADDR
     assign system_gpioCtrl_io_apb_PADDR = apb3Router_1_io_outputs_0_PADDR[15:0];  // GPIO
     assign system_wdgCtrl_io_apb_PADDR = apb3Router_1_io_outputs_1_PADDR[15:0];  // WDG
     assign system_usartCtrl_io_apb_PADDR = apb3Router_1_io_outputs_2_PADDR[15:0];  // USART
     assign system_i2cCtrl_io_apb_PADDR = apb3Router_1_io_outputs_3_PADDR[15:0];  // I2C
     assign system_spiCtrl_io_apb_PADDR = apb3Router_1_io_outputs_4_PADDR[15:0];  // SPI
     assign system_timCtrl_io_apb_PADDR = apb3Router_1_io_outputs_5_PADDR[15:0];  // TIM
+    assign system_systickCtrl_io_apb_PADDR = apb3Router_1_io_outputs_6_PADDR[15:0];  // SysTick
 
 
 
@@ -750,9 +761,30 @@ module Cyber (
         .io_outputs_5_PWDATA   (apb3Router_1_io_outputs_5_PWDATA[31:0]),  // o WDG
         .io_outputs_5_PRDATA   (system_wdgCtrl_io_apb_PRDATA[31:0]),      // i WDG
         .io_outputs_5_PSLVERROR(system_wdgCtrl_io_apb_PSLVERROR),         // i WDG
+        .io_outputs_6_PADDR    (apb3Router_1_io_outputs_6_PADDR[19:0]),   // o SysTick
+        .io_outputs_6_PSEL     (apb3Router_1_io_outputs_6_PSEL),          // o SysTick
+        .io_outputs_6_PENABLE  (apb3Router_1_io_outputs_6_PENABLE),       // o SysTick
+        .io_outputs_6_PREADY   (system_systickCtrl_io_apb_PREADY),        // i SysTick
+        .io_outputs_6_PWRITE   (apb3Router_1_io_outputs_6_PWRITE),        // o SysTick
+        .io_outputs_6_PWDATA   (apb3Router_1_io_outputs_6_PWDATA[31:0]),  // o SysTick
+        .io_outputs_6_PRDATA   (system_systickCtrl_io_apb_PRDATA[31:0]),  // i SysTick
+        .io_outputs_6_PSLVERROR(system_systickCtrl_io_apb_PSLVERROR),     // i SysTick
 
         .io_mainClk            (io_mainClk),                              // i
         .resetCtrl_systemReset (resetCtrl_systemReset)                    // i
+    );
+    Apb3SysTick Apb3SysTick (
+        .io_apb_PCLK          (io_mainClk),                          // i
+        .io_apb_PRESET        (resetCtrl_systemReset),               // i
+        .io_apb_PADDR         (system_systickCtrl_io_apb_PADDR),     // i
+        .io_apb_PSEL          (apb3Router_1_io_outputs_6_PSEL),      // i
+        .io_apb_PENABLE       (apb3Router_1_io_outputs_6_PENABLE),   // i
+        .io_apb_PREADY        (system_systickCtrl_io_apb_PREADY),    // o
+        .io_apb_PWRITE        (apb3Router_1_io_outputs_6_PWRITE),    // i
+        .io_apb_PWDATA        (apb3Router_1_io_outputs_6_PWDATA),    // i
+        .io_apb_PRDATA        (system_systickCtrl_io_apb_PRDATA),    // o
+        .io_apb_PSLVERROR     (system_systickCtrl_io_apb_PSLVERROR), // o
+        .interrupt            (systick_interrupt)                    // o
     );
     Apb3GPIORouter Apb3GPIORouter (
         .io_apb_PCLK          (GPIO_clk),                                    // i

@@ -1,72 +1,11 @@
-F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/APB3SPI.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/APB3SPI.v
-Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
--- Compiling module Apb3SPIRouter
--- Compiling module Apb3SPI
--- Compiling module SPICtrl
-
-Top level modules:
-	Apb3SPIRouter
-
-} {} {}} F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/APB3I2C.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/APB3I2C.v
-Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
--- Compiling module Apb3I2CRouter
--- Compiling module Apb3I2C
-
-Top level modules:
-	Apb3I2CRouter
-
-} {} {}} F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/APB3GPIO.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/APB3GPIO.v
-Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
--- Compiling module Apb3GPIORouter
--- Compiling module Apb3GPIO
-
-Top level modules:
-	Apb3GPIORouter
-
-} {} {}} F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/AHBDVP.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/AHBDVP.v
+F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/AHBDVP.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/AHBDVP.v
 Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
 -- Compiling module AhbDVP
 
 Top level modules:
 	AhbDVP
 
-} {} {}} F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/APB3WDG.v {2 {vlog -work work -vopt -stats=none F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/APB3WDG.v
-Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
--- Compiling module Apb3WDGRouter
--- Compiling module IWDG
--- Compiling module WWDG
-** Warning: F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/APB3WDG.v(274): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
-
-
-Top level modules:
-	Apb3WDGRouter
-
-} {} {}} F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/APB3BUS.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/APB3BUS.v
-Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
--- Compiling module Apb3Bridge
--- Compiling module Apb3PRouter
-
-Top level modules:
-	Apb3Bridge
-	Apb3PRouter
-
-} {} {}} F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/AHBRCC.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/AHBRCC.v
-Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
--- Compiling module AhbRCC
-
-Top level modules:
-	AhbRCC
-
-} {} {}} F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/AHBBUS.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/AHBBUS.v
-Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
--- Compiling module AhbBridge
--- Compiling module AhbPRouter
-
-Top level modules:
-	AhbBridge
-	AhbPRouter
-
-} {} {}} F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/APB3USART.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/APB3USART.v
+} {} {}} F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3USART.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3USART.v
 Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
 -- Compiling module Apb3USARTRouter
 -- Compiling module Apb3USART
@@ -79,21 +18,22 @@ Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
 Top level modules:
 	Apb3USARTRouter
 
-} {} {}} F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/APB3RAM.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/RISCV/APB3RAM.v
+} {} {}} F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3GPIO.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3GPIO.v
+Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+-- Compiling module Apb3GPIORouter
+-- Compiling module Apb3GPIO
+
+Top level modules:
+	Apb3GPIORouter
+
+} {} {}} F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3RAM.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3RAM.v
 Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
 -- Compiling module Apb3RAM
 
 Top level modules:
 	Apb3RAM
 
-} {} {}} F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/gowin_workfile/tb_top.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/gowin_workfile/tb_top.v
-Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
--- Compiling module tb_top
-
-Top level modules:
-	tb_top
-
-} {} {}} F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/gowin_workfile/prim_sim.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/FPGA/Tang_Mega/Riscv-SoC/Project/SoC/src/gowin_workfile/prim_sim.v
+} {} {}} F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/gowin_workfile/prim_sim.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/gowin_workfile/prim_sim.v
 Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
 -- Compiling UDP mux2
 -- Compiling module MUX2
@@ -327,5 +267,87 @@ Top level modules:
 	GTR12_UPAR
 	GTR12_PMAC
 	DQS
+
+} {} {}} F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/gowin_workfile/tb_top.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/gowin_workfile/tb_top.v
+Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+-- Compiling module tb_top
+
+Top level modules:
+	tb_top
+
+} {} {}} F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3SysTick.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3SysTick.v
+Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+-- Compiling module Apb3SysTick
+
+Top level modules:
+	Apb3SysTick
+
+} {} {}} F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3SPI.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3SPI.v
+Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+-- Compiling module Apb3SPIRouter
+-- Compiling module Apb3SPI
+-- Compiling module SPICtrl
+
+Top level modules:
+	Apb3SPIRouter
+
+} {} {}} F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/AHBRCC.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/AHBRCC.v
+Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+-- Compiling module AhbRCC
+
+Top level modules:
+	AhbRCC
+
+} {} {}} F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3I2C.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3I2C.v
+Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+-- Compiling module Apb3I2CRouter
+-- Compiling module Apb3I2C
+
+Top level modules:
+	Apb3I2CRouter
+
+} {} {}} F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/AHBBUS.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/AHBBUS.v
+Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+-- Compiling module AhbBridge
+-- Compiling module AhbPRouter
+
+Top level modules:
+	AhbBridge
+	AhbPRouter
+
+} {} {}} F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3WDG.v {2 {vlog -work work -vopt -stats=none F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3WDG.v
+Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+-- Compiling module Apb3WDGRouter
+-- Compiling module IWDG
+-- Compiling module WWDG
+** Warning: F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3WDG.v(274): (vlog-2600) [RDGN] - Redundant digits in numeric literal.
+
+
+Top level modules:
+	Apb3WDGRouter
+
+} {} {}} F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3TIM.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3TIM.v
+Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+-- Compiling module Apb3TIMRouter
+-- Compiling module Apb3TIM
+
+Top level modules:
+	Apb3TIMRouter
+
+} {} {}} F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3BUS.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/APB3BUS.v
+Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+-- Compiling module Apb3Bridge
+-- Compiling module Apb3PRouter
+
+Top level modules:
+	Apb3Bridge
+	Apb3PRouter
+
+} {} {}} F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/VexRiscv.v {1 {vlog -work work -vopt -stats=none F:/Project/Sipeed/Tang_Primer/Riscv-SoC/Project/Tang_Primer/src/RISCV/VexRiscv.v
+Model Technology ModelSim SE-64 vlog 10.4 Compiler 2014.12 Dec  3 2014
+-- Compiling module VexRiscv
+
+Top level modules:
+	VexRiscv
 
 } {} {}}
